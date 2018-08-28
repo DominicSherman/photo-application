@@ -1,3 +1,3 @@
-##photo-application
+# photo-application
 
 An application for uploading photos to a server
