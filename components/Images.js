@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import {CameraRoll, Image, FlatList, StyleSheet, View} from "react-native";
+import {CameraRoll, Image, FlatList, StyleSheet, View, Dimensions} from "react-native";
 
-const numPictures = 12;
+const numPictures = 100;
+const numPerRow = 3;
+const screenSize = Dimensions.get('window').width / numPerRow;
 
 export default class Images extends Component {
     constructor(props) {
@@ -20,7 +22,7 @@ export default class Images extends Component {
             let row = [];
             for (let i = 1; i <= numPictures; i++) {
                 if (r.edges[i - 1]) {
-                    if (i % 4 === 0) {
+                    if (i % numPerRow === 0) {
                         row = [...row, r.edges[i - 1]];
                         this.setState({cameraRollRows: [...this.state.cameraRollRows, row]});
                         row = [];
@@ -42,8 +44,8 @@ export default class Images extends Component {
             <Image
                 key={index}
                 style={{
-                    width: 100,
-                    height: 100
+                    width: screenSize,
+                    height: screenSize
                 }}
                 source={{uri: item.node.image.uri}}
             />
