@@ -1,0 +1,13 @@
+export const backgroundGray = '#F5F5F5';
+export const black = '#000';
+export const borderGray = '#B8B8B8';
+export const darkerGray = '#3F3F3F';
+export const darkGray = '#747474';
+export const green = '#2E8331';
+export const hyveeRed = '#E21C11';
+export const lightGray = '#F4F4F4';
+export const mediumGray = '#9e9e9e';
+export const white = '#FFF';
+export const maroon = '#8B0000';
+export const darkFont = '#3F3F3F';
+export const lightFont = '#757575';

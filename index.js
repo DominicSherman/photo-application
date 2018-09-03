@@ -1,3 +1,3 @@
 import { AppRegistry } from 'react-native';
-import App from './App';
-AppRegistry.registerComponent('photoapplication', () => App);
+import Home from './components/Home';
+AppRegistry.registerComponent('photoapplication', () => Home);
