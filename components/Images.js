@@ -17,22 +17,19 @@ export default class Images extends Component {
     componentDidMount() {
         const makeRows = (r) => {
             let row = [];
-            for (let i = 1; i <= numPictures; i++) {
-                if (r.edges[i - 1]) {
-                    if (i % numPerRow === 0) {
-                        row = [...row, r.edges[i - 1]];
+            for (let i = 0; i < r.edges.length; i++) {
+                if (r.edges[i]) {
+                    if ((i + 1) % numPerRow === 0) {
+                        row = [...row, r.edges[i]];
                         this.setState({cameraRollRows: [...this.state.cameraRollRows, row]});
                         row = [];
                     } else {
-                        row = [...row, r.edges[i - 1]];
-                    }
-                } else {
-                    if (row.length) {
-                        this.setState({cameraRollRows: [...this.state.cameraRollRows, row]});
-                        row = [];
+                        row = [...row, r.edges[i]];
                     }
                 }
             }
+
+            this.setState({cameraRollRows: [...this.state.cameraRollRows, row]});
         };
 
         CameraRoll.getPhotos({
