@@ -15,10 +15,7 @@ export default class Images extends Component {
     }
 
     componentDidMount() {
-        CameraRoll.getPhotos({
-            first: numPictures,
-            assetType: 'Photos',
-        }).then(r => {
+        const makeRows = (r) => {
             let row = [];
             for (let i = 1; i <= numPictures; i++) {
                 if (r.edges[i - 1]) {
@@ -36,35 +33,40 @@ export default class Images extends Component {
                     }
                 }
             }
-        })
-    }
+        };
 
-    renderRow(images) {
-        const Images = () => images.map((item, index) =>
-            <Image
-                key={index}
-                style={{
-                    width: screenSize,
-                    height: screenSize
-                }}
-                source={{uri: item.node.image.uri}}
-            />
-        );
-
-        return (
-            <View style={{flexDirection: 'row'}}>
-                <Images/>
-            </View>
-        );
+        CameraRoll.getPhotos({
+            first: numPictures,
+            assetType: 'Photos',
+        }).then(r => makeRows(r));
     }
 
     render() {
+        const renderRow = (images) => {
+            const Images = () => images.map((item, index) =>
+                <Image
+                    key={index}
+                    style={{
+                        width: screenSize,
+                        height: screenSize
+                    }}
+                    source={{uri: item.node.image.uri}}
+                />
+            );
+
+            return (
+                <View style={{flexDirection: 'row'}}>
+                    <Images/>
+                </View>
+            );
+        };
+
         return (
             <FlatList
                 data={this.state.cameraRollRows}
                 keyExtractor={(item) => item[0].node.image.uri}
                 renderItem={({item}) =>
-                    this.renderRow(item)
+                    renderRow(item)
                 }
             />
         );
