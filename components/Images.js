@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {CameraRoll, Image, FlatList, StyleSheet, View, Dimensions} from "react-native";
+import {CameraRoll, Image, FlatList, StyleSheet, View, Dimensions, Touchable} from "react-native";
+import TouchableImage from './TouchableImage';
 
 const numPictures = 100;
 const numPerRow = 3;
@@ -10,7 +11,8 @@ export default class Images extends Component {
         super(props);
 
         this.state = {
-            cameraRollRows: []
+            cameraRollRows: [],
+            selectedImages: []
         }
     }
 
@@ -41,13 +43,10 @@ export default class Images extends Component {
     render() {
         const renderRow = (images) => {
             const Images = () => images.map((item, index) =>
-                <Image
-                    key={index}
-                    style={{
-                        width: screenSize,
-                        height: screenSize
-                    }}
-                    source={{uri: item.node.image.uri}}
+                <TouchableImage
+                    item={item}
+                    index={index}
+                    screenSize={screenSize}
                 />
             );
 
