@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
-import {CameraRoll, Image, FlatList, StyleSheet, View, Dimensions, Touchable} from "react-native";
-import TouchableImage from './TouchableImage';
+import {CameraRoll, Dimensions, FlatList, StyleSheet, View} from "react-native";
+import TouchableImage from '../components/TouchableImage';
+import {withRedux} from '../redux-factory';
 
 const numPictures = 100;
 const numPerRow = 3;
 const screenSize = Dimensions.get('window').width / numPerRow;
 
-export default class Images extends Component {
+class Images extends Component {
     constructor(props) {
         super(props);
 
@@ -70,3 +71,5 @@ export default class Images extends Component {
 }
 
 const styles = StyleSheet.create({});
+
+export default withRedux(Images);

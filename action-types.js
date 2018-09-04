@@ -1,0 +1,1 @@
+export const SET_MODAL_VISIBLE = 'SET_MODAL_VISIBLE';

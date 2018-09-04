@@ -5,25 +5,23 @@ import {Modal, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import Images from './Images';
 import {darkFontStyles} from '../constants/font-styles';
+import {withRedux} from '../redux-factory';
 
-export default class Home extends React.Component {
-    state = {
-        modalVisible: false
-    };
-
+class Home extends React.Component {
     render() {
-        if (this.state.modalVisible) {
+        console.log('this.props', this.props);
+        if (this.props.modalVisible) {
             return (
                 <Modal
                     animationType={'slide'}
                     transparent={false}
-                    visible={this.state.modalVisible}
+                    visible={this.props.modalVisible}
                 >
                     <SafeAreaView>
                         <View style={styles.header}>
                             <Text style={darkFontStyles.regular}>{'Select Photos to Upload'}</Text>
                             <Touchable
-                                onPress={() => this.setState({modalVisible: false})}
+                                onPress={() => this.props.actions.setModalVisible(false)}
                             >
                                 <EvilIcon
                                     name={'close'}
@@ -40,7 +38,7 @@ export default class Home extends React.Component {
         return (
             <View style={styles.wrapper}>
                 <Touchable
-                    onPress={() => this.setState({modalVisible: true})}
+                    onPress={() => this.props.actions.setModalVisible(true)}
                 >
                     <Entypo
                         size={40}
@@ -65,3 +63,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     }
 });
+
+export default withRedux(Home);

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
-import EvilIcon from 'react-native-vector-icons/EvilIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 export default class TouchableImage extends Component {
     state = {
@@ -25,7 +25,7 @@ export default class TouchableImage extends Component {
                         source={{uri: item.node.image.uri}}
                     >
                         <View style={styles.overlay}>
-                            <EvilIcon
+                            <Entypo
                                 name={'check'}
                                 style={styles.icon}
                             />
