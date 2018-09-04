@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {screenSize} from '../constants/variables';
 
 export default class TouchableImage extends Component {
     state = {
@@ -8,7 +9,7 @@ export default class TouchableImage extends Component {
     };
 
     render() {
-        const {item, index, screenSize} = this.props;
+        const {item, index} = this.props;
         const toggleSelected = () => this.setState({selected: !this.state.selected});
 
         return (

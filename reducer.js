@@ -1,4 +1,4 @@
-import {SET_MODAL_VISIBLE} from './action-types';
+import {ADD_CAMERA_ROLL_ROW, SET_MODAL_VISIBLE} from './action-types';
 
 const defaultState = {
     cameraRollRows: [],
@@ -8,10 +8,16 @@ const defaultState = {
 
 const setModalVisible = (state, modalVisible) => ({
     ...state,
-        modalVisible
+    modalVisible
+});
+
+const addCameraRollRow = (state, row) => ({
+    ...state,
+    cameraRollRows: [...state.cameraRollRows, row]
 });
 
 const reducerMap = {
+    [ADD_CAMERA_ROLL_ROW]: addCameraRollRow,
     [SET_MODAL_VISIBLE]: setModalVisible
 };
 

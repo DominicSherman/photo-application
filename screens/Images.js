@@ -1,75 +1,51 @@
 import React, {Component} from 'react';
-import {CameraRoll, Dimensions, FlatList, StyleSheet, View} from "react-native";
-import TouchableImage from '../components/TouchableImage';
+import {CameraRoll, Dimensions, FlatList, Modal, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import Touchable from 'react-native-platform-touchable';
 import {withRedux} from '../redux-factory';
-
-const numPictures = 100;
-const numPerRow = 3;
-const screenSize = Dimensions.get('window').width / numPerRow;
+import {darkFontStyles} from '../constants/font-styles';
+import EvilIcon from 'react-native-vector-icons/EvilIcons';
+import {renderRow} from '../helpers';
 
 class Images extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            cameraRollRows: [],
-            selectedImages: []
-        }
-    }
-
-    componentDidMount() {
-        const makeRows = (r) => {
-            let row = [];
-            for (let i = 0; i < r.edges.length; i++) {
-                if (r.edges[i]) {
-                    if ((i + 1) % numPerRow === 0) {
-                        row = [...row, r.edges[i]];
-                        this.setState({cameraRollRows: [...this.state.cameraRollRows, row]});
-                        row = [];
-                    } else {
-                        row = [...row, r.edges[i]];
-                    }
-                }
-            }
-
-            this.setState({cameraRollRows: [...this.state.cameraRollRows, row]});
-        };
-
-        CameraRoll.getPhotos({
-            first: numPictures,
-            assetType: 'Photos',
-        }).then(r => makeRows(r));
-    }
-
     render() {
-        const renderRow = (images) => {
-            const Images = () => images.map((item, index) =>
-                <TouchableImage
-                    item={item}
-                    index={index}
-                    screenSize={screenSize}
-                />
-            );
-
-            return (
-                <View style={{flexDirection: 'row'}}>
-                    <Images/>
-                </View>
-            );
-        };
-
         return (
-            <FlatList
-                data={this.state.cameraRollRows}
-                keyExtractor={(item) => item[0].node.image.uri}
-                renderItem={({item}) =>
-                    renderRow(item)
-                }
-            />
+            <Modal
+                animationType={'slide'}
+                transparent={false}
+                visible={this.props.modalVisible}
+            >
+                <SafeAreaView>
+                    <View style={styles.header}>
+                        <Text style={darkFontStyles.regular}>{'Select Photos to Upload'}</Text>
+                        <Touchable
+                            onPress={() => this.props.actions.setModalVisible(false)}
+                        >
+                            <EvilIcon
+                                name={'close'}
+                                size={30}
+                            />
+                        </Touchable>
+                    </View>
+                    <FlatList
+                        data={this.props.cameraRollRows}
+                        keyExtractor={(item) => item[0].node.image.uri}
+                        renderItem={({item}) =>
+                            renderRow(item)
+                        }
+                    />
+                </SafeAreaView>
+            </Modal>
         );
     }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
+        alignContent: 'center'
+    }
+});
 
 export default withRedux(Images);
