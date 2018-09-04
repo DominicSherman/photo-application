@@ -5,7 +5,7 @@ import {numPerRow} from './constants/variables';
 export const setModalVisible = (isVisible) => (dispatch) =>
     dispatch(action(SET_MODAL_VISIBLE, isVisible));
 
-export const makeRows = (r) => (dispatch) => {
+export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
     for (let i = 0; i < r.edges.length; i++) {
         if (r.edges[i]) {

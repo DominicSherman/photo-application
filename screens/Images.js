@@ -1,12 +1,28 @@
 import React, {Component} from 'react';
-import {CameraRoll, Dimensions, FlatList, Modal, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Modal, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import {withRedux} from '../redux-factory';
 import {darkFontStyles} from '../constants/font-styles';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
-import {renderRow} from '../helpers';
+import TouchableImage from '../components/TouchableImage';
 
 class Images extends Component {
+    _renderRow(images) {
+        const Images = () => images.map((item, index) =>
+            <TouchableImage
+                key={index}
+                item={item}
+                index={index}
+            />
+        );
+
+        return (
+            <View style={{flexDirection: 'row'}}>
+                <Images/>
+            </View>
+        );
+    };
+
     render() {
         return (
             <Modal
@@ -29,9 +45,7 @@ class Images extends Component {
                     <FlatList
                         data={this.props.cameraRollRows}
                         keyExtractor={(item) => item[0].node.image.uri}
-                        renderItem={({item}) =>
-                            renderRow(item)
-                        }
+                        renderItem={({item}) => this._renderRow(item)}
                     />
                 </SafeAreaView>
             </Modal>

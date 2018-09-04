@@ -7,13 +7,11 @@ import {withRedux} from '../redux-factory';
 import {numPictures} from '../constants/variables';
 
 class Home extends React.Component {
-    async componentDidMount() {
-        const cameraRoll = await CameraRoll.getPhotos({
+    componentDidMount() {
+        CameraRoll.getPhotos({
             first: numPictures,
             assetType: 'Photos',
-        });
-
-        this.props.actions.makeRows(cameraRoll)
+        }).then((r) => this.props.actions.setCameraRollRows(r));
     }
 
     render() {
