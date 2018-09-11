@@ -1,29 +1,24 @@
 import React, {Component} from 'react';
-import {Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {screenSize} from '../constants/variables';
 
 export default class TouchableImage extends Component {
-    state = {
-        selected: false
-    };
-
     render() {
-        const {item, index} = this.props;
-        const toggleSelected = () => this.setState({selected: !this.state.selected});
+        const {actions, item, index, selectedImages} = this.props;
 
         return (
             <TouchableOpacity
-                onPress={() => toggleSelected()}
+                onPress={() => actions.toggleSelected(item)}
             >
-                {this.state.selected ?
+                {selectedImages[item.image.filename] ?
                     <ImageBackground
                         key={index}
                         style={{
                             width: screenSize,
                             height: screenSize
                         }}
-                        source={{uri: item.node.image.uri}}
+                        source={{uri: item.image.uri}}
                     >
                         <View style={styles.overlay}>
                             <Entypo
@@ -33,13 +28,13 @@ export default class TouchableImage extends Component {
                         </View>
                     </ImageBackground>
                     :
-                    <Image
+                    <ImageBackground
                         key={index}
                         style={{
                             width: screenSize,
                             height: screenSize
                         }}
-                        source={{uri: item.node.image.uri}}
+                        source={{uri: item.image.uri}}
                     />
                 }
             </TouchableOpacity>
