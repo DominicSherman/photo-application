@@ -7,6 +7,7 @@ import {withRedux} from '../redux-factory';
 import {numPictures, thumbnailImageSize} from '../constants/variables';
 import {darkFontStyles} from '../constants/font-styles';
 import TouchableImage from '../components/TouchableImage';
+import SelectedPreview from '../components/SelectedPreview';
 
 class Home extends React.Component {
     constructor(props) {
@@ -152,7 +153,7 @@ class Home extends React.Component {
                     </SafeAreaView>
                 </Modal>
 
-                <View style={{height: '15%'}}/>
+                <View style={{height: 150}}/>
                 <View style={styles.centeredRow}>
                     <Touchable
                         onPress={this.toggleModal}
@@ -182,25 +183,7 @@ class Home extends React.Component {
                         </View>
                     </Touchable>
                 </View>
-                <ScrollView style={styles.scrollView}>
-                    {
-                        Object.keys(this.currSelected).map((key) =>
-                            this.currSelected[key] ?
-                                <View
-                                    key={key}
-                                    style={styles.previewRow}
-                                >
-                                    <Image
-                                        style={styles.imageThumbnail}
-                                        source={{uri: this.currSelected[key].image.uri}}
-                                    />
-                                    <Text style={darkFontStyles.light}>{this.currSelected[key].image.filename}</Text>
-                                </View>
-                                :
-                                null
-                        )
-                    }
-                </ScrollView>
+                <SelectedPreview selectedImages={this.currSelected}/>
             </View>
         );
     }
@@ -226,22 +209,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#678da2',
         justifyContent: 'center'
     },
-    imageThumbnail: {
-        width: thumbnailImageSize,
-        height: thumbnailImageSize
-    },
-    previewRow: {
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-evenly'
-    },
-    scrollView: {
-        marginTop: '10%'
-    },
     centeredRow: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: '10%'
+        marginTop: 50
     }
 });
 

@@ -1,3 +1,3 @@
 import { AppRegistry } from 'react-native';
-import ReduxProvider from './ReduxProvider';
+import ReduxProvider from './src/ReduxProvider';
 AppRegistry.registerComponent('photoapplication', () => ReduxProvider);
