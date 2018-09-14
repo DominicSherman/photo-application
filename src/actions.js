@@ -1,4 +1,4 @@
-import {ADD_CAMERA_ROLL_ROW, SET_MODAL_VISIBLE, SET_SELECTED_IMAGES} from './action-types';
+import {ADD_CAMERA_ROLL_ROW, SET_MODAL_VISIBLE, SET_SELECTED_IMAGES} from './constants/action-types';
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
 

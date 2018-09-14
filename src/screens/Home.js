@@ -68,8 +68,8 @@ class Home extends React.Component {
         return (
             <View>
                 <ImageSelectModal
-                    currSelected={this.currSelected}
                     cameraRollRows={this.props.cameraRollRows}
+                    currSelected={this.currSelected}
                     modalVisible={this.state.modalVisible}
                     toggleModal={this.toggleModal}
                     toggleSelected={this.toggleSelected}
