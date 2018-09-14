@@ -1,4 +1,4 @@
-import {ADD_CAMERA_ROLL_ROW, SET_MODAL_VISIBLE, UPLOAD_IMAGES} from './action-types';
+import {ADD_CAMERA_ROLL_ROW, SET_MODAL_VISIBLE, SET_SELECTED_IMAGES} from './action-types';
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
 
@@ -21,4 +21,22 @@ export const setCameraRollRows = (r) => (dispatch) => {
     dispatch(action(ADD_CAMERA_ROLL_ROW, row));
 };
 
-export const uploadImages = (uploadedImages) => (dispatch) => dispatch(action(UPLOAD_IMAGES, uploadedImages));
+export const toggleSelected = (image) => (dispatch, getState) => {
+    let imagesMap;
+    const {selectedImages} = getState();
+    const {image: {filename}} = image;
+
+    if (selectedImages[`${filename}`]) {
+        imagesMap = {
+            ...selectedImages,
+            [`${filename}`]: null
+        };
+    } else {
+        imagesMap = {
+            ...selectedImages,
+            [`${filename}`]: image
+        };
+    }
+
+    dispatch(action(SET_SELECTED_IMAGES, imagesMap));
+};

@@ -1,78 +1,27 @@
 import React from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {
-    CameraRoll,
-    FlatList,
-    ImageBackground,
-    Modal,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from 'react-native';
+import {CameraRoll, FlatList, Modal, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import {withRedux} from '../redux-factory';
-import {numPictures, screenSize} from '../constants/variables';
+import {numPictures} from '../constants/variables';
 import {darkFontStyles} from '../constants/font-styles';
-
-let selectedImages = [];
+import TouchableImage from '../components/TouchableImage';
 
 class Home extends React.Component {
     state = {
         modalVisible: false
     };
 
-    toggleSelected = (image) => {
-        const {image: {filename}} = image;
-
-        if (selectedImages[`${filename}`]) {
-            selectedImages = {
-                ...selectedImages,
-                [`${filename}`]: null
-            };
-        } else {
-            selectedImages = {
-                ...selectedImages,
-                [`${filename}`]: image
-            };
-        }
-    };
-
     _renderRow(images) {
-        console.log('selectedImages', selectedImages);
         const Images = () => images.map((item, index) =>
-            <TouchableOpacity
-                onPress={() => this.toggleSelected(item)}
-            >
-                {selectedImages[item.image.filename] ?
-                    <ImageBackground
-                        key={index}
-                        style={{
-                            width: screenSize,
-                            height: screenSize
-                        }}
-                        source={{uri: item.image.uri}}
-                    >
-                        <View style={styles.overlay}>
-                            <Entypo
-                                name={'check'}
-                                style={styles.icon}
-                            />
-                        </View>
-                    </ImageBackground>
-                    :
-                    <ImageBackground
-                        key={index}
-                        style={{
-                            width: screenSize,
-                            height: screenSize
-                        }}
-                        source={{uri: item.image.uri}}
-                    />
-                }
-            </TouchableOpacity>
+            <TouchableImage
+                actions={this.props.actions}
+                key={index}
+                item={item}
+                index={index}
+                selectedImages={this.props.selectedImages}
+            />
         );
 
         return (
@@ -85,14 +34,12 @@ class Home extends React.Component {
     componentDidMount() {
         CameraRoll.getPhotos({
             first: numPictures,
-            assetType: 'All',
+            assetType: 'Photos',
         }).then((r) => this.props.actions.setCameraRollRows(r));
     }
 
     render() {
-        console.log('this.props', this.props);
-        console.log('selectedImages', selectedImages);
-        const {actions, cameraRollRows} = this.props;
+        const {cameraRollRows, selectedImages} = this.props;
 
         return (
             <View style={styles.wrapper}>
@@ -103,6 +50,7 @@ class Home extends React.Component {
                 >
                     <SafeAreaView>
                         <View style={styles.header}>
+                            <Text style={darkFontStyles.regular}>{'Select Photos to Upload'}</Text>
                             <Touchable
                                 onPress={() => this.setState({modalVisible: false})}
                             >
@@ -111,21 +59,11 @@ class Home extends React.Component {
                                     size={30}
                                 />
                             </Touchable>
-                            <Text
-                                style={darkFontStyles.regular}
-                                onPress={() =>  {
-                                    actions.uploadImages(selectedImages);
-                                    this.setState({modalVisible: false})
-                                }}
-                            >
-                                {'Done'}
-                            </Text>
                         </View>
                         <FlatList
                             data={cameraRollRows}
                             extraData={selectedImages}
-                            style={{paddingBottom: '12%'}}
-                            keyExtractor={(item) => `${item[0].timestamp}`}
+                            keyExtractor={(item) => item[0].timestamp}
                             renderItem={({item}) => this._renderRow(item)}
                         />
                     </SafeAreaView>
@@ -154,15 +92,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center'
-    },
-    icon: {
-        fontSize: 40,
-        color: 'green',
-        opacity: 1
-    },
-    overlay: {
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        flex: 1,
     }
 });
 
