@@ -9,18 +9,43 @@ import {darkFontStyles} from '../constants/font-styles';
 import TouchableImage from '../components/TouchableImage';
 
 class Home extends React.Component {
-    state = {
-        modalVisible: false
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            modalVisible: false
+        };
+        this.currSelected = [];
+    }
+
+    toggleSelected = (image) => {
+        const {image: {filename}} = image;
+
+        if (this.currSelected[`${filename}`]) {
+            this.currSelected = {
+                ...this.currSelected,
+                [`${filename}`]: null
+            };
+        } else {
+            this.currSelected = {
+                ...this.currSelected,
+                [`${filename}`]: image
+            };
+        }
+    };
+
+    toggleModal = () => {
+        this.setState({modalVisible: !this.state.modalVisible});
     };
 
     _renderRow(images) {
         const Images = () => images.map((item, index) =>
             <TouchableImage
-                actions={this.props.actions}
+                currSelected={this.currSelected}
                 key={index}
                 item={item}
                 index={index}
-                selectedImages={this.props.selectedImages}
+                toggleSelected={this.toggleSelected}
             />
         );
 
@@ -34,12 +59,13 @@ class Home extends React.Component {
     componentDidMount() {
         CameraRoll.getPhotos({
             first: numPictures,
-            assetType: 'Photos',
+            assetType: 'All',
         }).then((r) => this.props.actions.setCameraRollRows(r));
     }
 
     render() {
-        const {cameraRollRows, selectedImages} = this.props;
+        const {actions, cameraRollRows} = this.props;
+        console.log('this.props', this.props);
 
         return (
             <View style={styles.wrapper}>
@@ -50,26 +76,36 @@ class Home extends React.Component {
                 >
                     <SafeAreaView>
                         <View style={styles.header}>
-                            <Text style={darkFontStyles.regular}>{'Select Photos to Upload'}</Text>
                             <Touchable
-                                onPress={() => this.setState({modalVisible: false})}
+                                onPress={this.toggleModal}
                             >
                                 <EvilIcons
                                     name={'close'}
                                     size={30}
                                 />
                             </Touchable>
+                            <Text
+                                onPress={() => {
+                                    actions.setSelectedImages(this.currSelected);
+                                    this.toggleModal();
+                                }}
+                                style={[
+                                    darkFontStyles.regular,
+                                    {color: 'blue'}
+                                ]}
+                            >
+                                {'Done'}
+                            </Text>
                         </View>
                         <FlatList
                             data={cameraRollRows}
-                            extraData={selectedImages}
-                            keyExtractor={(item) => item[0].timestamp}
+                            keyExtractor={(item) => `${item[0].timestamp}`}
                             renderItem={({item}) => this._renderRow(item)}
                         />
                     </SafeAreaView>
                 </Modal>
                 <Touchable
-                    onPress={() => this.setState({modalVisible: true})}
+                    onPress={this.toggleModal}
                 >
                     <Entypo
                         size={40}

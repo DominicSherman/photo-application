@@ -4,14 +4,25 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {screenSize} from '../constants/variables';
 
 export default class TouchableImage extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            selected: false
+        }
+    }
+
     render() {
-        const {actions, item, index, selectedImages} = this.props;
+        const {item, index, toggleSelected, currSelected} = this.props;
 
         return (
             <TouchableOpacity
-                onPress={() => actions.toggleSelected(item)}
+                onPress={() => {
+                    toggleSelected(item);
+                    this.setState({selected: !this.state.selected})
+                }}
             >
-                {selectedImages[item.image.filename] ?
+                {this.state.selected ?
                     <ImageBackground
                         key={index}
                         style={{

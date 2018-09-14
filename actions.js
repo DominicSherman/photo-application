@@ -21,22 +21,5 @@ export const setCameraRollRows = (r) => (dispatch) => {
     dispatch(action(ADD_CAMERA_ROLL_ROW, row));
 };
 
-export const toggleSelected = (image) => (dispatch, getState) => {
-    let imagesMap;
-    const {selectedImages} = getState();
-    const {image: {filename}} = image;
-
-    if (selectedImages[`${filename}`]) {
-        imagesMap = {
-            ...selectedImages,
-            [`${filename}`]: null
-        };
-    } else {
-        imagesMap = {
-            ...selectedImages,
-            [`${filename}`]: image
-        };
-    }
-
-    dispatch(action(SET_SELECTED_IMAGES, imagesMap));
-};
+export const setSelectedImages = (selectedImages) => (dispatch) =>
+    dispatch(action(SET_SELECTED_IMAGES, selectedImages));
