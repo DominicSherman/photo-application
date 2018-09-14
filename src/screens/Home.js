@@ -1,13 +1,11 @@
 import React from 'react';
-import Entypo from 'react-native-vector-icons/Entypo';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {CameraRoll, FlatList, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
-import Touchable from 'react-native-platform-touchable';
+import {CameraRoll, View} from 'react-native';
 import {withRedux} from '../redux-factory';
-import {numPictures, thumbnailImageSize} from '../constants/variables';
-import {darkFontStyles} from '../constants/font-styles';
-import TouchableImage from '../components/TouchableImage';
+import {numPictures} from '../constants/variables';
 import SelectedPreview from '../components/SelectedPreview';
+import PlusButton from '../components/PlusButton';
+import UploadButton from '../components/UploadButton';
+import ImageSelectModal from './ImageSelectModal';
 
 class Home extends React.Component {
     constructor(props) {
@@ -26,6 +24,10 @@ class Home extends React.Component {
         }).then((r) => this.props.actions.setCameraRollRows(r));
     }
 
+    setCurrSelected = (newCurrSelected) => {
+        this.currSelected = newCurrSelected;
+    };
+
     setSelected = (item, isSelected) => {
         const {image: {filename}} = item;
 
@@ -40,6 +42,8 @@ class Home extends React.Component {
                 [`${filename}`]: null
             };
         }
+
+        this.forceUpdate();
     };
 
     toggleSelected = (item) => {
@@ -58,162 +62,30 @@ class Home extends React.Component {
         }
     };
 
-    toggleModal = () => {
-        this.setState({modalVisible: !this.state.modalVisible});
-    };
-
-    renderRow = (images) => {
-        let isSelected = true;
-        images.forEach((i) => !this.currSelected[i.image.filename] ? isSelected = false : null);
-
-        return (
-            <View style={{flexDirection: 'row'}}>
-                <View style={{flexDirection: 'column', justifyContent: 'center'}}>
-                    {!isSelected ?
-                        <Touchable
-                            onPress={() => {
-                                images.forEach((i) => this.setSelected(i, true));
-                                this.forceUpdate();
-                            }}
-                        >
-                            <Entypo
-                                size={20}
-                                color={'green'}
-                                name={'circle-with-plus'}
-                            />
-                        </Touchable>
-                        :
-                        <Touchable
-                            onPress={() => {
-                                images.forEach((i) => this.setSelected(i, false));
-                                this.forceUpdate();
-                            }}
-                        >
-                            <Entypo
-                                size={20}
-                                color={'red'}
-                                name={'circle-with-minus'}
-                            />
-                        </Touchable>
-                    }
-                </View>
-                {
-                    images.map((item) =>
-                        <TouchableImage
-                            key={`${item.image.filename}`}
-                            item={item}
-                            selected={this.currSelected[item.image.filename]}
-                            toggleSelected={this.toggleSelected}
-                        />
-                    )
-                }
-            </View>
-        );
-    };
+    toggleModal = () => this.setState({modalVisible: !this.state.modalVisible});
 
     render() {
-        const {actions, cameraRollRows} = this.props;
-
         return (
-            <View style={styles.wrapper}>
-                <Modal
-                    animationType={'slide'}
-                    transparent={false}
-                    visible={this.state.modalVisible}
-                >
-                    <SafeAreaView>
-                        <View style={styles.header}>
-                            <Touchable
-                                onPress={() => {
-                                    this.toggleModal();
-                                    this.currSelected = [];
-                                }}
-                            >
-                                <EvilIcons
-                                    name={'close'}
-                                    size={30}
-                                />
-                            </Touchable>
-                            <Text
-                                onPress={this.toggleModal}
-                                style={[
-                                    darkFontStyles.regular,
-                                    {color: 'blue'}
-                                ]}
-                            >
-                                {'Done'}
-                            </Text>
-                        </View>
-                        <FlatList
-                            data={cameraRollRows}
-                            extraData={this.currSelected}
-                            keyExtractor={(item) => `${item[0].timestamp}`}
-                            renderItem={({item}) => this.renderRow(item)}
-                        />
-                    </SafeAreaView>
-                </Modal>
-
+            <View>
+                <ImageSelectModal
+                    currSelected={this.currSelected}
+                    cameraRollRows={this.props.cameraRollRows}
+                    modalVisible={this.state.modalVisible}
+                    toggleModal={this.toggleModal}
+                    toggleSelected={this.toggleSelected}
+                    setSelected={this.setSelected}
+                    setCurrSelected={this.setCurrSelected}
+                />
                 <View style={{height: 150}}/>
-                <View style={styles.centeredRow}>
-                    <Touchable
-                        onPress={this.toggleModal}
-                    >
-                        <Entypo
-                            size={60}
-                            name={'circle-with-plus'}
-                        />
-                    </Touchable>
-                </View>
-                <View style={styles.centeredRow}>
-                    <Touchable
-                        onPress={() => {
-                            actions.setSelectedImages(this.currSelected);
-                            this.currSelected = [];
-                        }}
-                    >
-                        <View style={styles.buttonView}>
-                            <Text
-                                style={[
-                                    darkFontStyles.regular,
-                                    {color: 'white', fontSize: 30}
-                                ]}
-                            >
-                                {'UPLOAD'}
-                            </Text>
-                        </View>
-                    </Touchable>
-                </View>
+                <PlusButton toggleModal={this.toggleModal}/>
+                <UploadButton
+                    actions={this.props.actions}
+                    setCurrSelected={this.setCurrSelected}
+                />
                 <SelectedPreview selectedImages={this.currSelected}/>
             </View>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        alignContent: 'center'
-    },
-    wrapper: {
-        justifyContent: 'center'
-    },
-    buttonView: {
-        width: '100%',
-        paddingVertical: 40,
-        paddingHorizontal: 80,
-        borderColor: '#678da2',
-        borderRadius: 10,
-        borderWidth: 1,
-        backgroundColor: '#678da2',
-        justifyContent: 'center'
-    },
-    centeredRow: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 50
-    }
-});
 
 export default withRedux(Home);
