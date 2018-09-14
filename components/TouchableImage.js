@@ -1,38 +1,56 @@
-import React, {Component} from 'react';
-import {ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
-import {screenSize} from '../constants/variables';
+import React from 'react';
+import {ImageBackground, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import {imageSize} from '../constants/variables';
 
-export default class TouchableImage extends Component {
+export default class TouchableImage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             selected: false
+        };
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            this.setState({selected: this.props.selected});
         }
     }
 
+    getTimeForDisplay = (duration) => {
+        const min = Math.floor(duration / 60);
+        const sec = duration % 60;
+
+        return `${min}:${sec}`;
+    };
+
+    handlePress = () => {
+        this.setState({selected: !this.state.selected});
+        this.props.toggleSelected(this.props.item);
+    };
+
     render() {
-        const {item, index, toggleSelected, currSelected} = this.props;
+        const {item} = this.props;
 
         return (
             <TouchableOpacity
-                onPress={() => {
-                    toggleSelected(item);
-                    this.setState({selected: !this.state.selected})
-                }}
+                onPress={this.handlePress}
             >
                 {this.state.selected ?
                     <ImageBackground
-                        key={index}
-                        style={{
-                            width: screenSize,
-                            height: screenSize
-                        }}
+                        key={`${item.image.filename}`}
+                        style={styles.imageStyle}
                         source={{uri: item.image.uri}}
                     >
                         <View style={styles.overlay}>
-                            <Entypo
+                            {
+                                item.image.duration ?
+                                    <Text>{this.getTimeForDisplay(item.image.duration)}</Text>
+                                    :
+                                    null
+                            }
+                            <EvilIcons
                                 name={'check'}
                                 style={styles.icon}
                             />
@@ -40,11 +58,8 @@ export default class TouchableImage extends Component {
                     </ImageBackground>
                     :
                     <ImageBackground
-                        key={index}
-                        style={{
-                            width: screenSize,
-                            height: screenSize
-                        }}
+                        key={`${item.image.filename}`}
+                        style={styles.imageStyle}
                         source={{uri: item.image.uri}}
                     />
                 }
@@ -56,11 +71,18 @@ export default class TouchableImage extends Component {
 const styles = StyleSheet.create({
     icon: {
         fontSize: 40,
-        color: 'green',
-        opacity: 1
+        color: 'blue',
+        opacity: 1.0
     },
     overlay: {
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'lightblue',
+        opacity: 0.7,
         flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+    },
+    imageStyle: {
+        width: imageSize,
+        height: imageSize
     }
 });

@@ -3,7 +3,7 @@ import {ADD_CAMERA_ROLL_ROW, SET_MODAL_VISIBLE, SET_SELECTED_IMAGES} from './act
 const defaultState = {
     cameraRollRows: [],
     modalVisible: false,
-    selectedImages: []
+    selectedImages: {}
 };
 
 const setModalVisible = (state, modalVisible) => ({

@@ -1,5 +1,6 @@
 import {Dimensions} from 'react-native';
 
-export const numPictures = 100;
+export const numPictures = 300;
 export const numPerRow = 3;
-export const screenSize = Dimensions.get('window').width / numPerRow;
+export const imageSize = (Dimensions.get('window').width-20) / numPerRow;
+export const thumbnailImageSize = Dimensions.get('window').width/4;
