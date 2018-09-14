@@ -152,57 +152,55 @@ class Home extends React.Component {
                     </SafeAreaView>
                 </Modal>
 
-                <View style={styles.homeWrapper}>
-                    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                        <Touchable
-                            onPress={this.toggleModal}
-                        >
-                            <Entypo
-                                size={60}
-                                name={'circle-with-plus'}
-                            />
-                        </Touchable>
-                    </View>
-                    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                        <Touchable
-                            onPress={() => {
-                                actions.setSelectedImages(this.currSelected);
-                                this.currSelected = [];
-                            }}
-                        >
-                            <View style={styles.buttonView}>
-                                <Text
-                                    style={[
-                                        darkFontStyles.regular,
-                                        {color: 'blue'}
-                                    ]}
-                                >
-                                    {'UPLOAD'}
-                                </Text>
-                            </View>
-                        </Touchable>
-                    </View>
-                    <ScrollView style={styles.scrollView}>
-                        {
-                            Object.keys(this.currSelected).map((key) =>
-                                this.currSelected[key] ?
-                                    <View
-                                        key={key}
-                                        style={styles.previewRow}
-                                    >
-                                        <Image
-                                            style={styles.imageThumbnail}
-                                            source={{uri: this.currSelected[key].image.uri}}
-                                        />
-                                        <Text
-                                            style={darkFontStyles.light}>{this.currSelected[key].image.filename}</Text>
-                                    </View>
-                                    :
-                                    null
-                            )
-                        }
-                    </ScrollView>
+                <View style={{height: '15%'}}/>
+                <View style={styles.centeredRow}>
+                    <Touchable
+                        onPress={this.toggleModal}
+                    >
+                        <Entypo
+                            size={60}
+                            name={'circle-with-plus'}
+                        />
+                    </Touchable>
                 </View>
+                <View style={styles.centeredRow}>
+                    <Touchable
+                        onPress={() => {
+                            actions.setSelectedImages(this.currSelected);
+                            this.currSelected = [];
+                        }}
+                    >
+                        <View style={styles.buttonView}>
+                            <Text
+                                style={[
+                                    darkFontStyles.regular,
+                                    {color: 'white', fontSize: 30}
+                                ]}
+                            >
+                                {'UPLOAD'}
+                            </Text>
+                        </View>
+                    </Touchable>
+                </View>
+                <ScrollView style={styles.scrollView}>
+                    {
+                        Object.keys(this.currSelected).map((key) =>
+                            this.currSelected[key] ?
+                                <View
+                                    key={key}
+                                    style={styles.previewRow}
+                                >
+                                    <Image
+                                        style={styles.imageThumbnail}
+                                        source={{uri: this.currSelected[key].image.uri}}
+                                    />
+                                    <Text style={darkFontStyles.light}>{this.currSelected[key].image.filename}</Text>
+                                </View>
+                                :
+                                null
+                        )
+                    }
+                </ScrollView>
             </View>
         );
     }
@@ -216,25 +214,17 @@ const styles = StyleSheet.create({
         alignContent: 'center'
     },
     wrapper: {
-        alignItems: 'center',
-        flex: 1,
         justifyContent: 'center'
     },
-    homeWrapper: {
-        marginTop: '15%',
-        flexDirection: 'column',
-        justifyContent: 'space-evenly'
-    },
     buttonView: {
-        marginTop: '20%',
         width: '100%',
-        padding: 20,
-        borderColor: 'blue',
+        paddingVertical: 40,
+        paddingHorizontal: 80,
+        borderColor: '#678da2',
         borderRadius: 10,
         borderWidth: 1,
-        backgroundColor: '#ebebeb',
-        justifyContent: 'center',
-        alignContent: 'center'
+        backgroundColor: '#678da2',
+        justifyContent: 'center'
     },
     imageThumbnail: {
         width: thumbnailImageSize,
@@ -246,6 +236,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     scrollView: {
+        marginTop: '10%'
+    },
+    centeredRow: {
+        flexDirection: 'row',
+        justifyContent: 'center',
         marginTop: '10%'
     }
 });

@@ -1,5 +1,6 @@
 import React from 'react';
-import {ImageBackground, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ImageBackground, StyleSheet, Text, View} from 'react-native';
+import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {imageSize} from '../constants/variables';
 
@@ -10,6 +11,10 @@ export default class TouchableImage extends React.Component {
         this.state = {
             selected: false
         };
+    }
+
+    componentDidMount() {
+        this.setState({selected: this.props.selected});
     }
 
     componentDidUpdate(prevProps) {
@@ -34,7 +39,7 @@ export default class TouchableImage extends React.Component {
         const {item} = this.props;
 
         return (
-            <TouchableOpacity
+            <Touchable
                 onPress={this.handlePress}
             >
                 {this.state.selected ?
@@ -63,7 +68,7 @@ export default class TouchableImage extends React.Component {
                         source={{uri: item.image.uri}}
                     />
                 }
-            </TouchableOpacity>
+            </Touchable>
         );
     }
 }
