@@ -1,9 +1,9 @@
-import {ADD_CAMERA_ROLL_ROW, SET_MODAL_VISIBLE, SET_SELECTED_IMAGES} from './action-types';
+import {ADD_CAMERA_ROLL_ROW, SET_MODAL_VISIBLE, UPLOAD_IMAGES} from './action-types';
 
 const defaultState = {
     cameraRollRows: [],
     modalVisible: false,
-    selectedImages: []
+    uploadedImages: []
 };
 
 const setModalVisible = (state, modalVisible) => ({
@@ -16,15 +16,15 @@ const addCameraRollRow = (state, row) => ({
     cameraRollRows: [...state.cameraRollRows, row]
 });
 
-const setSelectedImages = (state, selectedImages) => ({
+const setUploadedImages = (state, uploadedImages) => ({
     ...state,
-    selectedImages
+    uploadedImages
 });
 
 const reducerMap = {
     [ADD_CAMERA_ROLL_ROW]: addCameraRollRow,
     [SET_MODAL_VISIBLE]: setModalVisible,
-    [SET_SELECTED_IMAGES]: setSelectedImages
+    [UPLOAD_IMAGES]: setUploadedImages
 };
 
 export default (state = defaultState, {type, data}) => {
