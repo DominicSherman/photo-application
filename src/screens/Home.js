@@ -7,7 +7,7 @@ import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';
 import ImageSelectModal from './ImageSelectModal';
 
-class Home extends React.Component {
+export class Home extends React.Component {
     constructor(props) {
         super(props);
 

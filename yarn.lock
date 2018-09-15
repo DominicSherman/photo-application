@@ -950,7 +950,7 @@ babel-plugin-istanbul@^4.1.6:
     babel-plugin-syntax-object-rest-spread "^6.13.0"
     find-up "^2.1.0"
     istanbul-lib-instrument "^1.10.1"
-    test-exclude "^4.2.1"
+    tests-exclude "^4.2.1"
 
 babel-plugin-jest-hoist@^23.2.0:
   version "23.2.0"
@@ -4614,7 +4614,7 @@ react-redux@^5.0.7:
 
 react-test-renderer@16.3.1:
   version "16.3.1"
-  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.3.1.tgz#d9257936d8535bd40f57f3d5a84e7b0452fb17f2"
+  resolved "https://registry.yarnpkg.com/react-tests-renderer/-/react-tests-renderer-16.3.1.tgz#d9257936d8535bd40f57f3d5a84e7b0452fb17f2"
   dependencies:
     fbjs "^0.8.16"
     object-assign "^4.1.1"
@@ -5297,7 +5297,7 @@ temp@0.8.3:
 
 test-exclude@^4.2.1:
   version "4.2.2"
-  resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-4.2.2.tgz#8b67aa8408f84afc225b06669e25c510f8582820"
+  resolved "https://registry.yarnpkg.com/tests-exclude/-/tests-exclude-4.2.2.tgz#8b67aa8408f84afc225b06669e25c510f8582820"
   dependencies:
     arrify "^1.0.1"
     minimatch "^3.0.4"
