@@ -18,6 +18,7 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "firebase-tools": "^4.2.1",
     "react": "16.3.1",
     "react-native": "~0.55.2",
     "react-native-fetch-blob": "^0.10.8",
