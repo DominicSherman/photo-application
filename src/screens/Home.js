@@ -76,7 +76,7 @@ class Home extends React.Component {
                     setSelected={this.setSelected}
                     setCurrSelected={this.setCurrSelected}
                 />
-                <View style={{height: 150}}/>
+                <View style={{height: 75}}/>
                 <PlusButton toggleModal={this.toggleModal}/>
                 <UploadButton
                     actions={this.props.actions}
