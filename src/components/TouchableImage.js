@@ -3,6 +3,7 @@ import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {imageSize} from '../constants/variables';
+import {whiteFontStyles} from '../constants/font-styles';
 
 export default class TouchableImage extends React.Component {
     constructor(props) {
@@ -25,7 +26,7 @@ export default class TouchableImage extends React.Component {
 
     getTimeForDisplay = (duration) => {
         const min = Math.floor(duration / 60);
-        const sec = duration % 60;
+        const sec = (duration % 60) < 10 ? `0${(duration % 60)}` : (duration % 60);
 
         return `${min}:${sec}`;
     };
@@ -37,6 +38,7 @@ export default class TouchableImage extends React.Component {
 
     render() {
         const {item} = this.props;
+        const {uri, filename, playableDuration} = item.image;
 
         return (
             <Touchable
@@ -44,14 +46,14 @@ export default class TouchableImage extends React.Component {
             >
                 {this.state.selected ?
                     <ImageBackground
-                        key={`${item.image.filename}`}
+                        key={`${filename}`}
                         style={styles.imageStyle}
-                        source={{uri: item.image.uri}}
+                        source={{uri}}
                     >
-                        <View style={styles.overlay}>
+                        <View style={[styles.colorOverlay, {justifyContent: playableDuration ? 'space-between' : 'flex-end'}]}>
                             {
-                                item.image.duration ?
-                                    <Text>{this.getTimeForDisplay(item.image.duration)}</Text>
+                                playableDuration ?
+                                    <Text style={[whiteFontStyles.light, {fontSize: 12}]}>{this.getTimeForDisplay(playableDuration)}</Text>
                                     :
                                     null
                             }
@@ -63,10 +65,19 @@ export default class TouchableImage extends React.Component {
                     </ImageBackground>
                     :
                     <ImageBackground
-                        key={`${item.image.filename}`}
+                        key={`${filename}`}
                         style={styles.imageStyle}
-                        source={{uri: item.image.uri}}
-                    />
+                        source={{uri}}
+                    >
+                        <View style={styles.overlay}>
+                            {
+                                playableDuration ?
+                                    <Text style={[whiteFontStyles.light, {fontSize: 12}]}>{this.getTimeForDisplay(playableDuration)}</Text>
+                                    :
+                                    null
+                            }
+                        </View>
+                    </ImageBackground>
                 }
             </Touchable>
         );
@@ -79,12 +90,17 @@ const styles = StyleSheet.create({
         color: 'blue',
         opacity: 1.0
     },
-    overlay: {
+    colorOverlay: {
         backgroundColor: 'lightblue',
         opacity: 0.7,
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'flex-end'
+        justifyContent: 'space-between'
+    },
+    overlay: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
     },
     imageStyle: {
         width: imageSize,

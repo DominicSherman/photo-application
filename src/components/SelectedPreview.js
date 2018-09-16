@@ -26,7 +26,14 @@ export default class SelectedPreview extends Component {
                                     style={styles.imageThumbnail}
                                     source={{uri: selectedImages[key].image.uri}}
                                 />
-                                <Text style={darkFontStyles.light}>{selectedImages[key].image.filename}</Text>
+                                <View style={styles.rowTextView}>
+                                    <Text
+                                        numberOfLines={1}
+                                        style={darkFontStyles.light}
+                                    >
+                                        {selectedImages[key].image.filename}
+                                    </Text>
+                                </View>
                             </View>
                         )
                     }
@@ -54,5 +61,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         paddingTop: 7
+    },
+    rowTextView: {
+        width: '50%',
+        flexDirection: 'column',
+        justifyContent: 'center'
     }
 });
