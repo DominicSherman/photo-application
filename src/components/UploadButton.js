@@ -5,12 +5,12 @@ import Touchable from 'react-native-platform-touchable';
 
 export default class UploadButton extends Component {
     render() {
-        const {actions, setCurrSelected} = this.props;
+        const {actions, selectedImages, setCurrSelected, uploadImages} = this.props;
         return (
             <View style={styles.centeredRow}>
                 <Touchable
                     onPress={() => {
-                        actions.setSelectedImages(this.currSelected);
+                        uploadImages(selectedImages);
                         setCurrSelected([]);
                     }}
                 >
