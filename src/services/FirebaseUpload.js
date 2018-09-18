@@ -21,18 +21,9 @@ export const initializeFirebase = () => {
     firebase.initializeApp(config);
 };
 
-const onStateChange = (snapshot, index, setProgress) => {
+const handleStateChange = (snapshot, index, setProgress) => {
     if (typeof snapshot.bytesTransferred === 'number') {
         setProgress(index, snapshot.bytesTransferred);
-    }
-
-    switch (snapshot.state) {
-        case firebase.storage.TaskState.PAUSED: // or 'paused'
-            console.log('Upload is paused');
-            break;
-        case firebase.storage.TaskState.RUNNING: // or 'running'
-            console.log(`Upload ${index} is running`);
-            break;
     }
 };
 
@@ -43,14 +34,11 @@ const handleError = (error) => {
 const handleSuccess = (uploadTask, blob, incrementFinished) => {
     blob.close();
     incrementFinished();
-    // uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-    //     console.log('DownloadURL: ', downloadURL);
-    // });
 };
 
 export const uploadImage = async (image, index, sessionId, incrementFinished, setProgress, setTotal) => {
     const uploadUri = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
-    const imageRef = firebase.storage().ref(`${sessionId}`).child(`${index} - ${image.filename}`);
+    const imageRef = firebase.storage().ref(`${sessionId}`).child(`${image.filename}`);
     const blob = await fs.readFile(uploadUri, 'base64').then((data) => {
         return Blob.build(data, {contentType: 'image/jpeg',type: 'BASE64'});
     });
@@ -58,7 +46,7 @@ export const uploadImage = async (image, index, sessionId, incrementFinished, se
     let uploadTask = imageRef.put(blob, {contentType: 'BASE64'});
     setTotal(index, uploadTask.snapshot.totalBytes);
     uploadTask.on('state_changed',
-        (snapshot) => onStateChange(snapshot, index, setProgress),
+        (snapshot) => handleStateChange(snapshot, index, setProgress),
         handleError,
         () => handleSuccess(uploadTask, blob, incrementFinished));
 };
