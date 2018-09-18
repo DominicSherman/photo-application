@@ -27,7 +27,6 @@ export class Home extends React.Component {
         window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
         window.Blob = Blob;
 
-        // Init Firebase
         const config = {
             apiKey: "AIzaSyBV-TeuzUPQtLqA8VEz1CcXaMNSd_SaDVY",
             authDomain: "wedding-photo-application.firebaseapp.com",
@@ -46,14 +45,25 @@ export class Home extends React.Component {
         }).then((r) => this.props.actions.setCameraRollRows(r));
     }
 
-    uploadImage = (image, mime = 'gs://wedding-photo-application.appspot.com') => {
+    // storeReference = (downloadUrl, sessionId) => {
+    //     const image = {
+    //         type: 'image',
+    //         url: downloadUrl,
+    //         createdAt: sessionId
+    //     };
+    //     const response = firebase.database().ref(`testing/${image.filename}`).push(image);
+    //
+    //     console.log('response', response);
+    // };
+
+    uploadImage = (image, index, sessionId) => {
         return (dispatch) => {
             return new Promise((resolve, reject) => {
+                const mime = 'gs://wedding-photo-application.appspot.com';
                 const uploadUri = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
-                const sessionId = new Date().getTime();
                 let uploadBlob = null;
 
-                const imageRef = firebase.storage().ref('testing').child(image.filename);
+                const imageRef = firebase.storage().ref(`${sessionId}`).child(`${index} - ${image.filename}`);
 
                 console.log('imageRef', imageRef);
                 fs.readFile(uploadUri, 'base64')
@@ -66,30 +76,36 @@ export class Home extends React.Component {
                     })
                     .then(() => {
                         uploadBlob.close();
-                        // return imageRef.getDownloadUrl();
+                        return imageRef.getDownloadURL();
                     })
-                    // .then((url) => {
-                    //     resolve(url);
-                    //     storeReference(url, sessionId, image);
-                    // })
+                    .then((url) => {
+                        resolve(url);
+                        // this.storeReference(url, sessionId, image);
+                    })
                     .catch((error) => {
+                        console.log('error', error);
                         reject(error);
                     })
             })
         }
     };
 
-    uploadImages = () => {
-        Object.keys(this.currSelected).forEach(async (key) => {
-            const image = this.currSelected[key].image;
+    uploadImages = async (selectedImages) => {
+        const sessionId = Date.now();
 
-            const upload = this.uploadImage(image);
-            await upload();
+        console.log('selectedImages', selectedImages);
+        await Object.keys(selectedImages).forEach(async (key, index) => {
+            const {image} = selectedImages[key];
+
+            console.log('image', image);
+            await this.uploadImage(image, index, sessionId)();
         });
+        console.log('here');
     };
 
     setCurrSelected = (newCurrSelected) => {
         this.currSelected = newCurrSelected;
+        this.forceUpdate();
     };
 
     setSelected = (item, isSelected) => {
@@ -143,7 +159,6 @@ export class Home extends React.Component {
                 <View style={{height: 75}}/>
                 <PlusButton toggleModal={this.toggleModal}/>
                 <UploadButton
-                    actions={this.props.actions}
                     setCurrSelected={this.setCurrSelected}
                     uploadImages={this.uploadImages}
                     selectedImages={this.currSelected}

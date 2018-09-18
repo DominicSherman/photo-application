@@ -23,18 +23,3 @@ export const setCameraRollRows = (r) => (dispatch) => {
 
 export const setSelectedImages = (selectedImages) => (dispatch) =>
     dispatch(action(SET_SELECTED_IMAGES, selectedImages));
-
-// const storeReference = (donloadUrl, sessionId, image) => {
-//     let imageRef = firebase.storage().ref('testing').child(image.filename);
-//     let currentUser = firebase.auth().currentUser;
-//     let image = {
-//         type: 'image',
-//         url: downloadUrl,
-//         createdAt: sessionId,
-//         user: {
-//             id: currentUser.uid,
-//             email: currentUser.emai
-//         }
-//     };
-//     firebase.database().ref().push(image);
-// };
