@@ -8,6 +8,7 @@ import UploadButton from '../components/UploadButton';
 import ImageSelectModal from './ImageSelectModal';
 import RNFetchBlob from 'react-native-fetch-blob';
 import * as firebase from 'firebase';
+import {getCurrentTime, getCameraRollRows} from '../constants/helper-functions';
 
 let Blob, fs;
 
@@ -16,8 +17,10 @@ export class Home extends React.Component {
         super(props);
 
         this.state = {
-            modalVisible: false
+            modalVisible: false,
+            cameraRollRows: []
         };
+
         this.currSelected = {};
     }
 
@@ -42,65 +45,51 @@ export class Home extends React.Component {
         CameraRoll.getPhotos({
             first: numPictures,
             assetType: 'All',
-        }).then((r) => this.props.actions.setCameraRollRows(r));
+        }).then((r) => this.setState({cameraRollRows: getCameraRollRows(r)}));
     }
 
-    // storeReference = (downloadUrl, sessionId) => {
-    //     const image = {
-    //         type: 'image',
-    //         url: downloadUrl,
-    //         createdAt: sessionId
-    //     };
-    //     const response = firebase.database().ref(`testing/${image.filename}`).push(image);
-    //
-    //     console.log('response', response);
-    // };
-
-    uploadImage = (image, index, sessionId) => {
-        return (dispatch) => {
-            return new Promise((resolve, reject) => {
-                const mime = 'gs://wedding-photo-application.appspot.com';
-                const uploadUri = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
-                let uploadBlob = null;
-
-                const imageRef = firebase.storage().ref(`${sessionId}`).child(`${index} - ${image.filename}`);
-
-                console.log('imageRef', imageRef);
-                fs.readFile(uploadUri, 'base64')
-                    .then((data) => {
-                        return Blob.build(data, {type: `${mime};BASE64`});
-                    })
-                    .then((blob) => {
-                        uploadBlob = blob;
-                        return imageRef.put(blob, {contentType: mime});
-                    })
-                    .then(() => {
-                        uploadBlob.close();
-                        return imageRef.getDownloadURL();
-                    })
-                    .then((url) => {
-                        resolve(url);
-                        // this.storeReference(url, sessionId, image);
-                    })
-                    .catch((error) => {
-                        console.log('error', error);
-                        reject(error);
-                    })
-            })
+    onStateChange = (snapshot) => {
+        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
         }
     };
 
-    uploadImages = async (selectedImages) => {
-        const sessionId = Date.now();
+    handleError = (error) => {
+        console.log('ERROR', error);
+    };
 
-        console.log('selectedImages', selectedImages);
+    handleSuccess = (uploadTask, blob) => {
+        blob.close();
+        uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+            console.log('', );
+            console.log('File available at', downloadURL);
+        });
+    };
+
+    uploadImage = async (image, index, sessionId) => {
+        const uploadUri = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
+        const imageRef = firebase.storage().ref(`${sessionId}`).child(`${index} - ${image.filename}`);
+        const blob = await fs.readFile(uploadUri, 'base64').then((data) => {
+            return Blob.build(data, {type: 'BASE64'});
+        });
+
+        let uploadTask = imageRef.put(blob, {contentType: 'BASE64'});
+        uploadTask.on('state_changed', this.onStateChange, this.handleError, () => this.handleSuccess(uploadTask, blob));
+    };
+
+    uploadImages = async (selectedImages) => {
         await Object.keys(selectedImages).forEach(async (key, index) => {
             const {image} = selectedImages[key];
 
-            console.log('image', image);
-            await this.uploadImage(image, index, sessionId)();
+            await this.uploadImage(image, index, getCurrentTime());
         });
-        console.log('here');
     };
 
     setCurrSelected = (newCurrSelected) => {
@@ -145,10 +134,11 @@ export class Home extends React.Component {
     toggleModal = () => this.setState({modalVisible: !this.state.modalVisible});
 
     render() {
+        console.log('this.state', this.state);
         return (
             <View>
                 <ImageSelectModal
-                    cameraRollRows={this.props.cameraRollRows}
+                    cameraRollRows={this.state.cameraRollRows}
                     currSelected={this.currSelected}
                     modalVisible={this.state.modalVisible}
                     toggleModal={this.toggleModal}
