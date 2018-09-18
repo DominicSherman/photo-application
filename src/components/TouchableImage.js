@@ -24,13 +24,6 @@ export default class TouchableImage extends React.Component {
         }
     }
 
-    getTimeForDisplay = (duration) => {
-        const min = Math.floor(duration / 60);
-        const sec = (duration % 60) < 10 ? `0${(duration % 60)}` : (duration % 60);
-
-        return `${min}:${sec}`;
-    };
-
     handlePress = () => {
         this.setState({selected: !this.state.selected});
         this.props.toggleSelected(this.props.item);
@@ -53,7 +46,7 @@ export default class TouchableImage extends React.Component {
                         <View style={[styles.colorOverlay, {justifyContent: playableDuration ? 'space-between' : 'flex-end'}]}>
                             {
                                 playableDuration ?
-                                    <Text style={[whiteFontStyles.light, {fontSize: 12}]}>{this.getTimeForDisplay(playableDuration)}</Text>
+                                    <Text style={[whiteFontStyles.light, {fontSize: 12}]}>{getTimeForDisplay(playableDuration)}</Text>
                                     :
                                     null
                             }

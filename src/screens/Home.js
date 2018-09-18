@@ -1,16 +1,14 @@
 import React from 'react';
-import {CameraRoll, Platform, View} from 'react-native';
+import {CameraRoll, View} from 'react-native';
 import {withRedux} from '../redux-factory';
 import {numPictures} from '../constants/variables';
 import SelectedPreview from '../components/SelectedPreview';
 import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';
 import ImageSelectModal from './ImageSelectModal';
-import RNFetchBlob from 'react-native-fetch-blob';
-import * as firebase from 'firebase';
-import {getCurrentTime, getCameraRollRows} from '../constants/helper-functions';
-
-let Blob, fs;
+import {getCameraRollRows, getCurrentTime} from '../constants/helper-functions';
+import LoadingView from '../components/LoadingView';
+import {initializeFirebase, uploadImage} from '../services/FirebaseUpload';
 
 export class Home extends React.Component {
     constructor(props) {
@@ -18,27 +16,19 @@ export class Home extends React.Component {
 
         this.state = {
             modalVisible: false,
-            cameraRollRows: []
+            cameraRollRows: [],
+            numToUpload: 0,
+            numFinished: 0,
+            isUploading: false,
+            progresses: {},
+            totals: {}
         };
 
         this.currSelected = {};
     }
 
     componentWillMount() {
-        Blob = RNFetchBlob.polyfill.Blob;
-        fs = RNFetchBlob.fs;
-        window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
-        window.Blob = Blob;
-
-        const config = {
-            apiKey: "AIzaSyBV-TeuzUPQtLqA8VEz1CcXaMNSd_SaDVY",
-            authDomain: "wedding-photo-application.firebaseapp.com",
-            databaseURL: "https://wedding-photo-application.firebaseio.com",
-            projectId: "wedding-photo-application",
-            storageBucket: "wedding-photo-application.appspot.com",
-            messagingSenderId: "717477731043"
-        };
-        firebase.initializeApp(config);
+        initializeFirebase();
     }
 
     componentDidMount() {
@@ -48,47 +38,53 @@ export class Home extends React.Component {
         }).then((r) => this.setState({cameraRollRows: getCameraRollRows(r)}));
     }
 
-    onStateChange = (snapshot) => {
-        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        switch (snapshot.state) {
-            case firebase.storage.TaskState.PAUSED: // or 'paused'
-                console.log('Upload is paused');
-                break;
-            case firebase.storage.TaskState.RUNNING: // or 'running'
-                console.log('Upload is running');
-                break;
+    incrementFinished = () => {
+        const currFinished = this.state.numFinished + 1;
+
+        if (currFinished === this.state.numToUpload) {
+            this.setState({isUploading: false});
         }
+
+        this.setState({numFinished: currFinished});
     };
 
-    handleError = (error) => {
-        console.log('ERROR', error);
-    };
-
-    handleSuccess = (uploadTask, blob) => {
-        blob.close();
-        uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-            console.log('', );
-            console.log('File available at', downloadURL);
+    setProgress = (index, bytesTransferred) => {
+        this.setState({
+            progresses: {
+                ...this.state.progresses,
+                [index]: bytesTransferred
+            }
         });
     };
 
-    uploadImage = async (image, index, sessionId) => {
-        const uploadUri = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
-        const imageRef = firebase.storage().ref(`${sessionId}`).child(`${index} - ${image.filename}`);
-        const blob = await fs.readFile(uploadUri, 'base64').then((data) => {
-            return Blob.build(data, {type: 'BASE64'});
+    setTotal = (index, total) => {
+        this.setState({
+            totals: {
+                ...this.state.totals,
+                [index]: total
+            }
         });
+    };
 
-        let uploadTask = imageRef.put(blob, {contentType: 'BASE64'});
-        uploadTask.on('state_changed', this.onStateChange, this.handleError, () => this.handleSuccess(uploadTask, blob));
+    setUploading = (numToUpload) => {
+        this.setState({numToUpload});
+        this.setState({isUploading: true});
     };
 
     uploadImages = async (selectedImages) => {
+        this.setUploading(Object.keys(selectedImages).length);
+        const sessionId = getCurrentTime();
+
         await Object.keys(selectedImages).forEach(async (key, index) => {
             const {image} = selectedImages[key];
 
-            await this.uploadImage(image, index, getCurrentTime());
+            await uploadImage(
+                image,
+                index,
+                sessionId,
+                this.incrementFinished,
+                this.setProgress,
+                this.setTotal);
         });
     };
 
@@ -111,7 +107,6 @@ export class Home extends React.Component {
                 [`${filename}`]: null
             };
         }
-
         this.forceUpdate();
     };
 
@@ -134,7 +129,17 @@ export class Home extends React.Component {
     toggleModal = () => this.setState({modalVisible: !this.state.modalVisible});
 
     render() {
-        console.log('this.state', this.state);
+        if (this.state.isUploading) {
+            return (
+                <LoadingView
+                    numFinished={this.state.numFinished}
+                    numToUpload={this.state.numToUpload}
+                    progresses={this.state.progresses}
+                    totals={this.state.totals}
+                />
+            );
+        }
+
         return (
             <View>
                 <ImageSelectModal
