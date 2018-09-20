@@ -1,6 +1,7 @@
 import {Platform} from 'react-native';
 import RNFetchBlob from 'react-native-fetch-blob';
 import * as firebase from 'firebase';
+import {config} from '../../config';
 
 let Blob, fs;
 
@@ -10,14 +11,6 @@ export const initializeFirebase = () => {
     window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
     window.Blob = Blob;
 
-    const config = {
-        apiKey: "AIzaSyBV-TeuzUPQtLqA8VEz1CcXaMNSd_SaDVY",
-        authDomain: "wedding-photo-application.firebaseapp.com",
-        databaseURL: "https://wedding-photo-application.firebaseio.com",
-        projectId: "wedding-photo-application",
-        storageBucket: "wedding-photo-application.appspot.com",
-        messagingSenderId: "717477731043"
-    };
     firebase.initializeApp(config);
 };
 
@@ -36,7 +29,7 @@ const handleSuccess = async (uploadTask, sessionId, image, index, blob, incremen
     incrementFinished();
 
     uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) =>
-        await firebase.database().ref(`${sessionId}/${index}`).set({
+        await firebase.database().ref(`${sessionId}/`).child(index).set({
             fileName: image.filename.replace(/[^a-zA-Z0-9]/g, ''),
             url: downloadUrl
         }, (error) => {
@@ -50,14 +43,14 @@ const handleSuccess = async (uploadTask, sessionId, image, index, blob, incremen
 };
 
 export const uploadImage = async (image, index, sessionId, incrementFinished, setProgress, setTotal) => {
+    const mime = 'application/octet-stream';
     const uploadUri = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
-    const storageRef = firebase.storage().ref(`${sessionId}`);
-    const imageRef = storageRef.child(`${image.filename}`);
+    const imageRef = firebase.storage().ref(`${sessionId}`).child(`${image.filename}`);
     const blob = await fs.readFile(uploadUri, 'base64').then((data) => {
-        return Blob.build(data, {contentType: 'image/jpeg',type: 'BASE64'});
+        return Blob.build(data, {type: `${mime};BASE64`});
     });
 
-    let uploadTask = imageRef.put(blob, {contentType: 'BASE64'});
+    let uploadTask = imageRef.put(blob, {contentType: mime});
     setTotal(index, uploadTask.snapshot.totalBytes);
     uploadTask.on('state_changed',
         (snapshot) => handleStateChange(snapshot, index, setProgress),
