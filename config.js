@@ -1,10 +1,10 @@
 export const config = {
-    apiKey: "AIzaSyBV-TeuzUPQtLqA8VEz1CcXaMNSd_SaDVY",
-    authDomain: "wedding-photo-application.firebaseapp.com",
-    databaseURL: "https://wedding-photo-application.firebaseio.com",
-    projectId: "wedding-photo-application",
-    storageBucket: "wedding-photo-application.appspot.com",
-    messagingSenderId: "717477731043"
+    apiKey: "AIzaSyAJZcY30FvM2mMN6wYTAPazqWCMnqkiI28",
+    authDomain: "wedding-website-46644.firebaseapp.com",
+    databaseURL: "https://wedding-website-46644.firebaseio.com",
+    projectId: "wedding-website-46644",
+    storageBucket: "wedding-website-46644.appspot.com",
+    messagingSenderId: "303197686125"
 };
 
 export const ENV = 'dev';

@@ -1,18 +1,19 @@
 import {Platform} from 'react-native';
 import RNFetchBlob from 'react-native-fetch-blob';
-import * as firebase from 'firebase';
+import firebase from 'firebase';
+import 'firebase/database';
+import 'firebase/storage';
+
 import {config, ENV} from '../../config';
 
 let Blob, fs;
 
-export const initializeFirebase = () => {
-    Blob = RNFetchBlob.polyfill.Blob;
-    fs = RNFetchBlob.fs;
-    window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
-    window.Blob = Blob;
+Blob = RNFetchBlob.polyfill.Blob;
+fs = RNFetchBlob.fs;
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+window.Blob = Blob;
 
-    firebase.initializeApp(config);
-};
+export const initializeFirebase = () => firebase.initializeApp(config);
 
 const handleStateChange = (snapshot, index, setProgress) => {
     if (typeof snapshot.bytesTransferred === 'number') {
@@ -24,12 +25,12 @@ const handleError = (error) => {
     console.log('ERROR', error);
 };
 
-const handleSuccess = async (uploadTask, sessionId, image, index, blob, incrementFinished) => {
+const handleSuccess = async (uploadTask, sessionId, image, blob, incrementFinished) => {
     blob.close();
     incrementFinished();
 
     uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) =>
-        await firebase.database().ref(ENV).child(sessionId).child(index).set({
+        await firebase.database().ref(`${ENV}/images`).child(sessionId).child(`${Date.now()}`).set({
             fileName: image.filename.replace(/[^a-zA-Z0-9]/g, ''),
             url: downloadUrl
         }, (error) => {
@@ -45,7 +46,7 @@ const handleSuccess = async (uploadTask, sessionId, image, index, blob, incremen
 export const uploadImage = async (image, index, sessionId, incrementFinished, setProgress, setTotal) => {
     const mime = 'application/octet-stream';
     const uploadUri = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
-    const imageRef = firebase.storage().ref(`${ENV}/${sessionId}`).child(`${image.filename}`);
+    const imageRef = firebase.storage().ref(`${ENV}/images/${sessionId}`).child(`${image.filename}`);
     const blob = await fs.readFile(uploadUri, 'base64').then((data) => {
         return Blob.build(data, {type: `${mime};BASE64`});
     });
@@ -55,5 +56,5 @@ export const uploadImage = async (image, index, sessionId, incrementFinished, se
     uploadTask.on('state_changed',
         (snapshot) => handleStateChange(snapshot, index, setProgress),
         handleError,
-        () => handleSuccess(uploadTask, sessionId, image, index, blob, incrementFinished));
+        () => handleSuccess(uploadTask, sessionId, image, blob, incrementFinished));
 };
