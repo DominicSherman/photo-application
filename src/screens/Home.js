@@ -8,7 +8,7 @@ import UploadButton from '../components/UploadButton';
 import ImageSelectModal from './ImageSelectModal';
 import {getCameraRollRows, getCurrentTime} from '../constants/helper-functions';
 import LoadingView from '../components/LoadingView';
-import {initializeFirebase, uploadImage} from '../services/FirebaseUpload';
+import {initializeFirebase, uploadImage} from '../services/firebase-service';
 
 export class Home extends React.Component {
     constructor(props) {

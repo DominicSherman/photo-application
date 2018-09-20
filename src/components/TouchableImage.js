@@ -4,6 +4,7 @@ import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {imageSize} from '../constants/variables';
 import {whiteFontStyles} from '../constants/font-styles';
+import {getTimeForDisplay} from '../constants/helper-functions';
 
 export default class TouchableImage extends React.Component {
     constructor(props) {
@@ -65,7 +66,7 @@ export default class TouchableImage extends React.Component {
                         <View style={styles.overlay}>
                             {
                                 playableDuration ?
-                                    <Text style={[whiteFontStyles.light, {fontSize: 12}]}>{this.getTimeForDisplay(playableDuration)}</Text>
+                                    <Text style={[whiteFontStyles.light, {fontSize: 12}]}>{getTimeForDisplay(playableDuration)}</Text>
                                     :
                                     null
                             }

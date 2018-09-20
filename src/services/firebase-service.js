@@ -38,15 +38,33 @@ const handleSuccess = (uploadTask, blob, incrementFinished) => {
 
 export const uploadImage = async (image, index, sessionId, incrementFinished, setProgress, setTotal) => {
     const uploadUri = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
-    const imageRef = firebase.storage().ref(`${sessionId}`).child(`${image.filename}`);
+    const storageRef = firebase.storage().ref(`${sessionId}`);
+    console.log('storageRef', storageRef);
+    const imageRef = storageRef.child(`${image.filename}`);
+    console.log('imageRef', imageRef);
     const blob = await fs.readFile(uploadUri, 'base64').then((data) => {
         return Blob.build(data, {contentType: 'image/jpeg',type: 'BASE64'});
     });
 
     let uploadTask = imageRef.put(blob, {contentType: 'BASE64'});
+    console.log('uploadTask', uploadTask);
     setTotal(index, uploadTask.snapshot.totalBytes);
     uploadTask.on('state_changed',
         (snapshot) => handleStateChange(snapshot, index, setProgress),
         handleError,
         () => handleSuccess(uploadTask, blob, incrementFinished));
+
+    const timestamp = new Date();
+    console.log('timestamp', timestamp);
+    await firebase.database().ref(`${sessionId}`).set({
+        url: uploadTask.uploadUrl,
+        fileName: image.filename,
+        time: `${timestamp}`
+    }, (error) => {
+        if (error) {
+            console.log('ERROR', error);
+        } else {
+            console.log('DATABASE TASK COMPLETE');
+        }
+    });
 };
