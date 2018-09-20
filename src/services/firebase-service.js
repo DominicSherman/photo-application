@@ -1,7 +1,7 @@
 import {Platform} from 'react-native';
 import RNFetchBlob from 'react-native-fetch-blob';
 import * as firebase from 'firebase';
-import {config} from '../../config';
+import {config, ENV} from '../../config';
 
 let Blob, fs;
 
@@ -29,7 +29,7 @@ const handleSuccess = async (uploadTask, sessionId, image, index, blob, incremen
     incrementFinished();
 
     uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) =>
-        await firebase.database().ref(`${sessionId}/`).child(index).set({
+        await firebase.database().ref(ENV).child(sessionId).child(index).set({
             fileName: image.filename.replace(/[^a-zA-Z0-9]/g, ''),
             url: downloadUrl
         }, (error) => {
@@ -45,7 +45,7 @@ const handleSuccess = async (uploadTask, sessionId, image, index, blob, incremen
 export const uploadImage = async (image, index, sessionId, incrementFinished, setProgress, setTotal) => {
     const mime = 'application/octet-stream';
     const uploadUri = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
-    const imageRef = firebase.storage().ref(`${sessionId}`).child(`${image.filename}`);
+    const imageRef = firebase.storage().ref(`${ENV}/${sessionId}`).child(`${image.filename}`);
     const blob = await fs.readFile(uploadUri, 'base64').then((data) => {
         return Blob.build(data, {type: `${mime};BASE64`});
     });
