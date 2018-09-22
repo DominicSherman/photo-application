@@ -34,7 +34,7 @@ const getUploadUri = async (image) => {
 
 const insertDatabaseRef = (downloadUrl, sessionId, image) => {
     const height = 4;
-    const width = (image.width/image.height)*height;
+    const width = (image.width / image.height) * height;
     return firebase.database().ref(`${ENV}/images`).child(sessionId).child(`${Date.now()}`).set({
         fileName: image.filename.replace(/[^a-zA-Z0-9]/g, ''),
         url: downloadUrl,
@@ -81,3 +81,16 @@ export const uploadImage = async (actions, image, index, sessionId) => {
         handleError,
         () => handleSuccess(uploadTask, sessionId, image, actions));
 };
+
+export const getUsers = () => firebase.database().ref(`${ENV}/users`);
+
+export const addUser = (email) =>
+    firebase.database().ref(`${ENV}/users`).child(`${email.replace(/[^a-zA-Z0-9]/g, '')}-${Date.now()}`).set({
+        email
+    }, (error) => {
+        if (error) {
+            console.log('ERROR', error);
+        } else {
+            console.log('Database insert complete');
+        }
+    });

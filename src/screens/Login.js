@@ -1,7 +1,9 @@
 import React from 'react';
-import {TextInput, View, StyleSheet, Text} from 'react-native';
-import Touchable from 'react-native-platform-touchable';
-import {darkFontStyles, lightFontStyles} from '../constants/font-styles';
+import {StyleSheet, TextInput, View} from 'react-native';
+import {lightFontStyles} from '../constants/font-styles';
+import {addUser} from '../services/firebase-service';
+import LoginButton from '../components/LoginButton';
+import AddUserButton from '../components/AddUserButton';
 
 export default class Login extends React.Component {
     render() {
@@ -12,57 +14,41 @@ export default class Login extends React.Component {
                 style={styles.wrapperView}
             >
                 <TextInput
-                    autoCapitalize={false}
+                    autoCapitalize={'none'}
                     clearTextOnFocus
-                    style={lightFontStyles.light}
+                    numberOfLines={2}
+                    style={[lightFontStyles.light, {fontSize: 25}]}
                     onChangeText={(email) => actions.setEmail(email)}
                     placeholder={'Email'}
                     value={email}
                 />
                 <TextInput
+                    autoCapitalize={'words'}
                     clearTextOnFocus
-                    style={lightFontStyles.light}
+                    style={[lightFontStyles.light, {fontSize: 25}]}
                     onChangeText={(name) => actions.setName(name)}
                     placeholder={'Name'}
                     value={name}
                 />
-                <Touchable onPress={() => {
-                    actions.login();
-                }}>
-                    <View style={styles.buttonView}>
-                        <Text
-                            style={[
-                                darkFontStyles.regular,
-                                {color: 'white', fontSize: 30}
-                            ]}
-                        >
-                            {'LOGIN'}
-                        </Text>
-                    </View>
-                </Touchable>
+                <LoginButton
+                    login={actions.login}
+                    text={'LOGIN'}
+                />
+                <AddUserButton
+                    addUser={() => addUser(email)}
+                    text={'ADD USER'}
+                />
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    buttonView: {
-        width: '100%',
-        paddingVertical: 40,
-        paddingHorizontal: 80,
-        borderColor: '#678da2',
-        borderRadius: 10,
-        borderWidth: 1,
-        backgroundColor: '#678da2',
-        justifyContent: 'center',
-        marginTop: '10%',
-        alignItems: 'center'
-    },
     wrapperView: {
         marginTop: '40%',
         justifyContent: 'space-between',
         flexDirection: 'column',
         alignItems: 'center',
-        height: '60%'
+        height: '80%'
     }
 });

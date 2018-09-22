@@ -15,7 +15,7 @@ export default class UploadButton extends Component {
         await Object.keys(selectedImages).forEach(async (key, index) => {
             const {image} = selectedImages[key];
 
-            await uploadImage (
+            await uploadImage(
                 actions,
                 image,
                 index,
@@ -35,7 +35,7 @@ export default class UploadButton extends Component {
                 <Touchable
                     onPress={() => {
                         actions.setSelectedImages([]);
-                        this.uploadImages(selectedImages);
+                        this.uploadImages();
                     }}
                 >
                     <View style={styles.buttonView}>
@@ -55,12 +55,6 @@ export default class UploadButton extends Component {
 }
 
 const styles = StyleSheet.create({
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        alignContent: 'center'
-    },
     wrapper: {
         justifyContent: 'center'
     },

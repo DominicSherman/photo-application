@@ -9,3 +9,4 @@ export const SET_IS_UPLOADING = 'SET_IS_UPLOADING';
 export const SET_EMAIL = 'SET_EMAIL';
 export const SET_NAME = 'SET_NAME';
 export const SET_LOGGED_IN = 'SET_LOGGED_IN';
+export const SET_USERS = 'SET_USERS';

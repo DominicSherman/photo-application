@@ -8,10 +8,11 @@ import {
     SET_NUM_TO_UPLOAD,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
-    SET_TOTALS
+    SET_TOTALS, SET_USERS
 } from './constants/action-types';
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
+import {getUsers} from './services/firebase-service';
 
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
@@ -129,8 +130,14 @@ export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, emai
 
 export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
 
-export const login = () => (dispatch, getState) => {
-    const {user: {email}} = getState();
+export const setUsers = (users) => (dispatch) => dispatch(action(SET_USERS, users));
 
-    dispatch(action(SET_LOGGED_IN, true));
+export const login = () => async (dispatch, getState) => {
+    const {user: {email}, users} = getState();
+
+    if (users.includes(email)) {
+        dispatch(action(SET_LOGGED_IN, true));
+    } else {
+        console.log('INVALID EMAIL');
+    }
 };

@@ -1,9 +1,16 @@
 import {
-    ADD_CAMERA_ROLL_ROW, SET_EMAIL, SET_FIRST_NAME, SET_IS_UPLOADING, SET_LAST_NAME, SET_LOGGED_IN,
-    SET_MODAL_VISIBLE, SET_NAME,
+    ADD_CAMERA_ROLL_ROW,
+    SET_EMAIL,
+    SET_IS_UPLOADING,
+    SET_LOGGED_IN,
+    SET_MODAL_VISIBLE,
+    SET_NAME,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD, SET_PROGRESSES,
-    SET_SELECTED_IMAGES, SET_TOTALS
+    SET_NUM_TO_UPLOAD,
+    SET_PROGRESSES,
+    SET_SELECTED_IMAGES,
+    SET_TOTALS,
+    SET_USERS
 } from './constants/action-types';
 
 const defaultState = {
@@ -16,10 +23,11 @@ const defaultState = {
     progresses: {},
     totals: {},
     user: {
-        email: null,
-        name: null,
+        email: 'Email',
+        name: 'Name',
         loggedIn: false
-    }
+    },
+    users: null
 };
 
 const setModalVisible = (state, modalVisible) => ({
@@ -86,6 +94,11 @@ const setUserLoggedIn = (state, loggedIn) => ({
     }
 });
 
+const setUsers = (state, users) => ({
+    ...state,
+    users
+});
+
 const reducerMap = {
     [ADD_CAMERA_ROLL_ROW]: addCameraRollRow,
     [SET_MODAL_VISIBLE]: setModalVisible,
@@ -97,7 +110,8 @@ const reducerMap = {
     [SET_TOTALS]: setTotals,
     [SET_EMAIL]: setUserEmail,
     [SET_NAME]: setUserName,
-    [SET_LOGGED_IN]: setUserLoggedIn
+    [SET_LOGGED_IN]: setUserLoggedIn,
+    [SET_USERS]: setUsers
 };
 
 export default (state = defaultState, {type, data}) => {

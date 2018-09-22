@@ -8,12 +8,26 @@ import UploadButton from '../components/UploadButton';
 import ImageSelectModal from './ImageSelectModal';
 import {getCameraRollRows} from '../constants/helper-functions';
 import LoadingView from './LoadingView';
-import {initializeFirebase} from '../services/firebase-service';
+import {getUsers, initializeFirebase} from '../services/firebase-service';
 import Login from './Login';
+import {SHOULD_AUTHENTICATE} from '../../config';
 
 class Home extends React.Component {
-    componentWillMount() {
+    async componentWillMount() {
         initializeFirebase();
+
+        await getUsers().on('value',
+            (snapshot) => {
+                const users = snapshot.val();
+                if (users) {
+                    const userEmails = Object.keys(users).map((key) => users[key].email);
+
+                    this.props.actions.setUsers(userEmails);
+                } else {
+                    this.props.actions.setUsers({});
+                }
+            }
+        );
     }
 
     componentDidMount() {
@@ -29,22 +43,21 @@ class Home extends React.Component {
             cameraRollRows,
             selectedImages,
             modalVisible,
-            user
+            user,
+            users
         } = this.props;
 
-        console.log('this.props.user', this.props.user);
+        if (this.props.isUploading || (SHOULD_AUTHENTICATE && !users)) {
+            return <LoadingView/>;
+        }
 
-        if (!this.props.user.loggedIn) {
+        if (!this.props.user.loggedIn && SHOULD_AUTHENTICATE) {
             return (
                 <Login
                     actions={actions}
                     user={user}
                 />
             );
-        }
-
-        if (this.props.isUploading) {
-            return <LoadingView/>;
         }
 
         return (

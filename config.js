@@ -9,3 +9,5 @@ export const config = {
 
 export const ENV = 'dev';
 // export const ENV = 'prod';
+
+export const SHOULD_AUTHENTICATE = true;

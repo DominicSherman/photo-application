@@ -19,7 +19,7 @@ class LoadingView extends Component {
         const progress = Object.keys(progresses).reduce((accum, key) => {
             return (accum + progresses[key]);
         }, 0);
-        const percentage = total ? progress/total : 0;
+        const percentage = total ? progress / total : 0;
 
         return (
             <View
@@ -30,19 +30,23 @@ class LoadingView extends Component {
                     alignItems: 'center'
                 }}
             >
-                    <ActivityIndicator
-                        size={'large'}
-                        color={black}
-                    />
-                    <Text style={darkFontStyles.regular}>
-                        {`Uploading ${numFinished+1}/${numToUpload}...`}
-                    </Text>
-                    <Progress.Bar
-                        progress={percentage}
-                        width={200}
-                        color={'#678da2'}
-                        borderColor={'#678da2'}
-                    />
+                <ActivityIndicator
+                    size={'large'}
+                    color={black}
+                />
+                {numToUpload ?
+                    <View>
+                        <Text style={darkFontStyles.regular}>
+                            {`Uploading ${numFinished + 1}/${numToUpload}...`}
+                        </Text>
+                        <Progress.Bar
+                            progress={percentage}
+                            width={200}
+                            color={'#678da2'}
+                            borderColor={'#678da2'}
+                        />
+                    </View>
+                    : null}
             </View>
         );
     }
