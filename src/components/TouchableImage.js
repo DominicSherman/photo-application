@@ -27,7 +27,7 @@ export default class TouchableImage extends React.Component {
 
     handlePress = () => {
         this.setState({selected: !this.state.selected});
-        this.props.toggleSelected(this.props.item);
+        this.props.actions.toggleSelected(this.props.item);
     };
 
     render() {

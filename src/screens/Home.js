@@ -6,27 +6,11 @@ import SelectedPreview from '../components/SelectedPreview';
 import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';
 import ImageSelectModal from './ImageSelectModal';
-import {getCameraRollRows, getCurrentTime} from '../constants/helper-functions';
+import {getCameraRollRows} from '../constants/helper-functions';
 import LoadingView from './LoadingView';
-import {initializeFirebase, uploadImage} from '../services/firebase-service';
+import {initializeFirebase} from '../services/firebase-service';
 
-export class Home extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            modalVisible: false,
-            cameraRollRows: [],
-            numToUpload: 0,
-            numFinished: 0,
-            isUploading: false,
-            progresses: {},
-            totals: {}
-        };
-
-        this.currSelected = {};
-    }
-
+class Home extends React.Component {
     componentWillMount() {
         initializeFirebase();
     }
@@ -35,114 +19,28 @@ export class Home extends React.Component {
         CameraRoll.getPhotos({
             first: numPictures,
             assetType: 'All',
-        }).then((r) => this.setState({cameraRollRows: getCameraRollRows(r)}));
+        }).then((r) => this.props.actions.setCameraRollRows(r));
     }
 
-    incrementFinished = () => {
-        const currFinished = this.state.numFinished + 1;
-
-        this.setState({numFinished: currFinished});
-
-        if (currFinished === this.state.numToUpload) {
-            this.setState({
-                isUploading: false,
-                numToUpload: 0,
-                numFinished: 0,
-                progresses: {},
-                total: {}
-            });
-        }
-    };
-
-    setProgress = (index, bytesTransferred) => {
-        this.setState({
-            progresses: {
-                ...this.state.progresses,
-                [index]: bytesTransferred
-            }
-        });
-    };
-
-    setTotal = (index, total) => {
-        this.setState({
-            totals: {
-                ...this.state.totals,
-                [index]: total
-            }
-        });
-    };
-
-    setUploading = (numToUpload) => {
-        this.setState({numToUpload});
-        this.setState({isUploading: true});
-    };
-
-    uploadImages = async (selectedImages) => {
-        const numUploading = Object.keys(selectedImages).filter((key) => selectedImages[key]).length;
-        this.setUploading(numUploading);
-        const sessionId = getCurrentTime();
-
-        await Object.keys(selectedImages).forEach(async (key, index) => {
-            const {image} = selectedImages[key];
-
-            await uploadImage(
-                image,
-                index,
-                sessionId,
-                this.incrementFinished,
-                this.setProgress,
-                this.setTotal);
-        });
-    };
-
-    setCurrSelected = (newCurrSelected) => {
-        this.currSelected = newCurrSelected;
-        this.forceUpdate();
-    };
-
-    setSelected = (item, isSelected) => {
-        const {image: {filename}} = item;
-
-        if (isSelected) {
-            this.currSelected = {
-                ...this.currSelected,
-                [`${filename}`]: item
-            };
-        } else {
-            this.currSelected = {
-                ...this.currSelected,
-                [`${filename}`]: null
-            };
-        }
-        this.forceUpdate();
-    };
-
-    toggleSelected = (item) => {
-        const {image: {filename}} = item;
-
-        if (!this.currSelected[`${filename}`]) {
-            this.currSelected = {
-                ...this.currSelected,
-                [`${filename}`]: item
-            };
-        } else {
-            this.currSelected = {
-                ...this.currSelected,
-                [`${filename}`]: null
-            };
-        }
-    };
-
-    toggleModal = () => this.setState({modalVisible: !this.state.modalVisible});
-
     render() {
-        if (this.state.isUploading) {
+        const {
+            actions,
+            cameraRollRows,
+            selectedImages,
+            modalVisible,
+            progresses,
+            totals,
+            numFinished,
+            numToUpload
+        } = this.props;
+
+        if (this.props.isUploading) {
             return (
                 <LoadingView
-                    numFinished={this.state.numFinished}
-                    numToUpload={this.state.numToUpload}
-                    progresses={this.state.progresses}
-                    totals={this.state.totals}
+                    progresses={progresses}
+                    totals={totals}
+                    numFinished={numFinished}
+                    numToUpload={numToUpload}
                 />
             );
         }
@@ -150,22 +48,20 @@ export class Home extends React.Component {
         return (
             <View>
                 <ImageSelectModal
-                    cameraRollRows={this.state.cameraRollRows}
-                    currSelected={this.currSelected}
-                    modalVisible={this.state.modalVisible}
-                    toggleModal={this.toggleModal}
-                    toggleSelected={this.toggleSelected}
-                    setSelected={this.setSelected}
-                    setCurrSelected={this.setCurrSelected}
+                    actions={actions}
+                    cameraRollRows={cameraRollRows}
+                    selectedImages={selectedImages}
+                    modalVisible={modalVisible}
                 />
                 <View style={{height: 75}}/>
-                <PlusButton toggleModal={this.toggleModal}/>
+                <PlusButton toggleModal={actions.toggleModal}/>
                 <UploadButton
-                    setCurrSelected={this.setCurrSelected}
-                    uploadImages={this.uploadImages}
-                    selectedImages={this.currSelected}
+                    actions={actions}
+                    selectedImages={selectedImages}
                 />
-                <SelectedPreview selectedImages={this.currSelected}/>
+                <SelectedPreview
+                    selectedImages={selectedImages}
+                />
             </View>
         );
     }

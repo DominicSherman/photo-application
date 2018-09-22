@@ -6,7 +6,12 @@ import * as Progress from 'react-native-progress';
 
 export default class LoadingView extends Component {
     render() {
-        const {progresses, totals, numFinished, numToUpload} = this.props;
+        const {
+            progresses,
+            totals,
+            numFinished,
+            numToUpload
+        } = this.props;
         const total = Object.keys(totals).reduce((accum, key) => {
             return (accum + totals[key]);
         }, 0);

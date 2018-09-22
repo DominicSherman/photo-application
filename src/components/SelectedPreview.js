@@ -6,18 +6,17 @@ import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 export default class SelectedPreview extends Component {
     render() {
         const {selectedImages} = this.props;
-        const keys = Object.keys(selectedImages).filter((key) => selectedImages[key]);
 
         return (
             <View>
                 <View style={styles.textView}>
                     <Text style={[darkFontStyles.regular]}>
-                        {`${keys.length} selected`}
+                        {`${Object.keys(selectedImages).length} selected`}
                     </Text>
                 </View>
                 <ScrollView style={styles.scrollView}>
                     {
-                        keys.map((key) =>
+                        Object.keys(selectedImages).map((key) =>
                             <View
                                 key={key}
                                 style={styles.previewRow}

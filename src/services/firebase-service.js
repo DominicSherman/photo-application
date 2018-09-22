@@ -49,16 +49,16 @@ const insertDatabaseRef = (downloadUrl, sessionId, image) => {
     });
 };
 
-const handleSuccess = async (uploadTask, sessionId, image, incrementFinished) => {
-    incrementFinished();
+const handleSuccess = async (uploadTask, sessionId, image, actions) => {
+    actions.incrementFinished();
 
     uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => insertDatabaseRef(downloadUrl, sessionId, image));
 };
 
 
-const handleStateChange = (snapshot, index, setProgress) => {
+const handleStateChange = (snapshot, index, actions) => {
     if (typeof snapshot.bytesTransferred === 'number') {
-        setProgress(index, snapshot.bytesTransferred);
+        actions.setProgress(index, snapshot.bytesTransferred);
     }
 };
 
@@ -66,7 +66,7 @@ const handleError = (error) => {
     console.log('ERROR', error);
 };
 
-export const uploadImage = async (image, index, sessionId, incrementFinished, setProgress, setTotal) => {
+export const uploadImage = async (actions, image, index, sessionId) => {
     const mime = 'application/octet-stream';
     const imageRef = firebase.storage().ref(`${ENV}/images/${sessionId}`).child(`${image.filename}`);
 
@@ -75,9 +75,9 @@ export const uploadImage = async (image, index, sessionId, incrementFinished, se
         return Blob.build(data, {type: `${mime};BASE64`});
     });
     let uploadTask = imageRef.put(blob, {contentType: mime});
-    setTotal(index, uploadTask.snapshot.totalBytes);
+    actions.setTotal(index, uploadTask.snapshot.totalBytes);
     uploadTask.on('state_changed',
-        (snapshot) => handleStateChange(snapshot, index, setProgress),
+        (snapshot) => handleStateChange(snapshot, index, actions),
         handleError,
-        () => handleSuccess(uploadTask, sessionId, image, incrementFinished));
+        () => handleSuccess(uploadTask, sessionId, image, actions));
 };

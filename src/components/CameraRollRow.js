@@ -7,21 +7,20 @@ import TouchableImage from './TouchableImage';
 export default class CameraRollRow extends Component {
     render() {
         const {
-            currSelected,
-            images,
-            setSelected,
-            toggleSelected
+            actions,
+            selectedImages,
+            images
         } = this.props;
 
         let isSelected = true;
-        images.forEach((i) => !currSelected[i.image.filename] ? isSelected = false : null);
+        images.forEach((i) => !selectedImages[i.image.filename] ? isSelected = false : null);
 
         return (
             <View style={{flexDirection: 'row'}}>
                 <View style={{flexDirection: 'column', justifyContent: 'center'}}>
                     {!isSelected ?
                         <Touchable
-                            onPress={() => images.forEach((i) => setSelected(i, true))}
+                            onPress={() => actions.setSelectedRow(images, true)}
                         >
                             <Entypo
                                 size={20}
@@ -31,7 +30,7 @@ export default class CameraRollRow extends Component {
                         </Touchable>
                         :
                         <Touchable
-                            onPress={() => images.forEach((i) => setSelected(i, false))}
+                            onPress={() => actions.setSelectedRow(images, false)}
                         >
                             <Entypo
                                 size={20}
@@ -44,10 +43,10 @@ export default class CameraRollRow extends Component {
                 {
                     images.map((item) =>
                         <TouchableImage
+                            actions={actions}
                             key={`${item.image.filename}`}
                             item={item}
-                            selected={currSelected[item.image.filename]}
-                            toggleSelected={toggleSelected}
+                            selected={selectedImages[item.image.filename]}
                         />
                     )
                 }

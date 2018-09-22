@@ -2,16 +2,40 @@ import React, {Component} from 'react';
 import {darkFontStyles} from '../constants/font-styles';
 import {StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
+import {getCurrentTime} from '../constants/helper-functions';
+import {uploadImage} from '../services/firebase-service';
 
 export default class UploadButton extends Component {
+    uploadImages = async () => {
+        const {actions, selectedImages} = this.props;
+
+        actions.setUploading(Object.keys(selectedImages).length);
+
+        const sessionId = getCurrentTime();
+        await Object.keys(selectedImages).forEach(async (key, index) => {
+            const {image} = selectedImages[key];
+
+            await uploadImage (
+                actions,
+                image,
+                index,
+                sessionId
+            );
+        });
+    };
+
     render() {
-        const {selectedImages, setCurrSelected, uploadImages} = this.props;
+        const {
+            actions,
+            selectedImages
+        } = this.props;
+
         return (
             <View style={styles.centeredRow}>
                 <Touchable
-                    onPress={async () => {
-                        uploadImages(selectedImages);
-                        setCurrSelected([]);
+                    onPress={() => {
+                        actions.setSelectedImages([]);
+                        this.uploadImages(selectedImages);
                     }}
                 >
                     <View style={styles.buttonView}>

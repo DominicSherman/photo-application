@@ -8,13 +8,10 @@ import CameraRollRow from '../components/CameraRollRow';
 export default class ImageSelectModal extends Component {
     render() {
         const {
+            actions,
             cameraRollRows,
-            currSelected,
-            modalVisible,
-            toggleModal,
-            toggleSelected,
-            setSelected,
-            setCurrSelected
+            selectedImages,
+            modalVisible
         } = this.props;
 
         return (
@@ -27,8 +24,8 @@ export default class ImageSelectModal extends Component {
                     <View style={styles.header}>
                         <Touchable
                             onPress={() => {
-                                toggleModal();
-                                setCurrSelected([]);
+                                actions.toggleModal();
+                                actions.setSelectedImages([]);
                             }}
                         >
                             <EvilIcons
@@ -37,7 +34,7 @@ export default class ImageSelectModal extends Component {
                             />
                         </Touchable>
                         <Text
-                            onPress={toggleModal}
+                            onPress={actions.toggleModal}
                             style={[
                                 darkFontStyles.regular,
                                 {color: 'blue'}
@@ -48,14 +45,13 @@ export default class ImageSelectModal extends Component {
                     </View>
                     <FlatList
                         data={cameraRollRows}
-                        extraData={currSelected}
+                        extraData={selectedImages}
                         keyExtractor={(item, index) => `${index}`}
                         renderItem={({item}) =>
                             <CameraRollRow
-                                currSelected={currSelected}
+                                actions={actions}
+                                selectedImages={selectedImages}
                                 images={item}
-                                setSelected={setSelected}
-                                toggleSelected={toggleSelected}
                             />
                         }
                     />
