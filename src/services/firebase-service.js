@@ -32,7 +32,7 @@ const getUploadUri = async (image) => {
     }
 };
 
-const insertDatabaseRef = (downloadUrl, sessionId, image) => {
+const insertDatabaseRef = (downloadUrl, sessionId, image, actions) => {
     const height = 4;
     const width = (image.width / image.height) * height;
     return firebase.database().ref(`${ENV}/images`).child(sessionId).child(`${Date.now()}`).set({
@@ -44,15 +44,13 @@ const insertDatabaseRef = (downloadUrl, sessionId, image) => {
         if (error) {
             console.log('ERROR', error);
         } else {
-            console.log('Database insert complete');
+            actions.incrementFinished();
         }
     });
 };
 
 const handleSuccess = async (uploadTask, sessionId, image, actions) => {
-    actions.incrementFinished();
-
-    uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => insertDatabaseRef(downloadUrl, sessionId, image));
+    uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => insertDatabaseRef(downloadUrl, sessionId, image, actions));
 };
 
 

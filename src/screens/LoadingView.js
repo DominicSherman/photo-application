@@ -35,7 +35,7 @@ class LoadingView extends Component {
                     color={black}
                 />
                 {numToUpload ?
-                    <View>
+                    <View style={{justifyContent: 'center'}}>
                         <Text style={darkFontStyles.regular}>
                             {`Uploading ${numFinished + 1}/${numToUpload}...`}
                         </Text>
