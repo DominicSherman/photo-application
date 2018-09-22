@@ -6,3 +6,6 @@ export const SET_PROGRESSES = 'SET_PROGRESSES';
 export const SET_TOTALS = 'SET_TOTALS';
 export const SET_NUM_TO_UPLOAD = 'SET_NUM_TO_UPLOAD';
 export const SET_IS_UPLOADING = 'SET_IS_UPLOADING';
+export const SET_EMAIL = 'SET_EMAIL';
+export const SET_NAME = 'SET_NAME';
+export const SET_LOGGED_IN = 'SET_LOGGED_IN';

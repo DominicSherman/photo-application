@@ -9,6 +9,7 @@ import ImageSelectModal from './ImageSelectModal';
 import {getCameraRollRows} from '../constants/helper-functions';
 import LoadingView from './LoadingView';
 import {initializeFirebase} from '../services/firebase-service';
+import Login from './Login';
 
 class Home extends React.Component {
     componentWillMount() {
@@ -28,16 +29,22 @@ class Home extends React.Component {
             cameraRollRows,
             selectedImages,
             modalVisible,
-            progresses,
-            totals,
-            numFinished,
-            numToUpload
+            user
         } = this.props;
 
-        if (this.props.isUploading) {
+        console.log('this.props.user', this.props.user);
+
+        if (!this.props.user.loggedIn) {
             return (
-                <LoadingView/>
+                <Login
+                    actions={actions}
+                    user={user}
+                />
             );
+        }
+
+        if (this.props.isUploading) {
+            return <LoadingView/>;
         }
 
         return (

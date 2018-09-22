@@ -1,7 +1,9 @@
 import {
     ADD_CAMERA_ROLL_ROW,
+    SET_EMAIL,
     SET_IS_UPLOADING,
-    SET_MODAL_VISIBLE,
+    SET_LOGGED_IN,
+    SET_MODAL_VISIBLE, SET_NAME,
     SET_NUM_FINISHED,
     SET_NUM_TO_UPLOAD,
     SET_PROGRESSES,
@@ -121,4 +123,14 @@ export const toggleSelected = (item) => (dispatch, getState) => {
 export const toggleModal = () => (dispatch, getState) => {
     const {modalVisible} = getState();
     dispatch(action(SET_MODAL_VISIBLE, !modalVisible));
+};
+
+export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, email));
+
+export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
+
+export const login = () => (dispatch, getState) => {
+    const {user: {email}} = getState();
+
+    dispatch(action(SET_LOGGED_IN, true));
 };
