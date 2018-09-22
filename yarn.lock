@@ -6266,6 +6266,10 @@ react-native-fetch-blob@^0.10.8:
     base-64 "0.1.0"
     glob "7.0.6"
 
+react-native-heic-converter@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-heic-converter/-/react-native-heic-converter-1.1.1.tgz#a19f6fcf8ced6f918c359f6e1b66176cc0b4ff79"
+
 react-native-image-picker@^0.26.10:
   version "0.26.10"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.26.10.tgz#0bb9ab928984948c67aee0b9e64216bee007a9fc"

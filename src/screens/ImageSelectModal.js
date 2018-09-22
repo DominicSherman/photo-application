@@ -49,7 +49,7 @@ export default class ImageSelectModal extends Component {
                     <FlatList
                         data={cameraRollRows}
                         extraData={currSelected}
-                        keyExtractor={(item) => `${item[0].timestamp}`}
+                        keyExtractor={(item, index) => `${index}`}
                         renderItem={({item}) =>
                             <CameraRollRow
                                 currSelected={currSelected}

@@ -41,6 +41,7 @@
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		C2D41313CE59495EA9AC6BF9 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A58643CBE765447A89C531C7 /* libRNFetchBlob.a */; };
 		F916449C21360BB9001624B9 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F916447B21360B67001624B9 /* libRCTCameraRoll.a */; };
+		F92D32472155AFAA00E4A72C /* libRNHeicConverter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F92D32442155AF6F00E4A72C /* libRNHeicConverter.a */; };
 		F94D6AE1213C848B006E4927 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94D6AAA213C848B006E4927 /* Octicons.ttf */; };
 		F94D6AE2213C848B006E4927 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94D6AAB213C848B006E4927 /* Feather.ttf */; };
 		F94D6AE3213C848B006E4927 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94D6AAC213C848B006E4927 /* Entypo.ttf */; };
@@ -360,6 +361,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNShare;
 		};
+		F92D32432155AF6F00E4A72C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F92D32182155AF6F00E4A72C /* RNHeicConverter.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNHeicConverter;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -396,6 +404,7 @@
 		BDFD7BB61D7E41C6A3D5D32F /* RNShare.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
 		C891CF55575D48A7BF43E460 /* libRNImagePicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImagePicker.a; sourceTree = "<group>"; };
 		F916447121360B67001624B9 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
+		F92D32182155AF6F00E4A72C /* RNHeicConverter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNHeicConverter.xcodeproj; path = "../node_modules/react-native-heic-converter/ios/RNHeicConverter.xcodeproj"; sourceTree = "<group>"; };
 		F94D6AAA213C848B006E4927 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		F94D6AAB213C848B006E4927 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
 		F94D6AAC213C848B006E4927 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
@@ -425,6 +434,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F92D32472155AFAA00E4A72C /* libRNHeicConverter.a in Frameworks */,
 				F916449C21360BB9001624B9 /* libRCTCameraRoll.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
@@ -617,6 +627,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F92D32182155AF6F00E4A72C /* RNHeicConverter.xcodeproj */,
 				F916447121360B67001624B9 /* RCTCameraRoll.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -719,6 +730,14 @@
 			isa = PBXGroup;
 			children = (
 				F916451D2136140B001624B9 /* libRNShare.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F92D32192155AF6F00E4A72C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F92D32442155AF6F00E4A72C /* libRNHeicConverter.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -915,6 +934,10 @@
 				{
 					ProductGroup = F916450F2136140B001624B9 /* Products */;
 					ProjectRef = 0ED2172351214543882EEC87 /* RNFetchBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = F92D32192155AF6F00E4A72C /* Products */;
+					ProjectRef = F92D32182155AF6F00E4A72C /* RNHeicConverter.xcodeproj */;
 				},
 				{
 					ProductGroup = F91645112136140B001624B9 /* Products */;
@@ -1221,6 +1244,13 @@
 			fileType = archive.ar;
 			path = libRNShare.a;
 			remoteRef = F916451C2136140B001624B9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F92D32442155AF6F00E4A72C /* libRNHeicConverter.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNHeicConverter.a;
+			remoteRef = F92D32432155AF6F00E4A72C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
