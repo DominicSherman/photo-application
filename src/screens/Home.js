@@ -7,7 +7,7 @@ import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';
 import ImageSelectModal from './ImageSelectModal';
 import {getCameraRollRows, getCurrentTime} from '../constants/helper-functions';
-import LoadingView from '../components/LoadingView';
+import LoadingView from './LoadingView';
 import {initializeFirebase, uploadImage} from '../services/firebase-service';
 
 export class Home extends React.Component {
@@ -41,11 +41,17 @@ export class Home extends React.Component {
     incrementFinished = () => {
         const currFinished = this.state.numFinished + 1;
 
-        if (currFinished === this.state.numToUpload) {
-            this.setState({isUploading: false});
-        }
-
         this.setState({numFinished: currFinished});
+
+        if (currFinished === this.state.numToUpload) {
+            this.setState({
+                isUploading: false,
+                numToUpload: 0,
+                numFinished: 0,
+                progresses: {},
+                total: {}
+            });
+        }
     };
 
     setProgress = (index, bytesTransferred) => {
@@ -72,7 +78,8 @@ export class Home extends React.Component {
     };
 
     uploadImages = async (selectedImages) => {
-        this.setUploading(Object.keys(selectedImages).length);
+        const numUploading = Object.keys(selectedImages).filter((key) => selectedImages[key]).length;
+        this.setUploading(numUploading);
         const sessionId = getCurrentTime();
 
         await Object.keys(selectedImages).forEach(async (key, index) => {
