@@ -3,8 +3,9 @@ import {black} from '../constants/style-variables';
 import {ActivityIndicator, Text, View} from 'react-native';
 import {darkFontStyles} from '../constants/font-styles';
 import * as Progress from 'react-native-progress';
+import {withRedux} from '../redux-factory';
 
-export default class LoadingView extends Component {
+class LoadingView extends Component {
     render() {
         const {
             progresses,
@@ -46,3 +47,5 @@ export default class LoadingView extends Component {
         );
     }
 }
+
+export default withRedux(LoadingView);

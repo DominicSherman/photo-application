@@ -36,12 +36,7 @@ class Home extends React.Component {
 
         if (this.props.isUploading) {
             return (
-                <LoadingView
-                    progresses={progresses}
-                    totals={totals}
-                    numFinished={numFinished}
-                    numToUpload={numToUpload}
-                />
+                <LoadingView/>
             );
         }
 
