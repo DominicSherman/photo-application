@@ -3,16 +3,17 @@ import {
     SET_EMAIL,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
-    SET_MODAL_VISIBLE, SET_NAME,
+    SET_MODAL_VISIBLE,
+    SET_NAME,
     SET_NUM_FINISHED,
     SET_NUM_TO_UPLOAD,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
-    SET_TOTALS, SET_USERS
+    SET_TOTALS,
+    SET_USERS
 } from './constants/action-types';
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
-import {getUsers} from './services/firebase-service';
 
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
@@ -135,7 +136,7 @@ export const setUsers = (users) => (dispatch) => dispatch(action(SET_USERS, user
 export const login = () => async (dispatch, getState) => {
     const {user: {email}, users} = getState();
 
-    if (users.includes(email)) {
+    if (users.includes(email.toLowerCase())) {
         dispatch(action(SET_LOGGED_IN, true));
     } else {
         console.log('INVALID EMAIL');

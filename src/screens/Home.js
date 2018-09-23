@@ -20,7 +20,7 @@ class Home extends React.Component {
             (snapshot) => {
                 const users = snapshot.val();
                 if (users) {
-                    const userEmails = Object.keys(users).map((key) => users[key].email);
+                    const userEmails = Object.keys(users).map((key) => users[key].email.toLowerCase());
 
                     this.props.actions.setUsers(userEmails);
                 } else {
