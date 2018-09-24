@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {black} from '../constants/style-variables';
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {darkFontStyles} from '../constants/font-styles';
 import * as Progress from 'react-native-progress';
 import {withRedux} from '../redux-factory';
@@ -22,23 +21,18 @@ class LoadingView extends Component {
         const percentage = total ? progress / total : 0;
 
         return (
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    alignItems: 'center'
-                }}
-            >
+            <View style={styles.wrapper}>
                 <ActivityIndicator
                     size={'large'}
-                    color={black}
+                    color={'#678da2'}
                 />
                 {numToUpload ?
-                    <View style={{justifyContent: 'center'}}>
-                        <Text style={darkFontStyles.regular}>
-                            {`Uploading ${numFinished + 1}/${numToUpload}...`}
-                        </Text>
+                    <View style={styles.innerWrapper}>
+                        <View style={styles.centeredRow}>
+                            <Text style={darkFontStyles.regular}>
+                                {`Uploading ${numFinished + 1}/${numToUpload}...`}
+                            </Text>
+                        </View>
                         <Progress.Bar
                             progress={percentage}
                             width={200}
@@ -53,3 +47,21 @@ class LoadingView extends Component {
 }
 
 export default withRedux(LoadingView);
+
+const styles = StyleSheet.create({
+    centeredRow: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    innerWrapper: {
+        justifyContent: 'space-between',
+        height: '15%'
+    },
+    wrapper: {
+        marginTop: '30%',
+        justifyContent: 'space-evenly',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '50%'
+    }
+});

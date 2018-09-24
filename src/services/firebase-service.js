@@ -16,6 +16,54 @@ window.Blob = Blob;
 
 export const initializeFirebase = () => firebase.initializeApp(config);
 
+const getPayload = (image, user, downloadUrl) => {
+    let isVideo = false;
+    const {email, name} = user;
+    const height = 4;
+    const width = (image.width / image.height) * height;
+    const last3 = image.filename.substr(-3).toLowerCase();
+    if (last3 === 'mov' || last3 === 'mp4') {
+        isVideo = true;
+    }
+
+    return {
+        fileName: image.filename,
+        url: downloadUrl,
+        height,
+        width,
+        isVideo,
+        email,
+        name
+    }
+};
+
+const insertDatabaseRef = (downloadUrl, sessionId, image, actions, user) => {
+    return firebase.database().ref(`${ENV}/images`).child(sessionId).child(`${Date.now()}`).set(
+        getPayload(image, user, downloadUrl),
+        (error) => {
+        if (error) {
+            console.log('ERROR', error);
+        } else {
+            actions.incrementFinished();
+        }
+    });
+};
+
+const handleSuccess = async (uploadTask, sessionId, image, actions, user) => {
+    uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => insertDatabaseRef(downloadUrl, sessionId, image, actions, user));
+};
+
+
+const handleStateChange = (snapshot, index, actions) => {
+    if (typeof snapshot.bytesTransferred === 'number') {
+        actions.setProgress(index, snapshot.bytesTransferred);
+    }
+};
+
+const handleError = (error) => {
+    console.log('ERROR', error);
+};
+
 const getUploadUri = async (image) => {
     let path = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
 
@@ -32,39 +80,7 @@ const getUploadUri = async (image) => {
     }
 };
 
-const insertDatabaseRef = (downloadUrl, sessionId, image, actions) => {
-    const height = 4;
-    const width = (image.width / image.height) * height;
-    return firebase.database().ref(`${ENV}/images`).child(sessionId).child(`${Date.now()}`).set({
-        fileName: image.filename.replace(/[^a-zA-Z0-9]/g, ''),
-        url: downloadUrl,
-        height,
-        width
-    }, (error) => {
-        if (error) {
-            console.log('ERROR', error);
-        } else {
-            actions.incrementFinished();
-        }
-    });
-};
-
-const handleSuccess = async (uploadTask, sessionId, image, actions) => {
-    uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => insertDatabaseRef(downloadUrl, sessionId, image, actions));
-};
-
-
-const handleStateChange = (snapshot, index, actions) => {
-    if (typeof snapshot.bytesTransferred === 'number') {
-        actions.setProgress(index, snapshot.bytesTransferred);
-    }
-};
-
-const handleError = (error) => {
-    console.log('ERROR', error);
-};
-
-export const uploadImage = async (actions, image, index, sessionId) => {
+export const uploadImage = async (actions, image, index, sessionId, user) => {
     const mime = 'application/octet-stream';
     const imageRef = firebase.storage().ref(`${ENV}/images/${sessionId}`).child(`${image.filename}`);
 
@@ -77,7 +93,7 @@ export const uploadImage = async (actions, image, index, sessionId) => {
     uploadTask.on('state_changed',
         (snapshot) => handleStateChange(snapshot, index, actions),
         handleError,
-        () => handleSuccess(uploadTask, sessionId, image, actions));
+        () => handleSuccess(uploadTask, sessionId, image, actions, user));
 };
 
 export const getUsers = () => firebase.database().ref(`${ENV}/users`);

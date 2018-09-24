@@ -73,6 +73,7 @@ class Home extends React.Component {
                 <UploadButton
                     actions={actions}
                     selectedImages={selectedImages}
+                    user={user}
                 />
                 <SelectedPreview
                     selectedImages={selectedImages}

@@ -7,8 +7,7 @@ import {uploadImage} from '../services/firebase-service';
 
 export default class UploadButton extends Component {
     uploadImages = async () => {
-        const {actions, selectedImages} = this.props;
-
+        const {actions, selectedImages, user} = this.props;
         actions.setUploading(Object.keys(selectedImages).length);
 
         const sessionId = getCurrentTime();
@@ -19,23 +18,23 @@ export default class UploadButton extends Component {
                 actions,
                 image,
                 index,
-                sessionId
+                sessionId,
+                user
             );
         });
     };
 
     render() {
-        const {
-            actions,
-            selectedImages
-        } = this.props;
+        const {actions, selectedImages} = this.props;
 
         return (
             <View style={styles.centeredRow}>
                 <Touchable
                     onPress={() => {
-                        actions.setSelectedImages([]);
-                        this.uploadImages();
+                        if (Object.keys(selectedImages).length) {
+                            actions.setSelectedImages([]);
+                            this.uploadImages();
+                        }
                     }}
                 >
                     <View style={styles.buttonView}>
