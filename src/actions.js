@@ -148,11 +148,10 @@ export const setUsers = (users) => async (dispatch) => {
                     email: userMap[key].email,
                     isAdmin: userMap[key].isAdmin
                 }));
-                console.log('users', users);
 
                 dispatch(action(SET_USERS, users));
             } else {
-                dispatch(action(SET_USERS, {}));
+                dispatch(action(SET_USERS, []));
             }
         }
     );

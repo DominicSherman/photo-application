@@ -5,7 +5,7 @@ import Button from '../components/Button';
 
 export default class Login extends React.Component {
     render() {
-        const {actions, user: {email, name}} = this.props;
+        const {actions, user: {email, name}, users} = this.props;
 
         return (
             <View
@@ -35,6 +35,17 @@ export default class Login extends React.Component {
                     height={40}
                     width={80}
                 />
+                {users && !users.length ?
+                    <Button
+                        action={actions.toggleUserModal}
+                        text={'USERS'}
+                        fontSize={25}
+                        height={25}
+                        width={50}
+                    />
+                    :
+                    null
+                }
             </View>
         );
     }
@@ -46,6 +57,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'column',
         alignItems: 'center',
-        height: '60%'
+        height: '75%'
     }
 });

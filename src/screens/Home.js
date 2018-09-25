@@ -42,28 +42,39 @@ class Home extends React.Component {
             return <LoadingView/>;
         }
 
-        if (!this.props.user.loggedIn && SHOULD_AUTHENTICATE) {
+        if (userModalVisible) {
             return (
-                <Login
+                <UserModal
                     actions={actions}
-                    user={user}
+                    users={users}
+                    userModalVisible={userModalVisible}
                 />
             );
         }
 
-        return (
-            <View>
+        if (imageModalVisible) {
+            return (
                 <ImageSelectModal
                     actions={actions}
                     cameraRollRows={cameraRollRows}
                     selectedImages={selectedImages}
                     imageModalVisible={imageModalVisible}
                 />
-                <UserModal
+            );
+        }
+
+        if (!this.props.user.loggedIn && SHOULD_AUTHENTICATE) {
+            return (
+                <Login
                     actions={actions}
+                    user={user}
                     users={users}
-                    userModalVisible={userModalVisible}
                 />
+            );
+        }
+
+        return (
+            <View>
                 <View style={{height: 75}}/>
                 {
                     user.isAdmin ?

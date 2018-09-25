@@ -23,7 +23,6 @@ export default class UserModal extends React.Component {
 
     render() {
         const {actions, users, userModalVisible} = this.props;
-        console.log('users', users);
         const {email, isAdmin} = this.state;
 
         return (
@@ -71,7 +70,8 @@ export default class UserModal extends React.Component {
                             width={50}
                         />
                         <View style={styles.flatListWrapper}>
-                            <View style={styles.emailWrapper}>
+                            <Text style={[darkFontStyles.medium, {fontSize: 25}]}>{'Current Users'}</Text>
+                            <View style={styles.row}>
                                 <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'EMAIL'}</Text>
                                 <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'ADMIN'}</Text>
                             </View>
@@ -79,7 +79,7 @@ export default class UserModal extends React.Component {
                                 data={users}
                                 keyExtractor={(user) => user.email}
                                 renderItem={({item}) => (
-                                    <View style={styles.emailWrapper}>
+                                    <View style={styles.row}>
                                         <View style={{width: '90%'}}>
                                         <Text
                                             numberOfLines={1}
@@ -99,16 +99,18 @@ export default class UserModal extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    emailWrapper: {
+    row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '90%',
-        marginLeft: '5%'
+        marginLeft: '5%',
+        paddingVertical: 5
     },
     flatListWrapper: {
         paddingTop: 20,
         height: '75%',
-        width: '100%'
+        width: '100%',
+        alignItems: 'center'
     },
     header: {
         flexDirection: 'row',
