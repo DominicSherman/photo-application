@@ -5,6 +5,7 @@ import Button from '../components/Button';
 
 export default class Login extends React.Component {
     render() {
+        console.log('this.props', this.props);
         const {actions, user: {email, name}, users} = this.props;
         const showUserButton = users && !users.length;
 

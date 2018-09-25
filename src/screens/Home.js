@@ -1,77 +1,17 @@
 import React from 'react';
-import {CameraRoll, View} from 'react-native';
-import {withRedux} from '../redux-factory';
-import {numPictures} from '../constants/variables';
+import {View} from 'react-native';
 import SelectedPreview from '../components/SelectedPreview';
 import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';
-import ImageSelectModal from './ImageSelectModal';
-import {getCameraRollRows} from '../constants/helper-functions';
-import LoadingView from './LoadingView';
-import {initializeFirebase} from '../services/firebase-service';
-import Login from './Login';
-import {SHOULD_AUTHENTICATE} from '../../config';
 import Button from '../components/Button';
-import UserModal from './UserModal';
 
-class Home extends React.Component {
-    componentWillMount() {
-        initializeFirebase();
-        this.props.actions.setUsers();
-    }
-
-    componentDidMount() {
-        CameraRoll.getPhotos({
-            first: numPictures,
-            assetType: 'All',
-        }).then((r) => this.props.actions.setCameraRollRows(r));
-    }
-
+export default class Home extends React.Component {
     render() {
         const {
             actions,
-            cameraRollRows,
             selectedImages,
-            imageModalVisible,
-            user,
-            users,
-            userModalVisible
+            user
         } = this.props;
-
-        if (this.props.isUploading || (SHOULD_AUTHENTICATE && !users)) {
-            return <LoadingView/>;
-        }
-
-        if (userModalVisible) {
-            return (
-                <UserModal
-                    actions={actions}
-                    users={users}
-                    userModalVisible={userModalVisible}
-                />
-            );
-        }
-
-        if (imageModalVisible) {
-            return (
-                <ImageSelectModal
-                    actions={actions}
-                    cameraRollRows={cameraRollRows}
-                    selectedImages={selectedImages}
-                    imageModalVisible={imageModalVisible}
-                />
-            );
-        }
-
-        if (!this.props.user.loggedIn && SHOULD_AUTHENTICATE) {
-            return (
-                <Login
-                    actions={actions}
-                    user={user}
-                    users={users}
-                />
-            );
-        }
 
         return (
             <View>
@@ -101,5 +41,3 @@ class Home extends React.Component {
         );
     }
 }
-
-export default withRedux(Home);

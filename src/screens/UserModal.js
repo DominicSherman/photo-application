@@ -69,9 +69,9 @@ export default class UserModal extends React.Component {
                             height={25}
                             width={50}
                         />
-                        <View style={styles.flatListWrapper}>
+                        <View style={styles.currentUsers}>
                             <Text style={[darkFontStyles.medium, {fontSize: 25}]}>{'Current Users'}</Text>
-                            <View style={styles.row}>
+                            <View style={styles.headerRow}>
                                 <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'EMAIL'}</Text>
                                 <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'ADMIN'}</Text>
                             </View>
@@ -81,12 +81,15 @@ export default class UserModal extends React.Component {
                                 renderItem={({item}) => (
                                     <View style={styles.row}>
                                         <View style={{width: '90%'}}>
-                                        <Text
-                                            numberOfLines={1}
-                                            style={[darkFontStyles.regular, {fontSize: 15}]}
-                                        >{item.email}</Text>
+                                            <Text
+                                                numberOfLines={1}
+                                                style={[darkFontStyles.regular, {fontSize: 15}]}
+                                            >
+                                                {item.email}
+                                            </Text>
                                         </View>
-                                        <Text style={[darkFontStyles.regular, {fontSize: 15}]}>{item.isAdmin ? 'Yes' : 'No'}</Text>
+                                        <Text
+                                            style={[darkFontStyles.regular, {fontSize: 15}]}>{item.isAdmin ? 'Yes' : 'No'}</Text>
                                     </View>
                                 )}
                             />
@@ -106,7 +109,7 @@ const styles = StyleSheet.create({
         marginLeft: '5%',
         paddingVertical: 5
     },
-    flatListWrapper: {
+    currentUsers: {
         paddingTop: 20,
         height: '75%',
         width: '100%',
@@ -117,6 +120,13 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         padding: 10,
         alignContent: 'center'
+    },
+    headerRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '70%',
+        marginLeft: '20%',
+        paddingVertical: 5
     },
     switch: {
         flexDirection: 'row',

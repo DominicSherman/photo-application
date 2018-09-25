@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {Provider} from 'react-redux';
-import {createStore, applyMiddleware} from 'redux';
+import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
 
 import reducer from './reducer';
-import Home from './screens/Home';
+import App from './App';
 
 const store = createStore(reducer, applyMiddleware(thunk));
 
@@ -12,9 +12,8 @@ export default class ReduxProvider extends Component {
     render() {
         return (
             <Provider store={store}>
-                <Home/>
+                <App/>
             </Provider>
-
         );
     }
 }
