@@ -6,11 +6,10 @@ import Button from '../components/Button';
 export default class Login extends React.Component {
     render() {
         const {actions, user: {email, name}, users} = this.props;
+        const showUserButton = users && !users.length;
 
         return (
-            <View
-                style={styles.wrapperView}
-            >
+            <View style={[styles.wrapperView, {height: showUserButton ? '75%' : '60%'}]}>
                 <TextInput
                     autoCapitalize={'none'}
                     clearTextOnFocus
@@ -35,7 +34,7 @@ export default class Login extends React.Component {
                     height={40}
                     width={80}
                 />
-                {users && !users.length ?
+                {showUserButton ?
                     <Button
                         action={actions.toggleUserModal}
                         text={'USERS'}
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
         marginTop: '40%',
         justifyContent: 'space-between',
         flexDirection: 'column',
-        alignItems: 'center',
-        height: '75%'
+        alignItems: 'center'
     }
 });
