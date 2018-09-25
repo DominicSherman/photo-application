@@ -1,4 +1,5 @@
-export const SET_MODAL_VISIBLE = 'SET_MODAL_VISIBLE';
+export const SET_IMAGE_MODAL_VISIBLE = 'SET_IMAGE_MODAL_VISIBLE';
+export const SET_USER_MODAL_VISIBLE = 'SET_USER_MODAL_VISIBLE';
 export const ADD_CAMERA_ROLL_ROW = 'ADD_CAMERA_ROLL_ROW';
 export const SET_SELECTED_IMAGES = 'SET_SELECTED_IMAGES';
 export const SET_NUM_FINISHED = 'SET_NUM_FINISHED';
@@ -10,3 +11,4 @@ export const SET_EMAIL = 'SET_EMAIL';
 export const SET_NAME = 'SET_NAME';
 export const SET_LOGGED_IN = 'SET_LOGGED_IN';
 export const SET_USERS = 'SET_USERS';
+export const SET_ADMIN = 'SET_ADMIN';

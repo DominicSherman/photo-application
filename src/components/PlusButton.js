@@ -5,12 +5,12 @@ import Entypo from 'react-native-vector-icons/Entypo';
 
 export default class PlusButton extends Component {
     render() {
-        const {toggleModal} = this.props;
+        const {toggleImageModal} = this.props;
 
         return (
             <View style={styles.centeredRow}>
                 <Touchable
-                    onPress={toggleModal}
+                    onPress={toggleImageModal}
                 >
                     <Entypo
                         size={60}

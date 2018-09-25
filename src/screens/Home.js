@@ -8,9 +8,11 @@ import UploadButton from '../components/UploadButton';
 import ImageSelectModal from './ImageSelectModal';
 import {getCameraRollRows} from '../constants/helper-functions';
 import LoadingView from './LoadingView';
-import {getUsers, initializeFirebase} from '../services/firebase-service';
+import {addUser, getUsers, initializeFirebase} from '../services/firebase-service';
 import Login from './Login';
 import {SHOULD_AUTHENTICATE} from '../../config';
+import Button from '../components/Button';
+import AddUserModal from './AddUserModal';
 
 class Home extends React.Component {
     async componentWillMount() {
@@ -20,9 +22,12 @@ class Home extends React.Component {
             (snapshot) => {
                 const users = snapshot.val();
                 if (users) {
-                    const userEmails = Object.keys(users).map((key) => users[key].email.toLowerCase());
+                    const userObjects = Object.keys(users).map((key) => ({
+                        email: users[key].email,
+                        isAdmin: users[key].isAdmin
+                    }));
 
-                    this.props.actions.setUsers(userEmails);
+                    this.props.actions.setUsers(userObjects);
                 } else {
                     this.props.actions.setUsers({});
                 }
@@ -42,9 +47,10 @@ class Home extends React.Component {
             actions,
             cameraRollRows,
             selectedImages,
-            modalVisible,
+            imageModalVisible,
             user,
-            users
+            users,
+            userModalVisible
         } = this.props;
 
         if (this.props.isUploading || (SHOULD_AUTHENTICATE && !users)) {
@@ -66,10 +72,26 @@ class Home extends React.Component {
                     actions={actions}
                     cameraRollRows={cameraRollRows}
                     selectedImages={selectedImages}
-                    modalVisible={modalVisible}
+                    imageModalVisible={imageModalVisible}
+                />
+                <AddUserModal
+                    actions={actions}
+                    userModalVisible={userModalVisible}
                 />
                 <View style={{height: 75}}/>
-                <PlusButton toggleModal={actions.toggleModal}/>
+                {
+                    user.isAdmin ?
+                        <Button
+                            action={actions.toggleUserModal}
+                            text={'ADD USER'}
+                            fontSize={25}
+                            height={25}
+                            width={50}
+                        />
+                        :
+                        null
+                }
+                <PlusButton toggleImageModal={actions.toggleImageModal}/>
                 <UploadButton
                     actions={actions}
                     selectedImages={selectedImages}

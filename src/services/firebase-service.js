@@ -98,9 +98,10 @@ export const uploadImage = async (actions, image, index, sessionId, user) => {
 
 export const getUsers = () => firebase.database().ref(`${ENV}/users`);
 
-export const addUser = (email) =>
+export const addUser = (email, isAdmin) =>
     firebase.database().ref(`${ENV}/users`).child(`${email.replace(/[^a-zA-Z0-9]/g, '')}`).set({
-        email
+        email,
+        isAdmin
     }, (error) => {
         if (error) {
             console.log('ERROR', error);

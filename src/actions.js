@@ -3,14 +3,14 @@ import {
     SET_EMAIL,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
-    SET_MODAL_VISIBLE,
+    SET_IMAGE_MODAL_VISIBLE,
     SET_NAME,
     SET_NUM_FINISHED,
     SET_NUM_TO_UPLOAD,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
     SET_TOTALS,
-    SET_USERS
+    SET_USERS, SET_USER_MODAL_VISIBLE, SET_ADMIN
 } from './constants/action-types';
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
@@ -122,9 +122,14 @@ export const toggleSelected = (item) => (dispatch, getState) => {
     }
 };
 
-export const toggleModal = () => (dispatch, getState) => {
-    const {modalVisible} = getState();
-    dispatch(action(SET_MODAL_VISIBLE, !modalVisible));
+export const toggleImageModal = () => (dispatch, getState) => {
+    const {imageModalVisible} = getState();
+    dispatch(action(SET_IMAGE_MODAL_VISIBLE, !imageModalVisible));
+};
+
+export const toggleUserModal = () => (dispatch, getState) => {
+    const {userModalVisible} = getState();
+    dispatch(action(SET_USER_MODAL_VISIBLE, !userModalVisible));
 };
 
 export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, email));
@@ -135,8 +140,13 @@ export const setUsers = (users) => (dispatch) => dispatch(action(SET_USERS, user
 
 export const login = () => async (dispatch, getState) => {
     const {user: {email}, users} = getState();
+    const authUser = users.filter((user) => user.email === email);
+    console.log('authUser', authUser);
+    if (authUser.length) {
+        if (authUser[0].isAdmin) {
+            dispatch(action(SET_ADMIN, true));
+        }
 
-    if (users.includes(email.toLowerCase())) {
         dispatch(action(SET_LOGGED_IN, true));
     } else {
         console.log('INVALID EMAIL');

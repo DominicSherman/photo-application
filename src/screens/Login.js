@@ -1,9 +1,7 @@
 import React from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {lightFontStyles} from '../constants/font-styles';
-import {addUser} from '../services/firebase-service';
-import LoginButton from '../components/LoginButton';
-import AddUserButton from '../components/AddUserButton';
+import Button from '../components/Button';
 
 export default class Login extends React.Component {
     render() {
@@ -18,7 +16,7 @@ export default class Login extends React.Component {
                     clearTextOnFocus
                     numberOfLines={2}
                     style={[lightFontStyles.light, {fontSize: 25}]}
-                    onChangeText={(email) => actions.setEmail(email)}
+                    onChangeText={(email) => actions.setEmail(email.toLowerCase())}
                     placeholder={'Email'}
                     value={email}
                 />
@@ -30,13 +28,12 @@ export default class Login extends React.Component {
                     placeholder={'Name'}
                     value={name}
                 />
-                <LoginButton
-                    login={actions.login}
+                <Button
+                    action={actions.login}
                     text={'LOGIN'}
-                />
-                <AddUserButton
-                    addUser={() => addUser(email)}
-                    text={'ADD USER'}
+                    fontSize={30}
+                    height={40}
+                    width={80}
                 />
             </View>
         );
@@ -49,6 +46,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'column',
         alignItems: 'center',
-        height: '80%'
+        height: '60%'
     }
 });

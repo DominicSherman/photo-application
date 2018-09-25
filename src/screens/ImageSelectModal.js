@@ -11,20 +11,20 @@ export default class ImageSelectModal extends Component {
             actions,
             cameraRollRows,
             selectedImages,
-            modalVisible
+            imageModalVisible
         } = this.props;
 
         return (
             <Modal
                 animationType={'slide'}
                 transparent={false}
-                visible={modalVisible}
+                visible={imageModalVisible}
             >
                 <SafeAreaView>
                     <View style={styles.header}>
                         <Touchable
                             onPress={() => {
-                                actions.toggleModal();
+                                actions.toggleImageModal();
                                 actions.setSelectedImages([]);
                             }}
                         >
@@ -34,7 +34,7 @@ export default class ImageSelectModal extends Component {
                             />
                         </Touchable>
                         <Text
-                            onPress={actions.toggleModal}
+                            onPress={actions.toggleImageModal}
                             style={[
                                 darkFontStyles.regular,
                                 {color: 'blue'}

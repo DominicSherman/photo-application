@@ -3,18 +3,19 @@ import {
     SET_EMAIL,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
-    SET_MODAL_VISIBLE,
+    SET_IMAGE_MODAL_VISIBLE,
     SET_NAME,
     SET_NUM_FINISHED,
     SET_NUM_TO_UPLOAD,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
     SET_TOTALS,
-    SET_USERS
+    SET_USERS, SET_USER_MODAL_VISIBLE, SET_ADMIN
 } from './constants/action-types';
 
 const defaultState = {
-    modalVisible: false,
+    imageModalVisible: false,
+    userModalVisible: false,
     cameraRollRows: [],
     selectedImages: {},
     numToUpload: 0,
@@ -25,14 +26,20 @@ const defaultState = {
     user: {
         email: 'Email',
         name: 'Name',
-        loggedIn: false
+        loggedIn: false,
+        isAdmin: false
     },
     users: null
 };
 
-const setModalVisible = (state, modalVisible) => ({
+const setImageModalVisible = (state, imageModalVisible) => ({
     ...state,
-    modalVisible
+    imageModalVisible
+});
+
+const setUserModalVisible = (state, userModalVisible) => ({
+    ...state,
+    userModalVisible
 });
 
 const addCameraRollRow = (state, row) => ({
@@ -94,6 +101,14 @@ const setUserLoggedIn = (state, loggedIn) => ({
     }
 });
 
+const setAdmin = (state, isAdmin) => ({
+    ...state,
+    user: {
+        ...state.user,
+        isAdmin
+    }
+});
+
 const setUsers = (state, users) => ({
     ...state,
     users
@@ -101,7 +116,8 @@ const setUsers = (state, users) => ({
 
 const reducerMap = {
     [ADD_CAMERA_ROLL_ROW]: addCameraRollRow,
-    [SET_MODAL_VISIBLE]: setModalVisible,
+    [SET_IMAGE_MODAL_VISIBLE]: setImageModalVisible,
+    [SET_USER_MODAL_VISIBLE]: setUserModalVisible,
     [SET_SELECTED_IMAGES]: setSelectedImages,
     [SET_NUM_TO_UPLOAD]: setNumToUpload,
     [SET_NUM_FINISHED]: setNumFinished,
@@ -111,7 +127,8 @@ const reducerMap = {
     [SET_EMAIL]: setUserEmail,
     [SET_NAME]: setUserName,
     [SET_LOGGED_IN]: setUserLoggedIn,
-    [SET_USERS]: setUsers
+    [SET_USERS]: setUsers,
+    [SET_ADMIN]: setAdmin
 };
 
 export default (state = defaultState, {type, data}) => {
