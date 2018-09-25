@@ -8,31 +8,16 @@ import UploadButton from '../components/UploadButton';
 import ImageSelectModal from './ImageSelectModal';
 import {getCameraRollRows} from '../constants/helper-functions';
 import LoadingView from './LoadingView';
-import {addUser, getUsers, initializeFirebase} from '../services/firebase-service';
+import {initializeFirebase} from '../services/firebase-service';
 import Login from './Login';
 import {SHOULD_AUTHENTICATE} from '../../config';
 import Button from '../components/Button';
-import AddUserModal from './AddUserModal';
+import UserModal from './UserModal';
 
 class Home extends React.Component {
-    async componentWillMount() {
+    componentWillMount() {
         initializeFirebase();
-
-        await getUsers().on('value',
-            (snapshot) => {
-                const users = snapshot.val();
-                if (users) {
-                    const userObjects = Object.keys(users).map((key) => ({
-                        email: users[key].email,
-                        isAdmin: users[key].isAdmin
-                    }));
-
-                    this.props.actions.setUsers(userObjects);
-                } else {
-                    this.props.actions.setUsers({});
-                }
-            }
-        );
+        this.props.actions.setUsers();
     }
 
     componentDidMount() {
@@ -74,8 +59,9 @@ class Home extends React.Component {
                     selectedImages={selectedImages}
                     imageModalVisible={imageModalVisible}
                 />
-                <AddUserModal
+                <UserModal
                     actions={actions}
+                    users={users}
                     userModalVisible={userModalVisible}
                 />
                 <View style={{height: 75}}/>
@@ -83,7 +69,7 @@ class Home extends React.Component {
                     user.isAdmin ?
                         <Button
                             action={actions.toggleUserModal}
-                            text={'ADD USER'}
+                            text={'USERS'}
                             fontSize={25}
                             height={25}
                             width={50}

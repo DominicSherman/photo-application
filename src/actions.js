@@ -15,6 +15,7 @@ import {
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
 import {clean} from './constants/helper-functions';
+import {getUsers} from './services/firebase-service';
 
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
@@ -137,7 +138,25 @@ export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, emai
 
 export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
 
-export const setUsers = (users) => (dispatch) => dispatch(action(SET_USERS, users));
+export const setUsers = (users) => async (dispatch) => {
+    await getUsers().on('value',
+        (snapshot) => {
+            const userMap = snapshot.val();
+
+            if (userMap) {
+                const users = Object.keys(userMap).map((key) => ({
+                    email: userMap[key].email,
+                    isAdmin: userMap[key].isAdmin
+                }));
+                console.log('users', users);
+
+                dispatch(action(SET_USERS, users));
+            } else {
+                dispatch(action(SET_USERS, {}));
+            }
+        }
+    );
+};
 
 export const login = () => async (dispatch, getState) => {
     const {user: {email}, users} = getState();

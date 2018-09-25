@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, SafeAreaView, StyleSheet, Switch, Text, TextInput, View} from 'react-native';
+import {FlatList, Modal, SafeAreaView, StyleSheet, Switch, Text, TextInput, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable'
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
@@ -7,7 +7,7 @@ import {darkFontStyles, lightFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
 import {addUser} from '../services/firebase-service';
 
-export default class AddUserModal extends React.Component {
+export default class UserModal extends React.Component {
     constructor(props) {
         super(props);
 
@@ -22,9 +22,9 @@ export default class AddUserModal extends React.Component {
     resetState = () => this.setState(this.initalState);
 
     render() {
-        const {actions, userModalVisible} = this.props;
+        const {actions, users, userModalVisible} = this.props;
+        console.log('users', users);
         const {email, isAdmin} = this.state;
-        console.log('this.state', this.state);
 
         return (
             <Modal
@@ -70,6 +70,27 @@ export default class AddUserModal extends React.Component {
                             height={25}
                             width={50}
                         />
+                        <View style={styles.flatListWrapper}>
+                            <View style={styles.emailWrapper}>
+                                <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'EMAIL'}</Text>
+                                <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'ADMIN'}</Text>
+                            </View>
+                            <FlatList
+                                data={users}
+                                keyExtractor={(user) => user.email}
+                                renderItem={({item}) => (
+                                    <View style={styles.emailWrapper}>
+                                        <View style={{width: '90%'}}>
+                                        <Text
+                                            numberOfLines={1}
+                                            style={[darkFontStyles.regular, {fontSize: 15}]}
+                                        >{item.email}</Text>
+                                        </View>
+                                        <Text style={[darkFontStyles.regular, {fontSize: 15}]}>{item.isAdmin ? 'Yes' : 'No'}</Text>
+                                    </View>
+                                )}
+                            />
+                        </View>
                     </View>
                 </SafeAreaView>
             </Modal>
@@ -78,6 +99,17 @@ export default class AddUserModal extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    emailWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '90%',
+        marginLeft: '5%'
+    },
+    flatListWrapper: {
+        paddingTop: 20,
+        height: '75%',
+        width: '100%'
+    },
     header: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
@@ -90,10 +122,10 @@ const styles = StyleSheet.create({
         width: '40%'
     },
     wrapperView: {
-        marginTop: '40%',
+        marginTop: '20%',
         justifyContent: 'space-between',
         flexDirection: 'column',
         alignItems: 'center',
-        height: '50%'
+        height: '100%'
     }
 });
