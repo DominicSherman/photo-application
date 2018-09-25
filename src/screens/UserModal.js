@@ -71,7 +71,7 @@ export default class UserModal extends React.Component {
                         />
                         <View style={styles.currentUsers}>
                             <Text style={[darkFontStyles.medium, {fontSize: 25}]}>{'Current Users'}</Text>
-                            <View style={styles.headerRow}>
+                            <View style={styles.row}>
                                 <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'EMAIL'}</Text>
                                 <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'ADMIN'}</Text>
                             </View>
@@ -80,14 +80,12 @@ export default class UserModal extends React.Component {
                                 keyExtractor={(user) => user.email}
                                 renderItem={({item}) => (
                                     <View style={styles.row}>
-                                        <View style={{width: '90%'}}>
-                                            <Text
-                                                numberOfLines={1}
-                                                style={[darkFontStyles.regular, {fontSize: 15}]}
-                                            >
-                                                {item.email}
-                                            </Text>
-                                        </View>
+                                        <Text
+                                            numberOfLines={1}
+                                            style={[darkFontStyles.regular, {fontSize: 15, width: '90%'}]}
+                                        >
+                                            {item.email}
+                                        </Text>
                                         <Text
                                             style={[darkFontStyles.regular, {fontSize: 15}]}>{item.isAdmin ? 'Yes' : 'No'}</Text>
                                     </View>
@@ -120,13 +118,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         padding: 10,
         alignContent: 'center'
-    },
-    headerRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '70%',
-        marginLeft: '20%',
-        paddingVertical: 5
     },
     switch: {
         flexDirection: 'row',

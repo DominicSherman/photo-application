@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {withRedux} from './redux-factory';
 import {numPictures} from './constants/variables';
 import {initializeFirebase} from './services/firebase-service';
@@ -10,7 +10,7 @@ import LoadingView from './screens/LoadingView';
 import UserModal from './screens/UserModal';
 import ImageSelectModal from './screens/ImageSelectModal';
 
-class App extends Component {
+class App extends React.Component {
     componentWillMount() {
         initializeFirebase();
         this.props.actions.setUsers();
@@ -68,7 +68,6 @@ class App extends Component {
                 />
             );
         }
-
 
         return (
             <Home
