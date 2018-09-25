@@ -14,6 +14,7 @@ import {
 } from './constants/action-types';
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
+import {clean} from './constants/helper-functions';
 
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
@@ -140,8 +141,8 @@ export const setUsers = (users) => (dispatch) => dispatch(action(SET_USERS, user
 
 export const login = () => async (dispatch, getState) => {
     const {user: {email}, users} = getState();
-    const authUser = users.filter((user) => user.email === email);
-    console.log('authUser', authUser);
+    const authUser = users.filter((user) => clean(user.email) === clean(email));
+
     if (authUser.length) {
         if (authUser[0].isAdmin) {
             dispatch(action(SET_ADMIN, true));

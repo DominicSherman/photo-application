@@ -6,6 +6,7 @@ import 'firebase/storage';
 import RNHeicConverter from 'react-native-heic-converter';
 
 import {config, ENV} from '../../config';
+import {clean} from '../constants/helper-functions';
 
 let Blob, fs;
 
@@ -99,7 +100,7 @@ export const uploadImage = async (actions, image, index, sessionId, user) => {
 export const getUsers = () => firebase.database().ref(`${ENV}/users`);
 
 export const addUser = (email, isAdmin) =>
-    firebase.database().ref(`${ENV}/users`).child(`${email.replace(/[^a-zA-Z0-9]/g, '')}`).set({
+    firebase.database().ref(`${ENV}/users`).child(`${clean(email)}`).set({
         email,
         isAdmin
     }, (error) => {

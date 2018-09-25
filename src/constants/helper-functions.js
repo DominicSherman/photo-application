@@ -12,3 +12,5 @@ export const getTimeForDisplay = (duration) => {
 
     return `${min}:${sec}`;
 };
+
+export const clean = (string) => string.replace(/[^a-zA-Z0-9]/g, '');
