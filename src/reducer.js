@@ -24,7 +24,7 @@ const defaultState = {
     progresses: {},
     totals: {},
     user: {
-        email: 'Email',
+        email: '',
         name: '',
         loggedIn: false,
         isAdmin: false
