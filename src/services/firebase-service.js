@@ -39,7 +39,7 @@ const getPayload = (image, user, downloadUrl) => {
 };
 
 const insertDatabaseRef = (downloadUrl, sessionId, image, actions, user) => {
-    return firebase.database().ref(`${ENV}/images`).child(sessionId).child(`${Date.now()}`).set(
+    return firebase.database().ref(`${ENV}/media`).child(sessionId).child(`${Date.now()}`).set(
         getPayload(image, user, downloadUrl),
         (error) => {
         if (error) {
@@ -83,7 +83,7 @@ const getUploadUri = async (image) => {
 
 export const uploadImage = async (actions, image, index, sessionId, user) => {
     const mime = 'application/octet-stream';
-    const imageRef = firebase.storage().ref(`${ENV}/images/${sessionId}`).child(`${image.filename}`);
+    const imageRef = firebase.storage().ref(`${ENV}/${sessionId}`).child(`${image.filename}`);
 
     const uploadUri = await getUploadUri(image);
     const blob = await fs.readFile(uploadUri, 'base64').then((data) => {

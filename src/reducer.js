@@ -25,7 +25,7 @@ const defaultState = {
     totals: {},
     user: {
         email: 'Email',
-        name: 'Name',
+        name: '',
         loggedIn: false,
         isAdmin: false
     },
