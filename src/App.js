@@ -9,9 +9,11 @@ import Login from './screens/Login';
 import LoadingView from './screens/LoadingView';
 import UserModal from './screens/UserModal';
 import ImageSelectModal from './screens/ImageSelectModal';
+import {tryToLoadCredentials} from './services/async-storage-service';
 
 class App extends React.Component {
     componentWillMount() {
+        tryToLoadCredentials(this.props.actions);
         initializeFirebase();
         this.props.actions.setUsers();
     }
@@ -34,7 +36,7 @@ class App extends React.Component {
             userModalVisible
         } = this.props;
 
-        if (this.props.isUploading || (SHOULD_AUTHENTICATE && !users)) {
+        if (this.props.isUploading || (SHOULD_AUTHENTICATE && !user.loggedIn && !users)) {
             return <LoadingView/>;
         }
 

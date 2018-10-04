@@ -1,20 +1,23 @@
 import {
     ADD_CAMERA_ROLL_ROW,
+    SET_ADMIN,
     SET_EMAIL,
+    SET_IMAGE_MODAL_VISIBLE,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
-    SET_IMAGE_MODAL_VISIBLE,
     SET_NAME,
     SET_NUM_FINISHED,
     SET_NUM_TO_UPLOAD,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
     SET_TOTALS,
-    SET_USERS, SET_USER_MODAL_VISIBLE, SET_ADMIN
+    SET_USER_MODAL_VISIBLE,
+    SET_USERS
 } from './constants/action-types';
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
 import {clean} from './constants/helper-functions';
+import {removeCredentials, storeCredentials} from './services/async-storage-service';
 import {getUsers} from './services/firebase-service';
 
 export const setCameraRollRows = (r) => (dispatch) => {
@@ -36,9 +39,9 @@ export const setCameraRollRows = (r) => (dispatch) => {
 export const incrementFinished = () => (dispatch, getState) => {
     const {numFinished, numToUpload} = getState();
 
-    dispatch(action(SET_NUM_FINISHED, numFinished+1));
+    dispatch(action(SET_NUM_FINISHED, numFinished + 1));
 
-    if (numFinished+1 === numToUpload) {
+    if (numFinished + 1 === numToUpload) {
         dispatch(action(SET_IS_UPLOADING, false));
         dispatch(action(SET_NUM_TO_UPLOAD, 0));
         dispatch(action(SET_NUM_FINISHED, 0));
@@ -134,10 +137,6 @@ export const toggleUserModal = () => (dispatch, getState) => {
     dispatch(action(SET_USER_MODAL_VISIBLE, !userModalVisible));
 };
 
-export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, email));
-
-export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
-
 export const setUsers = (users) => async (dispatch) => {
     await getUsers().on('value',
         (snapshot) => {
@@ -157,17 +156,10 @@ export const setUsers = (users) => async (dispatch) => {
     );
 };
 
-export const login = () => async (dispatch, getState) => {
-    const {user: {email}, users} = getState();
-    const authUser = users.filter((user) => clean(user.email) === clean(email));
+export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, email));
 
-    if (authUser.length) {
-        if (authUser[0].isAdmin) {
-            dispatch(action(SET_ADMIN, true));
-        }
+export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
 
-        dispatch(action(SET_LOGGED_IN, true));
-    } else {
-        console.log('INVALID EMAIL');
-    }
-};
+export const setIsAdmin = (isAdmin) => (dispatch) => dispatch(action(SET_ADMIN, isAdmin));
+
+export const setLoggedIn = (isLoggedIn) => (dispatch) => dispatch(action(SET_LOGGED_IN, isLoggedIn));

@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     scrollView: {
-        marginTop: '10%',
-        height: '45%'
+        marginTop: '3%',
+        height: '85%'
     },
     textView: {
         flexDirection: 'row',

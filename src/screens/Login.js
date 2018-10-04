@@ -2,10 +2,11 @@ import React from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {lightFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
+import {login} from '../constants/helper-functions';
 
 export default class Login extends React.Component {
     render() {
-        const {actions, user: {email, name}, users} = this.props;
+        const {actions, user, users} = this.props;
         const showUserButton = users && !users.length;
 
         return (
@@ -17,7 +18,7 @@ export default class Login extends React.Component {
                     style={[lightFontStyles.light, {fontSize: 25}]}
                     onChangeText={(email) => actions.setEmail(email.toLowerCase())}
                     placeholder={'Email'}
-                    value={email}
+                    value={user.email}
                 />
                 <TextInput
                     autoCapitalize={'words'}
@@ -25,10 +26,10 @@ export default class Login extends React.Component {
                     style={[lightFontStyles.light, {fontSize: 25}]}
                     onChangeText={(name) => actions.setName(name)}
                     placeholder={'Name'}
-                    value={name}
+                    value={user.name}
                 />
                 <Button
-                    action={actions.login}
+                    action={() => login(actions, user, users)}
                     text={'LOGIN'}
                     fontSize={30}
                     height={40}

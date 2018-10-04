@@ -1,9 +1,11 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import SelectedPreview from '../components/SelectedPreview';
 import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';
 import Button from '../components/Button';
+import {lightFontStyles} from '../constants/font-styles';
+import {logout} from '../constants/helper-functions';
 
 export default class Home extends React.Component {
     render() {
@@ -15,7 +17,19 @@ export default class Home extends React.Component {
 
         return (
             <View>
-                <View style={{height: 75}}/>
+                <View style={{
+                    height: 80,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                <Text style={[
+                    lightFontStyles.light,
+                    {
+                        fontSize: 15
+                    }]}>
+                    {`${user.name} - ${user.email}`}
+                    </Text>
+                </View>
                 {
                     user.isAdmin ?
                         <Button
@@ -34,8 +48,17 @@ export default class Home extends React.Component {
                     selectedImages={selectedImages}
                     user={user}
                 />
+                <View style={{height: '37%'}}>
                 <SelectedPreview
                     selectedImages={selectedImages}
+                />
+                </View>
+                <Button
+                    action={() => logout(actions)}
+                    text={'LOGOUT'}
+                    fontSize={15}
+                    height={20}
+                    width={40}
                 />
             </View>
         );
