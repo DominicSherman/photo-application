@@ -1,7 +1,6 @@
 import React from 'react';
 import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
-import {CameraRoll} from 'react-native';
 
 import Home from '../src/screens/Home';
 import {withRedux} from '../src/redux-factory';

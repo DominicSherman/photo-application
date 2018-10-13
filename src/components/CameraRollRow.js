@@ -2,14 +2,15 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import Entypo from 'react-native-vector-icons/Entypo';
+
 import TouchableImage from './TouchableImage';
 
 export default class CameraRollRow extends Component {
     render() {
         const {
             actions,
-            selectedImages,
-            images
+            images,
+            selectedImages
         } = this.props;
 
         let isSelected = true;
@@ -23,9 +24,9 @@ export default class CameraRollRow extends Component {
                             onPress={() => actions.setSelectedRow(images, true)}
                         >
                             <Entypo
-                                size={20}
                                 color={'green'}
                                 name={'circle-with-plus'}
+                                size={20}
                             />
                         </Touchable>
                         :
@@ -33,9 +34,9 @@ export default class CameraRollRow extends Component {
                             onPress={() => actions.setSelectedRow(images, false)}
                         >
                             <Entypo
-                                size={20}
                                 color={'red'}
                                 name={'circle-with-minus'}
+                                size={20}
                             />
                         </Touchable>
                     }
