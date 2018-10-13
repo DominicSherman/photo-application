@@ -2,22 +2,44 @@
   "name": "photo-application",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "babel-preset-react-native-stage-0": "^1.0.1",
-    "jest": "^23.5.0",
-    "jest-react-native": "^18.0.0",
-    "react-test-renderer": "16.3.1"
-  },
   "scripts": {
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "test": "jest"
+    "coverage": "jest --coverage",
+    "lint": "eslint . --ext .json --ext .js",
+    "test": "yarn lint && yarn coverage",
+    "unit": "jest"
   },
   "jest": {
-    "preset": "react-native"
+    "coverageDirectory": ".coverage",
+    "collectCoverageFrom": [
+      "<rootDir>/src/*/**/*.js",
+      "<rootDir>/index.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-router-native)/"
+    ],
+    "moduleNameMapper": {
+      "^react-native-firebase": "<rootDir>/test/mocks/react-native-firebase-stub.js"
+    },
+    "testMatch": [
+      "<rootDir>/test/**/*.test.js"
+    ]
   },
   "dependencies": {
+    "chance": "^1.0.16",
+    "eslint": "4.19.1",
+    "eslint-config-get-off-my-lawn": "^4.0.1",
     "firebase": "^5.5.0",
     "firebase-tools": "^4.2.1",
     "react": "16.3.1",
@@ -33,5 +55,11 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {
+    "babel-preset-react-native-stage-0": "^1.0.1",
+    "jest": "^23.5.0",
+    "jest-react-native": "^18.0.0",
+    "react-test-renderer": "16.3.1"
   }
 }
