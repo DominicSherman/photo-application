@@ -12,7 +12,7 @@ export const withRedux = (BaseComponent) => class ReduxComponent extends Compone
     render() {
         const ConnectedComponent = connect(mapStateToProps, mapDispatchToProps)(BaseComponent);
 
-        return(
+        return (
             <ConnectedComponent/>
         );
     }

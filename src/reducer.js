@@ -14,21 +14,22 @@ import {
 } from './constants/action-types';
 
 const defaultState = {
-    imageModalVisible: false,
-    userModalVisible: false,
     cameraRollRows: [],
-    selectedImages: {},
-    numToUpload: 0,
-    numFinished: 0,
+    imageModalVisible: false,
     isUploading: false,
+    numFinished: 0,
+    numToUpload: 0,
     progresses: {},
+    selectedImages: {},
+    shouldAuthenticate: true,
     totals: {},
     user: {
         email: '',
-        name: '',
+        isAdmin: false,
         loggedIn: false,
-        isAdmin: false
+        name: ''
     },
+    userModalVisible: false,
     users: null
 };
 
@@ -116,19 +117,19 @@ const setUsers = (state, users) => ({
 
 const reducerMap = {
     [ADD_CAMERA_ROLL_ROW]: addCameraRollRow,
-    [SET_IMAGE_MODAL_VISIBLE]: setImageModalVisible,
-    [SET_USER_MODAL_VISIBLE]: setUserModalVisible,
-    [SET_SELECTED_IMAGES]: setSelectedImages,
-    [SET_NUM_TO_UPLOAD]: setNumToUpload,
-    [SET_NUM_FINISHED]: setNumFinished,
-    [SET_IS_UPLOADING]: setIsUploading,
-    [SET_PROGRESSES]: setProgresses,
-    [SET_TOTALS]: setTotals,
+    [SET_ADMIN]: setAdmin,
     [SET_EMAIL]: setUserEmail,
-    [SET_NAME]: setUserName,
+    [SET_IMAGE_MODAL_VISIBLE]: setImageModalVisible,
+    [SET_IS_UPLOADING]: setIsUploading,
     [SET_LOGGED_IN]: setUserLoggedIn,
-    [SET_USERS]: setUsers,
-    [SET_ADMIN]: setAdmin
+    [SET_NAME]: setUserName,
+    [SET_NUM_FINISHED]: setNumFinished,
+    [SET_NUM_TO_UPLOAD]: setNumToUpload,
+    [SET_PROGRESSES]: setProgresses,
+    [SET_SELECTED_IMAGES]: setSelectedImages,
+    [SET_TOTALS]: setTotals,
+    [SET_USER_MODAL_VISIBLE]: setUserModalVisible,
+    [SET_USERS]: setUsers
 };
 
 export default (state = defaultState, {type, data}) => {

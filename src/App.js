@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {Component} from 'react';
+import {CameraRoll} from 'react-native';
+
 import {withRedux} from './redux-factory';
 import {numPictures} from './constants/variables';
 import {initializeFirebase} from './services/firebase-service';
-import {CameraRoll} from 'react-native';
-import {SHOULD_AUTHENTICATE} from '../config';
 import Home from './screens/Home';
 import Login from './screens/Login';
 import LoadingView from './screens/LoadingView';
@@ -11,7 +11,7 @@ import UserModal from './screens/UserModal';
 import ImageSelectModal from './screens/ImageSelectModal';
 import {tryToLoadCredentials} from './services/async-storage-service';
 
-class App extends React.Component {
+class App extends Component {
     componentWillMount() {
         tryToLoadCredentials(this.props.actions);
         initializeFirebase();
@@ -20,32 +20,37 @@ class App extends React.Component {
 
     componentDidMount() {
         CameraRoll.getPhotos({
-            first: numPictures,
             assetType: 'All',
+            first: numPictures
         }).then((r) => this.props.actions.setCameraRollRows(r));
     }
 
+    /* eslint-disable complexity */
     render() {
         const {
             actions,
             cameraRollRows,
-            selectedImages,
             imageModalVisible,
+            isUploading,
+            selectedImages,
+            shouldAuthenticate,
             user,
-            users,
-            userModalVisible
+            userModalVisible,
+            users
         } = this.props;
 
-        if (this.props.isUploading || (SHOULD_AUTHENTICATE && !user.loggedIn && !users)) {
-            return <LoadingView/>;
+        if (isUploading || !user.loggedIn && !users && shouldAuthenticate) {
+            return (
+                <LoadingView {...this.props} />
+            );
         }
 
         if (userModalVisible) {
             return (
                 <UserModal
                     actions={actions}
-                    users={users}
                     userModalVisible={userModalVisible}
+                    users={users}
                 />
             );
         }
@@ -55,13 +60,13 @@ class App extends React.Component {
                 <ImageSelectModal
                     actions={actions}
                     cameraRollRows={cameraRollRows}
-                    selectedImages={selectedImages}
                     imageModalVisible={imageModalVisible}
+                    selectedImages={selectedImages}
                 />
             );
         }
 
-        if (!this.props.user.loggedIn && SHOULD_AUTHENTICATE) {
+        if (!this.props.user.loggedIn && shouldAuthenticate) {
             return (
                 <Login
                     actions={actions}
@@ -79,6 +84,7 @@ class App extends React.Component {
             />
         );
     }
+    /* eslint-enable complexity */
 }
 
 export default withRedux(App);

@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
+
 import SelectedPreview from '../components/SelectedPreview';
 import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';
@@ -17,47 +18,51 @@ export default class Home extends React.Component {
 
         return (
             <View>
-                <View style={{
-                    height: 80,
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}>
-                <Text style={[
-                    lightFontStyles.light,
-                    {
-                        fontSize: 15
-                    }]}>
-                    {`${user.name} - ${user.email}`}
+                <View
+                    style={{
+                        alignItems: 'center',
+                        height: 80,
+                        justifyContent: 'center'
+                    }}
+                >
+                    <Text
+                        style={[
+                            lightFontStyles.light,
+                            {
+                                fontSize: 15
+                            }]}
+                    >
+                        {`${user.name} - ${user.email}`}
                     </Text>
                 </View>
                 {
                     user.isAdmin ?
                         <Button
                             action={actions.toggleUserModal}
-                            text={'USERS'}
                             fontSize={25}
                             height={25}
+                            text={'USERS'}
                             width={50}
                         />
                         :
                         null
                 }
-                <PlusButton toggleImageModal={actions.toggleImageModal}/>
+                <PlusButton toggleImageModal={actions.toggleImageModal} />
                 <UploadButton
                     actions={actions}
                     selectedImages={selectedImages}
                     user={user}
                 />
                 <View style={{height: '37%'}}>
-                <SelectedPreview
-                    selectedImages={selectedImages}
-                />
+                    <SelectedPreview
+                        selectedImages={selectedImages}
+                    />
                 </View>
                 <Button
                     action={() => logout(actions)}
-                    text={'LOGOUT'}
                     fontSize={15}
                     height={20}
+                    text={'LOGOUT'}
                     width={40}
                 />
             </View>

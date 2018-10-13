@@ -14,7 +14,8 @@
   "jest": {
     "coverageDirectory": ".coverage",
     "collectCoverageFrom": [
-      "<rootDir>/src/*/**/*.js",
+      "<rootDir>/src/*/*.js",
+      "<rootDir>/src/*.js",
       "<rootDir>/index.js"
     ],
     "coverageThreshold": {
@@ -29,9 +30,6 @@
     "transformIgnorePatterns": [
       "node_modules/(?!react-native|react-router-native)/"
     ],
-    "moduleNameMapper": {
-      "^react-native-firebase": "<rootDir>/test/mocks/react-native-firebase-stub.js"
-    },
     "testMatch": [
       "<rootDir>/test/**/*.test.js"
     ]
