@@ -13,8 +13,8 @@ export default class PlusButton extends Component {
                     onPress={toggleImageModal}
                 >
                     <Entypo
-                        size={60}
                         name={'circle-with-plus'}
+                        size={60}
                     />
                 </Touchable>
             </View>
