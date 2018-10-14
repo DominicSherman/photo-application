@@ -6,6 +6,10 @@ module.exports = {
         'node/no-unpublished-import': 0,
         'react/prop-types': 0,
         'react/prefer-stateless-function': 0,
-        'jest/consistent-test-it': 0
+        'jest/consistent-test-it': 0,
+        'react/no-set-state': 0,
+        'react/no-did-mount-set-state': 0,
+        'react/no-did-update-set-state': 0,
+        'react/no-access-state-in-setstate': 0
     }
 };

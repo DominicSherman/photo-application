@@ -2,9 +2,34 @@ import React from 'react';
 import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+
 import {imageSize} from '../constants/variables';
 import {whiteFontStyles} from '../constants/font-styles';
 import {getTimeForDisplay} from '../constants/helper-functions';
+
+const styles = StyleSheet.create({
+    colorOverlay: {
+        backgroundColor: 'lightblue',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        opacity: 0.7
+    },
+    icon: {
+        color: 'blue',
+        fontSize: 40,
+        opacity: 1.0
+    },
+    imageStyle: {
+        height: imageSize,
+        width: imageSize
+    },
+    overlay: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
+    }
+});
 
 export default class TouchableImage extends React.Component {
     constructor(props) {
@@ -41,8 +66,8 @@ export default class TouchableImage extends React.Component {
                 {this.state.selected ?
                     <ImageBackground
                         key={`${filename}`}
-                        style={styles.imageStyle}
                         source={{uri}}
+                        style={styles.imageStyle}
                     >
                         <View style={[styles.colorOverlay, {justifyContent: playableDuration ? 'space-between' : 'flex-end'}]}>
                             {
@@ -60,8 +85,8 @@ export default class TouchableImage extends React.Component {
                     :
                     <ImageBackground
                         key={`${filename}`}
-                        style={styles.imageStyle}
                         source={{uri}}
+                        style={styles.imageStyle}
                     >
                         <View style={styles.overlay}>
                             {
@@ -77,27 +102,3 @@ export default class TouchableImage extends React.Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    icon: {
-        fontSize: 40,
-        color: 'blue',
-        opacity: 1.0
-    },
-    colorOverlay: {
-        backgroundColor: 'lightblue',
-        opacity: 0.7,
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    overlay: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-start'
-    },
-    imageStyle: {
-        width: imageSize,
-        height: imageSize
-    }
-});

@@ -1,6 +1,5 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-
 import SelectedPreview from '../components/SelectedPreview';
 import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';

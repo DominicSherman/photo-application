@@ -1,9 +1,12 @@
 import React from 'react';
+import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import {Image, ScrollView, Text, View} from 'react-native';
 
 import SelectedPreview from '../../src/components/SelectedPreview';
 import {createRandomImage} from '../model-factory';
+
+const chance = new Chance();
 
 describe('SelectedPreview', () => {
     let expectedImages,

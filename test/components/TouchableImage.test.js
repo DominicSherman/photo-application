@@ -6,6 +6,10 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import TouchableImage from '../../src/components/TouchableImage';
 
+jest.mock('react-native-fetch-blob', () => ({
+    DocumentDir: () => ({})
+}));
+
 describe('TouchableImage', () => {
     let expectedProps,
 
