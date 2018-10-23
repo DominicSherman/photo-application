@@ -28,8 +28,22 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start'
+    },
+    timeStyle: {
+        fontSize: 12
     }
 });
+
+const getViewStyle = (playableDuration, selected) => {
+    if (selected) {
+        return [
+            styles.colorOverlay,
+            !playableDuration && {justifyContent: 'flex-end'}
+        ];
+    }
+
+    return styles.overlay;
+};
 
 export default class TouchableImage extends React.Component {
     constructor(props) {
@@ -41,17 +55,21 @@ export default class TouchableImage extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({selected: this.props.selected});
+        this.setSelected(this.props.selected);
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps !== this.props) {
-            this.setState({selected: this.props.selected});
+            this.setSelected(this.props.selected);
         }
     }
 
+    setSelected = (selected) => this.setState({selected});
+
+    toggleSelected = () => this.setState((prev) => ({selected: !prev.selected}));
+
     handlePress = () => {
-        this.setState({selected: !this.state.selected});
+        this.toggleSelected();
         this.props.actions.toggleSelected(this.props.item);
     };
 
@@ -63,41 +81,31 @@ export default class TouchableImage extends React.Component {
             <Touchable
                 onPress={this.handlePress}
             >
-                {this.state.selected ?
-                    <ImageBackground
-                        key={`${filename}`}
-                        source={{uri}}
-                        style={styles.imageStyle}
+                <ImageBackground
+                    key={`${filename}`}
+                    source={{uri}}
+                    style={styles.imageStyle}
+                >
+                    <View
+                        style={getViewStyle(playableDuration, this.state.selected)}
                     >
-                        <View style={[styles.colorOverlay, {justifyContent: playableDuration ? 'space-between' : 'flex-end'}]}>
-                            {
-                                playableDuration ?
-                                    <Text style={[whiteFontStyles.light, {fontSize: 12}]}>{getTimeForDisplay(playableDuration)}</Text>
-                                    :
-                                    null
-                            }
+                        {
+                            playableDuration &&
+                                <Text
+                                    style={[styles.timeStyle, whiteFontStyles.light]}
+                                >
+                                    {getTimeForDisplay(playableDuration)}
+                                </Text>
+                        }
+                        {
+                            this.state.selected &&
                             <EvilIcons
                                 name={'check'}
                                 style={styles.icon}
                             />
-                        </View>
-                    </ImageBackground>
-                    :
-                    <ImageBackground
-                        key={`${filename}`}
-                        source={{uri}}
-                        style={styles.imageStyle}
-                    >
-                        <View style={styles.overlay}>
-                            {
-                                playableDuration ?
-                                    <Text style={[whiteFontStyles.light, {fontSize: 12}]}>{getTimeForDisplay(playableDuration)}</Text>
-                                    :
-                                    null
-                            }
-                        </View>
-                    </ImageBackground>
-                }
+                        }
+                    </View>
+                </ImageBackground>
             </Touchable>
         );
     }

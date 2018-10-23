@@ -32,7 +32,11 @@
     ],
     "testMatch": [
       "<rootDir>/test/**/*.test.js"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^react-redux": "<rootDir>/test/stubs/react-redux-stub.js",
+      "react-native-fetch-blob": "<rootDir>/test/stubs/react-native-fetch-blob-stub.js"
+    }
   },
   "dependencies": {
     "firebase": "^5.5.0",
