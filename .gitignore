@@ -46,3 +46,5 @@ google-play-android-developer.json
 .env.release
 .vscode
 testConfig.js
+
+config.js
