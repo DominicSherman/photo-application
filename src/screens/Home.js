@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
+
 import SelectedPreview from '../components/SelectedPreview';
 import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';
@@ -35,7 +36,7 @@ export default class Home extends React.Component {
                     </Text>
                 </View>
                 {
-                    user.isAdmin ?
+                    user.isAdmin &&
                         <Button
                             action={actions.toggleUserModal}
                             fontSize={25}
@@ -43,8 +44,6 @@ export default class Home extends React.Component {
                             text={'USERS'}
                             width={50}
                         />
-                        :
-                        null
                 }
                 <PlusButton toggleImageModal={actions.toggleImageModal} />
                 <UploadButton

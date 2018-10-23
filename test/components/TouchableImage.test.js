@@ -26,7 +26,6 @@ describe('TouchableImage', () => {
     const cacheChildren = () => {
         renderedImageBackground = renderedComponent.props.children;
         renderedView = renderedImageBackground.props.children;
-        console.log('renderedView.props.style', renderedView.props.style);
         [
             renderedText,
             renderedIcon
@@ -148,13 +147,13 @@ describe('TouchableImage', () => {
             });
 
             it('should justify content flex-end if selected and no playable duration', () => {
-                expectedProps.playableDuration = null;
+                expectedProps.item.image.playableDuration = null;
                 renderComponent();
                 renderedInstance.toggleSelected();
                 renderedComponent = renderedInstance.render();
                 cacheChildren();
 
-                expect(renderedView.props.style.justifyContent).toBe('flex-end');
+                expect(renderedView.props.style[1].justifyContent).toBe('flex-end');
             });
         });
 

@@ -16,12 +16,13 @@ import {
 } from './constants/action-types';
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
-import {clean} from './constants/helper-functions';
-import {removeCredentials, storeCredentials} from './services/async-storage-service';
 import {getUsers} from './services/firebase-service';
+import {removeItem} from './constants/helper-functions';
 
+/* eslint-disable max-depth */
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
+
     for (let i = 0; i < r.edges.length; i++) {
         if (r.edges[i]) {
             if ((i + 1) % numPerRow === 0) {
@@ -35,6 +36,7 @@ export const setCameraRollRows = (r) => (dispatch) => {
 
     dispatch(action(ADD_CAMERA_ROLL_ROW, row));
 };
+/* eslint-enable max-depth */
 
 export const incrementFinished = () => (dispatch, getState) => {
     const {numFinished, numToUpload} = getState();
@@ -75,20 +77,13 @@ export const setUploading = (numToUpload) => (dispatch) => {
 
 export const setSelectedImages = (newSelected) => (dispatch) => dispatch(action(SET_SELECTED_IMAGES, newSelected));
 
-const removeItem = (obj, item) =>
-    Object.keys(obj)
-        .filter((key) => key !== item)
-        .reduce((newObject, key) => ({
-            ...newObject,
-            [key]: obj[key]
-        }), {});
-
 export const setSelectedRow = (row, isSelected) => (dispatch, getState) => {
-    let {selectedImages} = getState();
-    let selectedRow = {};
+    let {selectedImages} = getState(),
+        selectedRow = {};
 
     row.forEach((item) => {
         const {image: {filename}} = item;
+
         if (isSelected) {
             selectedRow = {
                 ...selectedRow,
@@ -129,11 +124,13 @@ export const toggleSelected = (item) => (dispatch, getState) => {
 
 export const toggleImageModal = () => (dispatch, getState) => {
     const {imageModalVisible} = getState();
+
     dispatch(action(SET_IMAGE_MODAL_VISIBLE, !imageModalVisible));
 };
 
 export const toggleUserModal = () => (dispatch, getState) => {
     const {userModalVisible} = getState();
+
     dispatch(action(SET_USER_MODAL_VISIBLE, !userModalVisible));
 };
 
