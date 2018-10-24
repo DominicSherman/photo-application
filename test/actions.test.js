@@ -1,45 +1,61 @@
-import React from 'react';
 import Chance from 'chance';
 
 import {
     incrementFinished,
-    setCameraRollRows,
+    setCameraRollRows, setEmail, setIsAdmin, setLoggedIn, setName,
     setProgress,
-    setSelectedImages,
+    setSelectedImages, setSelectedRow,
     setTotal,
-    setUploading
+    setUploading, setUsers, toggleImageModal, toggleSelected, toggleUserModal
 } from '../src/actions';
 import {numPerRow} from '../src/constants/variables';
 import {action} from '../src/constants/action';
 import {
-    ADD_CAMERA_ROLL_ROW,
-    SET_IS_UPLOADING,
+    ADD_CAMERA_ROLL_ROW, SET_ADMIN, SET_EMAIL, SET_IMAGE_MODAL_VISIBLE,
+    SET_IS_UPLOADING, SET_LOGGED_IN, SET_NAME,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD, SET_PROGRESSES, SET_SELECTED_IMAGES, SET_TOTALS
+    SET_NUM_TO_UPLOAD, SET_PROGRESSES, SET_SELECTED_IMAGES, SET_TOTALS, SET_USER_MODAL_VISIBLE, SET_USERS
 } from '../src/constants/action-types';
+import {getUsers} from '../src/services/firebase-service';
 
-jest.mock('../src/constants/helper-functions');
+import {createRandomImage, createRandomUser} from './model-factory';
+
+jest.mock('../src/services/firebase-service');
 
 const chance = new Chance();
 
 describe('actions', () => {
     let dispatchSpy,
         getStateStub,
+        expectedSelectedImages,
         expectedState;
 
     beforeEach(() => {
-        dispatchSpy = jest.fn();
+        const items = chance.n(createRandomImage, chance.d6() + 1);
+
+        items.forEach((item) => {
+            expectedSelectedImages = {
+                ...expectedSelectedImages,
+                [`${item.image.filename}`]: item
+            };
+        });
+
         expectedState = {
+            imageModalVisible: chance.bool(),
             numFinished: chance.natural(),
             numToUpload: chance.natural(),
+            progresses: {
+                [chance.string()]: chance.string()
+            },
+            selectedImages: expectedSelectedImages,
             totals: {
                 [chance.string()]: chance.string()
             },
-            progresses: {
-                [chance.string()]: chance.string()
-            }
+            userModalVisible: chance.bool()
         };
+
         getStateStub = jest.fn(() => expectedState);
+        dispatchSpy = jest.fn();
     });
 
     afterEach(() => {
@@ -66,6 +82,12 @@ describe('actions', () => {
 
             expect(dispatchSpy).toHaveBeenCalledTimes(timesCalled);
             expect(dispatchSpy).toHaveBeenCalledWith(action(ADD_CAMERA_ROLL_ROW, expect.anything()));
+        });
+
+        it('should do nothing if there is no node', () => {
+            r = {
+                edges: chance.n
+            }
         });
     });
 
@@ -164,6 +186,189 @@ describe('actions', () => {
         it('should dispatch the selected images', () => {
             expect(dispatchSpy).toHaveBeenCalledTimes(1);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_SELECTED_IMAGES, expectedSelected));
+        });
+    });
+
+    describe('setSelectedRow', () => {
+        it('should add all the items if isSelected is true', () => {
+            const row = chance.n(createRandomImage, chance.d6() + 1);
+
+            row.forEach((item) => {
+                expectedSelectedImages = {
+                    ...expectedSelectedImages,
+                    [`${item.image.filename}`]: item
+                };
+            });
+
+            setSelectedRow(row, true)(dispatchSpy, getStateStub);
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_SELECTED_IMAGES, expectedSelectedImages));
+        });
+
+        it('should remove all the items if isSelected is false', () => {
+            let row = {};
+
+            Object.keys(expectedSelectedImages).forEach((key, i) => {
+                if (i % 2 === 0) {
+                    row = [...row, expectedSelectedImages[key]];
+
+                    delete expectedSelectedImages[key];
+                }
+            });
+
+            setSelectedRow(row, false)(dispatchSpy, getStateStub);
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_SELECTED_IMAGES, expectedSelectedImages));
+        });
+    });
+
+    describe('toggleSelected', () => {
+        it('should add the image to selected images if it is not selected', () => {
+            const item = createRandomImage();
+
+            toggleSelected(item)(dispatchSpy, getStateStub);
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_SELECTED_IMAGES, {
+                ...expectedSelectedImages,
+                [`${item.image.filename}`]: item
+            }));
+        });
+
+        it('should remove the image from selected images if it is not selected', () => {
+            const keys = chance.shuffle(Object.keys(expectedSelectedImages));
+            const item = expectedSelectedImages[keys[0]];
+
+            toggleSelected(item)(dispatchSpy, getStateStub);
+
+            delete expectedSelectedImages[`${item.image.filename}`];
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_SELECTED_IMAGES, expectedSelectedImages));
+        });
+    });
+
+    describe('toggleImageModal', () => {
+        it('should toggle imageModalVisible', () => {
+            toggleImageModal()(dispatchSpy, getStateStub);
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_IMAGE_MODAL_VISIBLE, !expectedState.imageModalVisible));
+        });
+    });
+
+    describe('toggleUserModal', () => {
+        it('should toggle imageModalVisible', () => {
+            toggleUserModal()(dispatchSpy, getStateStub);
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_USER_MODAL_VISIBLE, !expectedState.userModalVisible));
+        });
+    });
+
+    describe('setUsers', () => {
+        let expectedUsers,
+            expectedUserMap = {},
+            expectedSnapshot,
+            onSpy;
+
+        beforeEach(async () => {
+            const keys = chance.n(chance.string, chance.d6() + 1);
+
+            expectedUsers = keys.map(() => createRandomUser());
+            keys.forEach((key, index) => {
+                expectedUserMap = {
+                    ...expectedUserMap,
+                    [key]: expectedUsers[index]
+                };
+            });
+            expectedSnapshot = {
+                val: jest.fn().mockReturnValue(expectedUserMap)
+            };
+            onSpy = jest.fn();
+            getUsers.mockReturnValue({
+                on: onSpy
+            });
+
+            await setUsers()(dispatchSpy);
+        });
+
+        afterEach(() => {
+            expectedUserMap = {};
+        });
+
+        it('should get the users from firebase', () => {
+            expect(getUsers).toHaveBeenCalledTimes(1);
+        });
+
+        it('should use on', () => {
+            expect(onSpy).toHaveBeenCalledTimes(1);
+            expect(onSpy).toHaveBeenCalledWith('value', expect.anything());
+        });
+
+        it('should add the users to redux if there are any', () => {
+            const snapshotCall = onSpy.mock.calls[0][1];
+
+            snapshotCall(expectedSnapshot);
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_USERS, expectedUsers));
+        });
+
+        it('should set an empty list to redux if there are any', () => {
+            expectedSnapshot = {
+                val: jest.fn().mockReturnValue(null)
+            };
+            const snapshotCall = onSpy.mock.calls[0][1];
+
+            snapshotCall(expectedSnapshot);
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_USERS, []));
+        });
+    });
+
+    describe('setEmail', () => {
+        it('should set the email', () => {
+            const email = chance.string();
+
+            setEmail(email)(dispatchSpy);
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EMAIL, email));
+        });
+    });
+
+    describe('setName', () => {
+        it('should set the name', () => {
+            const name = chance.string();
+
+            setName(name)(dispatchSpy);
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_NAME, name));
+        });
+    });
+
+    describe('setIsAdmin', () => {
+        it('should set isAdmin', () => {
+            const isAdmin = chance.bool();
+
+            setIsAdmin(isAdmin)(dispatchSpy);
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_ADMIN, isAdmin));
+        });
+    });
+
+    describe('setLoggedIn', () => {
+        it('should set isLoggedIn', () => {
+            const isLoggedIn = chance.bool();
+
+            setLoggedIn(isLoggedIn)(dispatchSpy);
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_LOGGED_IN, isLoggedIn));
         });
     });
 });

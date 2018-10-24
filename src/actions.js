@@ -17,26 +17,21 @@ import {
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
 import {getUsers} from './services/firebase-service';
-import {removeItem} from './constants/helper-functions';
 
-/* eslint-disable max-depth */
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
 
     for (let i = 0; i < r.edges.length; i++) {
-        if (r.edges[i]) {
-            if ((i + 1) % numPerRow === 0) {
-                dispatch(action(ADD_CAMERA_ROLL_ROW, [...row, r.edges[i].node]));
-                row = [];
-            } else {
-                row = [...row, r.edges[i].node];
-            }
+        if ((i + 1) % numPerRow === 0) {
+            dispatch(action(ADD_CAMERA_ROLL_ROW, [...row, r.edges[i].node]));
+            row = [];
+        } else {
+            row = [...row, r.edges[i].node];
         }
     }
 
     dispatch(action(ADD_CAMERA_ROLL_ROW, row));
 };
-/* eslint-enable max-depth */
 
 export const incrementFinished = () => (dispatch, getState) => {
     const {numFinished, numToUpload} = getState();
@@ -77,32 +72,31 @@ export const setUploading = (numToUpload) => (dispatch) => {
 
 export const setSelectedImages = (newSelected) => (dispatch) => dispatch(action(SET_SELECTED_IMAGES, newSelected));
 
+const removeItem = (obj, item) =>
+    Object.keys(obj)
+        .filter((key) => key !== item)
+        .reduce((newObject, key) => ({
+            ...newObject,
+            [key]: obj[key]
+        }), {});
+
 export const setSelectedRow = (row, isSelected) => (dispatch, getState) => {
-    let {selectedImages} = getState(),
-        selectedRow = {};
+    let updatedSelectedImages = getState().selectedImages;
 
     row.forEach((item) => {
         const {image: {filename}} = item;
 
         if (isSelected) {
-            selectedRow = {
-                ...selectedRow,
-                [`${item.image.filename}`]: item
+            updatedSelectedImages = {
+                ...updatedSelectedImages,
+                [`${filename}`]: item
             };
-
-            dispatch(action(
-                SET_SELECTED_IMAGES,
-                {
-                    ...selectedImages,
-                    ...selectedRow
-                }
-            ));
         } else {
-            selectedImages = removeItem(selectedImages, filename);
-
-            dispatch(action(SET_SELECTED_IMAGES, selectedImages));
+            updatedSelectedImages = removeItem(updatedSelectedImages, filename);
         }
     });
+
+    dispatch(action(SET_SELECTED_IMAGES, updatedSelectedImages));
 };
 
 export const toggleSelected = (item) => (dispatch, getState) => {
@@ -134,7 +128,7 @@ export const toggleUserModal = () => (dispatch, getState) => {
     dispatch(action(SET_USER_MODAL_VISIBLE, !userModalVisible));
 };
 
-export const setUsers = (users) => async (dispatch) => {
+export const setUsers = () => async (dispatch) => {
     await getUsers().on('value',
         (snapshot) => {
             const userMap = snapshot.val();

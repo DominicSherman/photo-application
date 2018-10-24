@@ -14,6 +14,7 @@ export default class CameraRollRow extends Component {
         } = this.props;
 
         let isSelected = true;
+
         images.forEach((i) => !selectedImages[i.image.filename] ? isSelected = false : null);
 
         return (

@@ -18,14 +18,6 @@ export const getTimeForDisplay = (duration) => {
 
 export const clean = (string) => string.replace(/[^a-zA-Z0-9]/g, '');
 
-export const removeItem = (obj, item) =>
-    Object.keys(obj)
-        .filter((key) => key !== item)
-        .reduce((newObject, key) => ({
-            ...newObject,
-            [key]: obj[key]
-        }), {});
-
 export const login = (actions, user, users) => {
     const {email, name} = user;
     const authUser = users.find((u) => clean(u.email) === clean(email));
