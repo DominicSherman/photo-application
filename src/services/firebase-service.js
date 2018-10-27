@@ -5,10 +5,11 @@ import 'firebase/database';
 import 'firebase/storage';
 import RNHeicConverter from 'react-native-heic-converter';
 
-import {config, ENV} from '../../config';
+import {config, ENV} from '../config';
 
 import {clean} from './helper-functions';
 
+let isInitialized = false;
 const getPayload = (image, user, downloadUrl) => {
     let isVideo = false;
     const {email, name} = user;
@@ -106,4 +107,9 @@ export const addUser = (email, isAdmin) =>
         isAdmin
     });
 
-export const initializeFirebase = () => firebase.initializeApp(config);
+export const initializeFirebase = () => {
+    if (!isInitialized) {
+        firebase.initializeApp(config);
+        isInitialized = true;
+    }
+};

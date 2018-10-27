@@ -3,7 +3,7 @@ import {FlatList, Modal, SafeAreaView, StyleSheet, Text, View} from 'react-nativ
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
-import {darkFontStyles} from '../constants/font-styles';
+import {darkFontStyles, lightFontStyles} from '../constants/font-styles';
 import CameraRollRow from '../components/CameraRollRow';
 
 const styles = StyleSheet.create({
@@ -43,6 +43,7 @@ export default class ImageSelectModal extends Component {
                                 size={30}
                             />
                         </Touchable>
+                        <Text style={lightFontStyles.light}>{'Select Images to Upload'}</Text>
                         <Text
                             onPress={actions.toggleImageModal}
                             style={[

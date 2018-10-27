@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
+import Entypo from 'react-native-vector-icons/Entypo';
 
-import {darkFontStyles} from '../constants/font-styles';
 import {getCurrentTime} from '../services/helper-functions';
 import {uploadImage} from '../services/firebase-service';
+import {lightFontStyles} from '../constants/font-styles';
 
 const styles = StyleSheet.create({
     buttonView: {
@@ -20,7 +21,8 @@ const styles = StyleSheet.create({
     centeredRow: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 50
+        marginTop: 50,
+        marginBottom: 25
     },
     text: {
         color: 'white',
@@ -65,10 +67,17 @@ export default class UploadButton extends Component {
                         }
                     }}
                 >
-                    <View style={styles.buttonView}>
-                        <Text style={[darkFontStyles.regular, styles.text]}>
-                            {'UPLOAD'}
-                        </Text>
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <Entypo
+                            name={'upload-to-cloud'}
+                            size={120}
+                        />
+                        <Text style={lightFontStyles.regular}>{'Upload'}</Text>
                     </View>
                 </Touchable>
             </View>
