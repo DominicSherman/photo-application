@@ -1,9 +1,19 @@
 import React, {Component} from 'react';
-import {darkFontStyles} from '../constants/font-styles';
 import {FlatList, Modal, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+
+import {darkFontStyles} from '../constants/font-styles';
 import CameraRollRow from '../components/CameraRollRow';
+
+const styles = StyleSheet.create({
+    header: {
+        alignContent: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10
+    }
+});
 
 export default class ImageSelectModal extends Component {
     render() {
@@ -50,8 +60,8 @@ export default class ImageSelectModal extends Component {
                         renderItem={({item}) =>
                             <CameraRollRow
                                 actions={actions}
-                                selectedImages={selectedImages}
                                 images={item}
+                                selectedImages={selectedImages}
                             />
                         }
                     />
@@ -60,12 +70,3 @@ export default class ImageSelectModal extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        alignContent: 'center'
-    }
-});

@@ -5,7 +5,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import {imageSize} from '../constants/variables';
 import {whiteFontStyles} from '../constants/font-styles';
-import {getTimeForDisplay} from '../constants/helper-functions';
+import {getTimeForDisplay} from '../services/helper-functions';
 
 const styles = StyleSheet.create({
     colorOverlay: {
@@ -59,7 +59,7 @@ export default class TouchableImage extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps !== this.props) {
+        if (prevProps.selected !== this.props.selected) {
             this.setSelected(this.props.selected);
         }
     }

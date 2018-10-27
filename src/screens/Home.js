@@ -6,7 +6,7 @@ import PlusButton from '../components/PlusButton';
 import UploadButton from '../components/UploadButton';
 import Button from '../components/Button';
 import {lightFontStyles} from '../constants/font-styles';
-import {logout} from '../constants/helper-functions';
+import {logout} from '../services/helper-functions';
 
 export default class Home extends React.Component {
     render() {

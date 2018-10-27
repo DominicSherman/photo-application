@@ -1,8 +1,18 @@
 import React from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
+
 import {lightFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
-import {login} from '../constants/helper-functions';
+import {login} from '../services/helper-functions';
+
+const styles = StyleSheet.create({
+    wrapperView: {
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        marginTop: '40%'
+    }
+});
 
 export default class Login extends React.Component {
     render() {
@@ -15,32 +25,32 @@ export default class Login extends React.Component {
                     autoCapitalize={'none'}
                     clearTextOnFocus
                     numberOfLines={2}
-                    style={[lightFontStyles.light, {fontSize: 25}]}
                     onChangeText={(email) => actions.setEmail(email.toLowerCase())}
                     placeholder={'Email'}
+                    style={[lightFontStyles.light, {fontSize: 25}]}
                     value={user.email}
                 />
                 <TextInput
                     autoCapitalize={'words'}
                     clearTextOnFocus
-                    style={[lightFontStyles.light, {fontSize: 25}]}
                     onChangeText={(name) => actions.setName(name)}
                     placeholder={'Name'}
+                    style={[lightFontStyles.light, {fontSize: 25}]}
                     value={user.name}
                 />
                 <Button
                     action={() => login(actions, user, users)}
-                    text={'LOGIN'}
                     fontSize={30}
                     height={40}
+                    text={'LOGIN'}
                     width={80}
                 />
                 {showUserButton ?
                     <Button
                         action={actions.toggleUserModal}
-                        text={'USERS'}
                         fontSize={25}
                         height={25}
+                        text={'USERS'}
                         width={50}
                     />
                     :
@@ -50,12 +60,3 @@ export default class Login extends React.Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    wrapperView: {
-        marginTop: '40%',
-        justifyContent: 'space-between',
-        flexDirection: 'column',
-        alignItems: 'center'
-    }
-});

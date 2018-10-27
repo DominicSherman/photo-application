@@ -6,7 +6,8 @@ import 'firebase/storage';
 import RNHeicConverter from 'react-native-heic-converter';
 
 import {config, ENV} from '../../config';
-import {clean} from '../constants/helper-functions';
+
+import {clean} from './helper-functions';
 
 const getPayload = (image, user, downloadUrl) => {
     let isVideo = false;
@@ -20,29 +21,34 @@ const getPayload = (image, user, downloadUrl) => {
     }
 
     return {
-        fileName: image.filename,
-        url: downloadUrl,
-        height,
-        width,
-        isVideo,
         email,
-        name
+        fileName: image.filename,
+        height,
+        isVideo,
+        name,
+        url: downloadUrl,
+        width
     };
 };
 
-const insertDatabaseRef = (downloadUrl, sessionId, image, actions, user) => firebase.database().ref(`${ENV}/media`).child(sessionId).child(`${Date.now()}`).set(
+const insertDatabaseRef = ({downloadUrl, sessionId, image, actions, user}) => firebase.database().ref(`${ENV}/media`).child(sessionId).child(`${Date.now()}`).set(
     getPayload(image, user, downloadUrl),
     (error) => {
-        if (error) {
-            console.log('ERROR', error);
-        } else {
+        if (!error) {
             actions.incrementFinished();
         }
     });
 
-const handleSuccess = async (uploadTask, sessionId, image, actions, user) => {
-    uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => insertDatabaseRef(downloadUrl, sessionId, image, actions, user));
-};
+const handleSuccess = ({uploadTask, sessionId, image, actions, user}) =>
+    uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) =>
+        insertDatabaseRef({
+            actions,
+            downloadUrl,
+            image,
+            sessionId,
+            user
+        })
+    );
 
 const handleStateChange = (snapshot, index, actions) => {
     if (typeof snapshot.bytesTransferred === 'number') {
@@ -50,11 +56,7 @@ const handleStateChange = (snapshot, index, actions) => {
     }
 };
 
-const handleError = (error) => {
-    console.log('ERROR', error);
-};
-
-const getUploadUri = async (image) => {
+const getUploadUri = (image) => {
     const path = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
 
     if (image.filename.substr(-4) === 'HEIC') {
@@ -68,7 +70,7 @@ const getUploadUri = async (image) => {
     return path;
 };
 
-export const uploadImage = async (actions, image, index, sessionId, user) => {
+export const uploadImage = async ({actions, image, index, sessionId, user}) => {
     const Blob = RNFetchBlob.polyfill.Blob;
     const fs = RNFetchBlob.fs;
 
@@ -85,8 +87,15 @@ export const uploadImage = async (actions, image, index, sessionId, user) => {
     actions.setTotal(index, uploadTask.snapshot.totalBytes);
     uploadTask.on('state_changed',
         (snapshot) => handleStateChange(snapshot, index, actions),
-        handleError,
-        () => handleSuccess(uploadTask, sessionId, image, actions, user));
+        () => ({}),
+        () => handleSuccess({
+            actions,
+            image,
+            sessionId,
+            uploadTask,
+            user
+        })
+    );
 };
 
 export const getUsers = () => firebase.database().ref(`${ENV}/users`);

@@ -6,11 +6,11 @@ import {ImageBackground, Text, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import TouchableImage from '../../src/components/TouchableImage';
-import {getTimeForDisplay} from '../../src/constants/helper-functions';
+import {getTimeForDisplay} from '../../src/services/helper-functions';
 
 const chance = new Chance();
 
-jest.mock('../../src/constants/helper-functions');
+jest.mock('../../src/services/helper-functions');
 
 describe('TouchableImage', () => {
     let expectedProps,
@@ -76,6 +76,10 @@ describe('TouchableImage', () => {
     });
 
     describe('componentDidUpdate', () => {
+        beforeEach(() => {
+            renderComponent();
+        });
+
         it('should set selected to the props if they have changed', () => {
             const prevProps = {
                 selected: false
@@ -88,14 +92,8 @@ describe('TouchableImage', () => {
             expect(renderedIcon).toBeDefined();
         });
 
-        it('should do nothing if the props have not change', () => {
-            const prevProps = {
-                selected: true
-            };
-
-            expectedProps.selected = true;
-            renderComponent();
-            renderedInstance.componentDidUpdate(prevProps);
+        it('should do nothing if the props have not changed', () => {
+            renderedInstance.componentDidUpdate(expectedProps);
 
             expect(renderedIcon).toBeFalsy();
         });

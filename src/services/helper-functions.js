@@ -1,5 +1,4 @@
-import {removeCredentials, storeCredentials} from '../services/async-storage-service';
-import {setEmail, setIsAdmin, setLoggedIn, setName} from '../actions';
+import {removeCredentials, storeCredentials} from './async-storage-service';
 
 export const getCurrentTime = () => {
     const today = new Date();
@@ -11,7 +10,7 @@ export const getCurrentTime = () => {
 
 export const getTimeForDisplay = (duration) => {
     const min = Math.floor(duration / 60);
-    const sec = (duration % 60) < 10 ? `0${(duration % 60)}` : (duration % 60);
+    const sec = duration % 60 < 10 ? `0${(duration % 60)}` : duration % 60;
 
     return `${min}:${sec}`;
 };
@@ -24,11 +23,8 @@ export const login = (actions, user, users) => {
 
     if (authUser) {
         storeCredentials(authUser, name);
-
         actions.setIsAdmin(authUser.isAdmin);
         actions.setLoggedIn(true);
-    } else {
-        console.log('INVALID EMAIL');
     }
 };
 

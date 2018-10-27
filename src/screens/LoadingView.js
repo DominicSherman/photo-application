@@ -3,7 +3,6 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import * as Progress from 'react-native-progress';
 
 import {darkFontStyles} from '../constants/font-styles';
-import {withRedux} from '../redux-factory';
 
 const styles = StyleSheet.create({
     centeredRow: {
@@ -11,15 +10,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     innerWrapper: {
-        justifyContent: 'space-between',
-        height: '15%'
+        height: '15%',
+        justifyContent: 'space-between'
     },
     wrapper: {
-        marginTop: '30%',
-        justifyContent: 'space-evenly',
-        flexDirection: 'column',
         alignItems: 'center',
-        height: '50%'
+        flexDirection: 'column',
+        height: '50%',
+        justifyContent: 'space-evenly',
+        marginTop: '30%'
     }
 });
 
