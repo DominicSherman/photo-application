@@ -6,27 +6,31 @@ import {darkFontStyles} from '../constants/font-styles';
 
 const styles = StyleSheet.create({
     imageThumbnail: {
-        width: thumbnailImageSize,
-        height: thumbnailImageSize
+        height: thumbnailImageSize,
+        width: thumbnailImageSize
     },
     previewRow: {
         flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+        width: '100%'
+    },
+    rowTextView: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        width: '50%'
     },
     scrollView: {
-        marginTop: '3%',
-        height: '85%'
+        height: '100%',
+        marginTop: '3%'
     },
     textView: {
         flexDirection: 'row',
         justifyContent: 'center',
         paddingTop: 7
     },
-    rowTextView: {
-        width: '50%',
-        flexDirection: 'column',
-        justifyContent: 'center'
+    wrapperView: {
+        height: '40%',
+        marginBottom: '2%'
     }
 });
 
@@ -35,7 +39,7 @@ export default class SelectedPreview extends Component {
         const {selectedImages} = this.props;
 
         return (
-            <View>
+            <View style={styles.wrapperView}>
                 <View style={styles.textView}>
                     <Text style={[darkFontStyles.regular]}>
                         {`${Object.keys(selectedImages).length} selected`}
@@ -49,8 +53,8 @@ export default class SelectedPreview extends Component {
                                 style={styles.previewRow}
                             >
                                 <Image
-                                    style={styles.imageThumbnail}
                                     source={{uri: selectedImages[key].image.uri}}
+                                    style={styles.imageThumbnail}
                                 />
                                 <View style={styles.rowTextView}>
                                     <Text

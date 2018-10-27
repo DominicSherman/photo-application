@@ -1,11 +1,24 @@
 import React from 'react';
-import {ScrollView, Text, View, Dimensions} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import SelectedPreview from '../components/SelectedPreview';
 import UploadButton from '../components/UploadButton';
 import Button from '../components/Button';
-import {lightFontStyles} from '../constants/font-styles';
 import {logout} from '../services/helper-functions';
+import {lightFont} from '../constants/style-variables';
+
+const styles = StyleSheet.create({
+    userText: {
+        color: lightFont,
+        fontSize: 15,
+        fontWeight: '200'
+    },
+    userWrapper: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: '3%'
+    }
+});
 
 export default class Home extends React.Component {
     render() {
@@ -14,25 +27,12 @@ export default class Home extends React.Component {
             selectedImages,
             user
         } = this.props;
-        const windowHeight = Dimensions.get('window').height;
 
         return (
-            <View style={{flex: 1}}>
+            <SafeAreaView style={{flex: 1}}>
                 <ScrollView>
-                    <View
-                        style={{
-                            alignItems: 'center',
-                            height: 80,
-                            justifyContent: 'center'
-                        }}
-                    >
-                        <Text
-                            style={[
-                                lightFontStyles.light,
-                                {
-                                    fontSize: 15
-                                }]}
-                        >
+                    <View style={styles.userWrapper}>
+                        <Text style={styles.userText}>
                             {`${user.name} - ${user.email}`}
                         </Text>
                     </View>
@@ -58,11 +58,9 @@ export default class Home extends React.Component {
                         selectedImages={selectedImages}
                         user={user}
                     />
-                    <View style={{height: '50%'}}>
-                        <SelectedPreview
-                            selectedImages={selectedImages}
-                        />
-                    </View>
+                    <SelectedPreview
+                        selectedImages={selectedImages}
+                    />
                     <Button
                         action={() => logout(actions)}
                         fontSize={15}
@@ -71,7 +69,7 @@ export default class Home extends React.Component {
                         width={40}
                     />
                 </ScrollView>
-            </View>
+            </SafeAreaView>
         );
     }
 }
