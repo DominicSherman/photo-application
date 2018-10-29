@@ -8,15 +8,25 @@ import {logout} from '../services/helper-functions';
 import {lightFont} from '../constants/style-variables';
 
 const styles = StyleSheet.create({
+    safeAreaView: {
+        flex: 1
+    },
+    userButtonWrapper: {
+        flex: 1,
+        height: '100%',
+        margin: '10%'
+    },
     userText: {
         color: lightFont,
+        flex: 1,
         fontSize: 15,
         fontWeight: '200'
     },
     userWrapper: {
         alignItems: 'center',
+        flex: 1,
         justifyContent: 'center',
-        marginBottom: '3%'
+        padding: 10
     }
 });
 
@@ -29,23 +39,13 @@ export default class Home extends React.Component {
         } = this.props;
 
         return (
-            <SafeAreaView style={{flex: 1}}>
+            <SafeAreaView style={styles.safeAreaView}>
                 <ScrollView>
                     <View style={styles.userWrapper}>
                         <Text style={styles.userText}>
                             {`${user.name} - ${user.email}`}
                         </Text>
                     </View>
-                    {
-                        user.isAdmin &&
-                        <Button
-                            action={actions.toggleUserModal}
-                            fontSize={25}
-                            height={25}
-                            text={'USERS'}
-                            width={50}
-                        />
-                    }
                     <Button
                         action={actions.toggleImageModal}
                         fontSize={18}
@@ -59,6 +59,7 @@ export default class Home extends React.Component {
                         user={user}
                     />
                     <SelectedPreview
+                        actions={actions}
                         selectedImages={selectedImages}
                     />
                     <Button
@@ -68,6 +69,18 @@ export default class Home extends React.Component {
                         text={'LOGOUT'}
                         width={40}
                     />
+                    {
+                        user.isAdmin &&
+                        <View style={styles.userButtonWrapper}>
+                            <Button
+                                action={actions.toggleUserModal}
+                                fontSize={15}
+                                height={20}
+                                text={'USERS'}
+                                width={40}
+                            />
+                        </View>
+                    }
                 </ScrollView>
             </SafeAreaView>
         );

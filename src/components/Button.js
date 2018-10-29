@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     centeredRow: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'center'
     }

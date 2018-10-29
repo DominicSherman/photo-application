@@ -46,8 +46,8 @@ export default class CameraRollRow extends Component {
                     images.map((item) =>
                         <TouchableImage
                             actions={actions}
-                            key={`${item.image.filename}`}
                             item={item}
+                            key={`${item.image.filename}`}
                             selected={selectedImages[item.image.filename]}
                         />
                     )

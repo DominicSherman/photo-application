@@ -19,10 +19,11 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     centeredRow: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 50,
-        marginBottom: 25
+        marginBottom: 25,
+        marginTop: 50
     },
     text: {
         color: 'white',
