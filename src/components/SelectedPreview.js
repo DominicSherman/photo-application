@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 import {thumbnailImageSize} from '../constants/variables';
 import {darkFontStyles} from '../constants/font-styles';
-import Entypo from 'react-native-vector-icons/Entypo';
 
 const styles = StyleSheet.create({
     imageThumbnail: {
@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     },
     wrapperView: {
         flex: 1,
-        height: '40%',
         paddingBottom: '6%'
     }
 });
