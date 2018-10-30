@@ -179,7 +179,7 @@ describe('firebase-service', () => {
 
         it('should monitor the upload task', () => {
             expect(onSpy).toHaveBeenCalledTimes(1);
-            expect(onSpy).toHaveBeenCalledWith('state_changed', expect.anything(), expect.anything(), expect.anything());
+            expect(onSpy).toHaveBeenCalledWith('state_changed', expect.anything(), null, expect.anything());
         });
 
         describe('handleStateChange', () => {

@@ -21,7 +21,8 @@ describe('ImageSelectModal', () => {
         renderedFlatlist,
 
         renderedTouchable,
-        renderedText,
+        renderedSelectText,
+        renderedDoneText,
 
         renderedIcon;
 
@@ -35,7 +36,8 @@ describe('ImageSelectModal', () => {
 
         [
             renderedTouchable,
-            renderedText
+            renderedSelectText,
+            renderedDoneText
         ] = renderedView.props.children;
 
         renderedIcon = renderedTouchable.props.children;
@@ -91,10 +93,15 @@ describe('ImageSelectModal', () => {
         expect(renderedIcon.type).toBe(EvilIcons);
     });
 
+    it('should render select text', () => {
+        expect(renderedSelectText.type).toBe(Text);
+        expect(renderedSelectText.props.children).toBe('Select Images to Upload');
+    });
+
     it('should render text for Done', () => {
-        expect(renderedText.type).toBe(Text);
-        expect(renderedText.props.onPress).toBe(expectedProps.actions.toggleImageModal);
-        expect(renderedText.props.children).toBe('Done');
+        expect(renderedDoneText.type).toBe(Text);
+        expect(renderedDoneText.props.onPress).toBe(expectedProps.actions.toggleImageModal);
+        expect(renderedDoneText.props.children).toBe('Done');
     });
 
     it('should render a FlatList', () => {

@@ -4,15 +4,15 @@ import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
 
 import reducer from './reducer';
-import App from './App';
-
-const store = createStore(reducer, applyMiddleware(thunk));
+import AppContainer from './AppContainer';
 
 export default class ReduxProvider extends Component {
     render() {
+        const store = createStore(reducer, applyMiddleware(thunk));
+
         return (
             <Provider store={store}>
-                <App />
+                <AppContainer />
             </Provider>
         );
     }

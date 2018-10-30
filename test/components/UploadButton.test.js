@@ -7,6 +7,7 @@ import {Text, View} from 'react-native';
 import UploadButton from '../../src/components/UploadButton';
 import {createRandomImage, createRandomUser} from '../model-factory';
 import {uploadImage} from '../../src/services/firebase-service';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 jest.mock('../../src/services/firebase-service');
 
@@ -19,12 +20,17 @@ describe('UploadButton', () => {
         renderedComponent,
         renderedTouchable,
         renderedView,
+
+        renderedIcon,
         renderedText;
 
     const cacheChildren = () => {
         renderedTouchable = renderedComponent.props.children;
         renderedView = renderedTouchable.props.children;
-        renderedText = renderedView.props.children;
+        [
+            renderedIcon,
+            renderedText
+        ] = renderedView.props.children;
     };
 
     const renderComponent = () => {
@@ -92,8 +98,14 @@ describe('UploadButton', () => {
         expect(renderedView.type).toBe(View);
     });
 
+    it('should render an upload icon', () => {
+        expect(renderedIcon.type).toBe(Entypo);
+        expect(renderedIcon.props.name).toBe('upload-to-cloud');
+        expect(renderedIcon.props.size).toBe(120);
+    });
+
     it('should render Text', () => {
         expect(renderedText.type).toBe(Text);
-        expect(renderedText.props.children).toBe('UPLOAD');
+        expect(renderedText.props.children).toBe('Upload');
     });
 });

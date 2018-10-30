@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {CameraRoll} from 'react-native';
 
-import {withRedux} from './redux-factory';
 import {numPictures} from './constants/variables';
 import {initializeFirebase} from './services/firebase-service';
 import Home from './screens/Home';
@@ -11,7 +10,7 @@ import UserModal from './screens/UserModal';
 import ImageSelectModal from './screens/ImageSelectModal';
 import {tryToLoadCredentials} from './services/async-storage-service';
 
-class App extends Component {
+export default class App extends Component {
     componentWillMount() {
         tryToLoadCredentials(this.props.actions);
         initializeFirebase();
@@ -86,5 +85,3 @@ class App extends Component {
     }
     /* eslint-enable complexity */
 }
-
-export default withRedux(App);

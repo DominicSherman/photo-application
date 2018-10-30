@@ -3,17 +3,16 @@ import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
 
 import Home from '../src/screens/Home';
-import {withRedux} from '../src/redux-factory';
 import UserModal from '../src/screens/UserModal';
 import LoadingView from '../src/screens/LoadingView';
 import ImageSelectModal from '../src/screens/ImageSelectModal';
 import Login from '../src/screens/Login';
 import {tryToLoadCredentials} from '../src/services/async-storage-service';
 import {initializeFirebase} from '../src/services/firebase-service';
+import App from '../src/App';
 
 const chance = new Chance();
 
-jest.mock('../src/redux-factory');
 jest.mock('../src/services/firebase-service');
 jest.mock('react-native-fetch-blob', () => ({
     DocumentDir: () => ({})
@@ -25,13 +24,10 @@ describe('App', () => {
         renderedComponent,
         renderedInstance;
 
-    require('../src/App');
-    const Component = withRedux.mock.calls[0][0];
-
     const renderComponent = () => {
         const shallowRenderer = ShallowRenderer.createRenderer();
 
-        shallowRenderer.render(<Component {...expectedProps} />);
+        shallowRenderer.render(<App {...expectedProps} />);
 
         renderedComponent = shallowRenderer.getRenderOutput();
         renderedInstance = shallowRenderer.getMountedInstance();

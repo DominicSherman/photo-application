@@ -1,10 +1,11 @@
 import React from 'react';
 import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
-import {Image, ScrollView, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 
 import SelectedPreview from '../../src/components/SelectedPreview';
 import {createRandomImage} from '../model-factory';
+import PreviewRow from '../../src/components/PreviewRow';
 
 const chance = new Chance();
 
@@ -17,19 +18,15 @@ describe('SelectedPreview', () => {
 
         renderedView,
         renderedText,
-
-        renderedScrollView,
         renderedSelectedImages;
 
     const cacheChildren = () => {
         [
             renderedView,
-            renderedScrollView
+            renderedSelectedImages
         ] = renderedComponent.props.children;
 
         renderedText = renderedView.props.children;
-
-        renderedSelectedImages = renderedScrollView.props.children;
     };
 
     const renderComponent = () => {
@@ -48,9 +45,12 @@ describe('SelectedPreview', () => {
             expectedSelectedImages = {
                 ...expectedSelectedImages,
                 [`${i.image.filename}`]: i
-            }
+            };
         });
         expectedProps = {
+            actions: {
+                toggleSelected: jest.fn()
+            },
             selectedImages: expectedSelectedImages
         };
 
@@ -67,10 +67,17 @@ describe('SelectedPreview', () => {
 
     it('should render Text', () => {
         expect(renderedText.type).toBe(Text);
-        expect(renderedText.props.children).toBe(`${Object.keys(expectedProps.selectedImages).length} selected`)
+        expect(renderedText.props.children).toBe(`${Object.keys(expectedProps.selectedImages).length} selected`);
     });
 
-    it('should render a ScrollView', () => {
-        expect(renderedScrollView.type).toBe(ScrollView);
+    it('should render PreviewRows', () => {
+        Object.keys(expectedProps.selectedImages).forEach((key, index) => {
+            const renderedPreviewRow = renderedSelectedImages[index];
+
+            expect(renderedPreviewRow.type).toBe(PreviewRow);
+            expect(renderedPreviewRow.key).toBe(key);
+            expect(renderedPreviewRow.props.selectedImage).toBe(expectedProps.selectedImages[key]);
+            expect(renderedPreviewRow.props.toggleSelected).toBe(expectedProps.actions.toggleSelected);
+        });
     });
 });

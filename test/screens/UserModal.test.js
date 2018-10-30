@@ -172,7 +172,7 @@ describe('UserModal', () => {
     it('should render the Add button', () => {
         expect(renderedAddButton.type).toBe(Button);
         expect(renderedAddButton.props.fontSize).toBe(25);
-        expect(renderedAddButton.props.height).toBe(25);
+        expect(renderedAddButton.props.height).toBe(18);
         expect(renderedAddButton.props.text).toBe('ADD');
         expect(renderedAddButton.props.width).toBe(50);
 
