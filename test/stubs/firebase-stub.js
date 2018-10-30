@@ -1,2 +1,7 @@
-export const storage = jest.fn();
-export const database = jest.fn();
+const firebase = {
+    database: jest.fn(),
+    initializeApp: jest.fn(),
+    storage: jest.fn()
+};
+
+export default firebase;

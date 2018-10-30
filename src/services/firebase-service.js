@@ -32,13 +32,17 @@ const getPayload = (image, user, downloadUrl) => {
     };
 };
 
-const insertDatabaseRef = ({downloadUrl, sessionId, image, actions, user}) => firebase.database().ref(`${ENV}/media`).child(sessionId).child(`${Date.now()}`).set(
-    getPayload(image, user, downloadUrl),
-    (error) => {
-        if (!error) {
-            actions.incrementFinished();
-        }
-    });
+const insertDatabaseRef = ({downloadUrl, sessionId, image, actions, user}) =>
+    firebase.database()
+        .ref(`${ENV}/media`)
+        .child(sessionId)
+        .child(`${Date.now()}`)
+        .set(getPayload(image, user, downloadUrl),
+            (error) => {
+                if (!error) {
+                    actions.incrementFinished();
+                }
+            });
 
 const handleSuccess = ({uploadTask, sessionId, image, actions, user}) =>
     uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) =>
@@ -88,7 +92,7 @@ export const uploadImage = async ({actions, image, index, sessionId, user}) => {
     actions.setTotal(index, uploadTask.snapshot.totalBytes);
     uploadTask.on('state_changed',
         (snapshot) => handleStateChange(snapshot, index, actions),
-        () => ({}),
+        null,
         () => handleSuccess({
             actions,
             image,
