@@ -31,12 +31,9 @@ export default class Login extends React.Component {
 
         return (
             <View style={styles.wrapperView}>
-                <View
-                    style={styles.textWrapper}
-                >
+                <View style={styles.textWrapper}>
                     <TextInput
                         autoCapitalize={'none'}
-                        numberOfLines={2}
                         onChangeText={(email) => actions.setEmail(email.toLowerCase())}
                         placeholder={'Email'}
                         style={[lightFontStyles.light, {fontSize: 18}]}

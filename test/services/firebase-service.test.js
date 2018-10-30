@@ -71,10 +71,10 @@ describe('firebase-service', () => {
             putSpy = jest.fn(() => ({
                 on: onSpy,
                 snapshot: {
-                    totalBytes: chance.natural(),
                     ref: {
                         getDownloadURL: downloadSpy
-                    }
+                    },
+                    totalBytes: chance.natural()
                 }
             }));
             childSpy = jest.fn(() => ({

@@ -30,9 +30,7 @@ describe('Home', () => {
         renderedSelectedPreview,
         renderedLogoutButton,
 
-        renderedUserText,
-
-        renderedPreview;
+        renderedUserText;
 
     const cacheChildren = () => {
         renderedScrollView = renderedComponent.props.children;

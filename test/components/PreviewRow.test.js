@@ -1,13 +1,11 @@
 import React from 'react';
-import Chance from 'chance';
 import Touchable from 'react-native-platform-touchable';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Image, Text, View} from 'react-native';
 import ShallowRenderer from 'react-test-renderer/shallow';
+
 import PreviewRow from '../../src/components/PreviewRow';
 import {createRandomImage} from '../model-factory';
-
-const chance = new Chance();
 
 describe('PreviewRows', () => {
     let expectedProps,

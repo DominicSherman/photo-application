@@ -1,7 +1,5 @@
 import {AppRegistry} from 'react-native';
 
-import ReduxProvider from '../src/ReduxProvider';
-
 jest.mock('react-native');
 jest.mock('../src/ReduxProvider');
 

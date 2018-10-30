@@ -7,6 +7,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 
 import CameraRollRow from '../../src/components/CameraRollRow';
 import {createRandomImage} from '../model-factory';
+import TouchableImage from '../../src/components/TouchableImage';
 
 const chance = new Chance();
 
@@ -108,6 +109,14 @@ describe('CameraRollRow', () => {
             expect(renderedIcon.props.color).toBe('red');
             expect(renderedIcon.props.name).toBe('circle-with-minus');
             expect(renderedIcon.props.size).toBe(20);
+        });
+    });
+
+    it('should render touchable images', () => {
+        expectedProps.images.forEach((image, index) => {
+            const renderedTouchableImage = renderedTouchableImages[index];
+
+            expect(renderedTouchableImage.type).toBe(TouchableImage);
         });
     });
 });

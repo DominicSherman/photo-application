@@ -3,11 +3,11 @@ import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import Touchable from 'react-native-platform-touchable';
 import {Text, View} from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 import UploadButton from '../../src/components/UploadButton';
 import {createRandomImage, createRandomUser} from '../model-factory';
 import {uploadImage} from '../../src/services/firebase-service';
-import Entypo from 'react-native-vector-icons/Entypo';
 
 jest.mock('../../src/services/firebase-service');
 

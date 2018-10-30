@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-import {darkFont, lightFont, hyveeRed, white} from './style-variables';
+import {darkFont, lightFont, white} from './style-variables';
 
 export const darkFontStyles = StyleSheet.create({
     light: {

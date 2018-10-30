@@ -87,7 +87,7 @@ describe('actions', () => {
         it('should do nothing if there is no node', () => {
             r = {
                 edges: chance.n
-            }
+            };
         });
     });
 

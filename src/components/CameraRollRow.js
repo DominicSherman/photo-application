@@ -15,11 +15,18 @@ export default class CameraRollRow extends Component {
 
         let isSelected = true;
 
+        /* eslint-disable no-return-assign*/
         images.forEach((i) => !selectedImages[i.image.filename] ? isSelected = false : null);
+        /* eslint-enable  no-return-assign*/
 
         return (
             <View style={{flexDirection: 'row'}}>
-                <View style={{flexDirection: 'column', justifyContent: 'center'}}>
+                <View
+                    style={{
+                        flexDirection: 'column',
+                        justifyContent: 'center'
+                    }}
+                >
                     {!isSelected ?
                         <Touchable
                             onPress={() => actions.setSelectedRow(images, true)}
