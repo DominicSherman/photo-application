@@ -10,7 +10,7 @@ import {addUser} from '../services/firebase-service';
 const styles = StyleSheet.create({
     currentUsers: {
         alignItems: 'center',
-        height: '75%',
+        flex: 1,
         paddingTop: 20,
         width: '100%'
     },
@@ -28,16 +28,17 @@ const styles = StyleSheet.create({
         width: '90%'
     },
     switch: {
+        flex: 0.1,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        paddingTop: '4%',
         width: '40%'
     },
     wrapperView: {
         alignItems: 'center',
+        flex: 1,
         flexDirection: 'column',
-        height: '100%',
-        justifyContent: 'space-between',
-        marginTop: '20%'
+        justifyContent: 'space-evenly'
     }
 });
 
@@ -69,7 +70,7 @@ export default class UserModal extends React.Component {
                 transparent={false}
                 visible={userModalVisible}
             >
-                <SafeAreaView>
+                <SafeAreaView style={{flex: 1}}>
                     <View style={styles.header}>
                         <Touchable
                             onPress={actions.toggleUserModal}
@@ -103,7 +104,7 @@ export default class UserModal extends React.Component {
                                 this.resetState();
                             }}
                             fontSize={25}
-                            height={25}
+                            height={18}
                             text={'ADD'}
                             width={50}
                         />

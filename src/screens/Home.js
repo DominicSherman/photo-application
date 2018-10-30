@@ -47,7 +47,11 @@ export default class Home extends React.Component {
                 <ScrollView>
                     <View style={styles.userWrapper}>
                         <Text style={styles.userText}>
-                            {`${user.name} - ${user.email}`}
+                            {user.name !== '' ?
+                                `${user.name} - ${user.email}`
+                                :
+                                user.email
+                            }
                         </Text>
                     </View>
                     {
