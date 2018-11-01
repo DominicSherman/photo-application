@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactNative from 'react-native';
 import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
 
@@ -10,6 +11,7 @@ import Login from '../src/screens/Login';
 import {tryToLoadCredentials} from '../src/services/async-storage-service';
 import {initializeFirebase} from '../src/services/firebase-service';
 import App from '../src/App';
+import {numPictures} from '../src/constants/variables';
 
 const chance = new Chance();
 
@@ -75,9 +77,35 @@ describe('App', () => {
     });
 
     describe('componentDidMount', () => {
+        let thenSpy,
+            getPhotosSpy;
+
         beforeEach(() => {
-            jest.resetAllMocks();
+            thenSpy = jest.fn();
+            getPhotosSpy = jest.fn(() => ({
+                then: thenSpy
+            }));
+            ReactNative.CameraRoll.getPhotos = getPhotosSpy;
             renderedInstance.componentDidMount();
+        });
+
+        it('should call getPhotos', () => {
+            expect(getPhotosSpy).toHaveBeenCalledTimes(1);
+            expect(getPhotosSpy).toHaveBeenCalledWith({
+                assetType: 'All',
+                first: numPictures
+            });
+        });
+
+        it('should call then', () => {
+            expect(thenSpy).toHaveBeenCalledTimes(1);
+
+            const r = chance.string();
+
+            thenSpy.mock.calls[0][0](r);
+
+            expect(expectedProps.actions.setCameraRollRows).toHaveBeenCalledTimes(1);
+            expect(expectedProps.actions.setCameraRollRows).toHaveBeenCalledWith(r);
         });
     });
 

@@ -1,15 +1,23 @@
-import {AppRegistry} from 'react-native';
+import ReactNative from 'react-native';
 
-jest.mock('react-native');
-jest.mock('../src/ReduxProvider');
+import ReduxProvider from '../src/ReduxProvider';
 
 describe('index', () => {
+    let registerSpy;
+
     beforeEach(() => {
+        registerSpy = jest.fn();
+        ReactNative.AppRegistry.registerComponent = registerSpy;
+
         require('../index');
     });
 
     it('should register the component', () => {
-        expect(AppRegistry.registerComponent).toHaveBeenCalledTimes(1);
-        expect(AppRegistry.registerComponent).toHaveBeenCalledWith('photoapplication', expect.anything());
+        expect(registerSpy).toHaveBeenCalledTimes(1);
+        expect(registerSpy).toHaveBeenCalledWith('photoapplication', expect.anything());
+
+        const registeredComponent = registerSpy.mock.calls[0][1]();
+
+        expect(registeredComponent).toBe(ReduxProvider);
     });
 });

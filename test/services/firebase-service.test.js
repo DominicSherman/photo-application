@@ -13,12 +13,12 @@ const chance = new Chance();
 
 jest.mock('react-native-fetch-blob', () => ({
     fs: {
-        readFile: jest.fn(() => ({
-            then: jest.fn()
-        }))
+        readFile: jest.fn()
     },
     polyfill: {
-        Blob: {}
+        Blob: {
+            build: jest.fn()
+        }
     }
 }));
 jest.mock('react-native-heic-converter', () => ({
@@ -48,7 +48,8 @@ describe('firebase-service', () => {
             putSpy,
             childSpy,
             storageRefSpy,
-            dbRefSpy;
+            dbRefSpy,
+            readFileThenSpy;
 
         beforeEach(async () => {
             expectedProps = {
@@ -97,6 +98,12 @@ describe('firebase-service', () => {
             }));
             firebase.database.mockReturnValue({
                 ref: dbRefSpy
+            });
+
+            readFileThenSpy = jest.fn();
+
+            RNFetchBlob.fs.readFile.mockReturnValue({
+                then: readFileThenSpy
             });
 
             await uploadImage(expectedProps);
@@ -167,6 +174,16 @@ describe('firebase-service', () => {
         it('should read the file', () => {
             expect(RNFetchBlob.fs.readFile).toHaveBeenCalledTimes(1);
             expect(RNFetchBlob.fs.readFile).toHaveBeenCalledWith(expectedProps.image.uri, 'base64');
+            expect(readFileThenSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should build the blob', () => {
+            const data = chance.string();
+
+            readFileThenSpy.mock.calls[0][0](data);
+
+            expect(RNFetchBlob.polyfill.Blob.build).toHaveBeenCalledTimes(1);
+            expect(RNFetchBlob.polyfill.Blob.build).toHaveBeenCalledWith(data, {type: 'application/octet-stream;BASE64'});
         });
 
         it('should put the blob', () => {
