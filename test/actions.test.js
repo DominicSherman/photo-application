@@ -2,19 +2,30 @@ import Chance from 'chance';
 
 import {
     incrementFinished,
-    setCameraRollRows, setEmail, setIsAdmin, setLoggedIn, setName,
+    setCameraRollRows,
+    setEmail,
+    setName,
     setProgress,
-    setSelectedImages, setSelectedRow,
+    setSelectedImages,
+    setSelectedRow,
     setTotal,
-    setUploading, setUsers, toggleImageModal, toggleSelected, toggleUserModal
+    setUploading,
+    setUsers,
+    toggleSelected
 } from '../src/action-creators/actions';
 import {numPerRow} from '../src/constants/variables';
 import {action} from '../src/constants/action';
 import {
-    ADD_CAMERA_ROLL_ROW, SET_ADMIN, SET_EMAIL, SET_IMAGE_MODAL_VISIBLE,
-    SET_IS_UPLOADING, SET_LOGGED_IN, SET_NAME,
+    ADD_CAMERA_ROLL_ROW,
+    SET_EMAIL,
+    SET_IS_UPLOADING,
+    SET_NAME,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD, SET_PROGRESSES, SET_SELECTED_IMAGES, SET_TOTALS, SET_USER_MODAL_VISIBLE, SET_USERS
+    SET_NUM_TO_UPLOAD,
+    SET_PROGRESSES,
+    SET_SELECTED_IMAGES,
+    SET_TOTALS,
+    SET_USERS
 } from '../src/constants/action-types';
 import {getUsers} from '../src/services/firebase-service';
 
@@ -78,16 +89,14 @@ describe('actions', () => {
         });
 
         it('should dispatch an action for every row', () => {
-            const timesCalled = Math.floor(r.edges.length / numPerRow) + 1;
+            let timesCalled = Math.floor(r.edges.length / numPerRow);
+
+            if (r.edges.length % numPerRow > 0) {
+                timesCalled += 1;
+            }
 
             expect(dispatchSpy).toHaveBeenCalledTimes(timesCalled);
             expect(dispatchSpy).toHaveBeenCalledWith(action(ADD_CAMERA_ROLL_ROW, expect.anything()));
-        });
-
-        it('should do nothing if there is no node', () => {
-            r = {
-                edges: chance.n
-            };
         });
     });
 
@@ -250,24 +259,6 @@ describe('actions', () => {
         });
     });
 
-    describe('toggleImageModal', () => {
-        it('should toggle imageModalVisible', () => {
-            toggleImageModal()(dispatchSpy, getStateStub);
-
-            expect(dispatchSpy).toHaveBeenCalledTimes(1);
-            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_IMAGE_MODAL_VISIBLE, !expectedState.imageModalVisible));
-        });
-    });
-
-    describe('toggleUserModal', () => {
-        it('should toggle imageModalVisible', () => {
-            toggleUserModal()(dispatchSpy, getStateStub);
-
-            expect(dispatchSpy).toHaveBeenCalledTimes(1);
-            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_USER_MODAL_VISIBLE, !expectedState.userModalVisible));
-        });
-    });
-
     describe('setUsers', () => {
         let expectedUsers,
             expectedUserMap = {},
@@ -347,28 +338,6 @@ describe('actions', () => {
 
             expect(dispatchSpy).toHaveBeenCalledTimes(1);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_NAME, name));
-        });
-    });
-
-    describe('setIsAdmin', () => {
-        it('should set isAdmin', () => {
-            const isAdmin = chance.bool();
-
-            setIsAdmin(isAdmin)(dispatchSpy);
-
-            expect(dispatchSpy).toHaveBeenCalledTimes(1);
-            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_ADMIN, isAdmin));
-        });
-    });
-
-    describe('setLoggedIn', () => {
-        it('should set isLoggedIn', () => {
-            const isLoggedIn = chance.bool();
-
-            setLoggedIn(isLoggedIn)(dispatchSpy);
-
-            expect(dispatchSpy).toHaveBeenCalledTimes(1);
-            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_LOGGED_IN, isLoggedIn));
         });
     });
 });

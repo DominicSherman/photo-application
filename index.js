@@ -7,7 +7,6 @@ import {loadIcons} from './src/services/icons-factory';
 import {getDefaultOptions, getRoot} from './src/services/layout-factory';
 import {HOME, IMAGE_MODAL, LOGIN, MORE, USER_MODAL} from './src/constants/routes';
 import {withRedux} from './src/services/redux-factory';
-import App from './src/App';
 import More from './src/screens/More';
 import reducer from './src/reducers/reducer';
 import {SET_ADMIN, SET_EMAIL, SET_LOGGED_IN, SET_NAME} from './src/constants/action-types';
@@ -17,12 +16,12 @@ import Login from './src/screens/Login';
 import {setUsers} from './src/action-creators/user-actions';
 import UserModal from './src/screens/UserModal';
 import ImageSelectModal from './src/screens/ImageSelectModal';
+import Home from './src/screens/Home';
 
-console.disableYellowBox = true;
 const store = createStore(reducer, applyMiddleware(thunk));
 
 const registerScreens = () => {
-    Navigation.registerComponent(HOME, () => withRedux(App, store));
+    Navigation.registerComponent(HOME, () => withRedux(Home, store));
     Navigation.registerComponent(LOGIN, () => withRedux(Login, store));
     Navigation.registerComponent(MORE, () => withRedux(More, store));
     Navigation.registerComponent(USER_MODAL, () => withRedux(UserModal, store));
@@ -33,7 +32,6 @@ registerScreens();
 
 const tryToLoadCredentials = () =>
     AsyncStorage.multiGet(['email', 'name', 'isAdmin']).then((data) => {
-
         const email = data[0][1];
         const name = data[1][1];
         const isAdmin = data[2][1];

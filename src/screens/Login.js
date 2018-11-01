@@ -4,7 +4,7 @@ import {Navigation} from 'react-native-navigation';
 
 import {lightFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
-import {login} from '../services/helper-functions';
+
 import LoadingView from './LoadingView';
 
 const styles = StyleSheet.create({

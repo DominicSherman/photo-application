@@ -1,4 +1,5 @@
 import {Navigation} from 'react-native-navigation';
+
 import {getRoot} from './layout-factory';
 
 export const showModal = (route) => {

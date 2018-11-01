@@ -2,15 +2,18 @@ import Chance from 'chance';
 
 import reducer from '../src/reducers/reducer';
 import {
-    ADD_CAMERA_ROLL_ROW, SET_ADMIN, SET_EMAIL,
-    SET_IMAGE_MODAL_VISIBLE,
-    SET_IS_UPLOADING, SET_LOGGED_IN, SET_NAME,
+    ADD_CAMERA_ROLL_ROW,
+    SET_ADMIN,
+    SET_EMAIL,
+    SET_IS_UPLOADING,
+    SET_LOGGED_IN,
+    SET_NAME,
     SET_NUM_FINISHED,
     SET_NUM_TO_UPLOAD,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
     SET_TOTALS,
-    SET_USER_MODAL_VISIBLE, SET_USERS
+    SET_USERS
 } from '../src/constants/action-types';
 
 const chance = new Chance();
@@ -18,13 +21,11 @@ const chance = new Chance();
 describe('reducer', () => {
     const defaultState = {
         cameraRollRows: [],
-        imageModalVisible: false,
         isUploading: false,
         numFinished: 0,
         numToUpload: 0,
         progresses: {},
         selectedImages: {},
-        shouldAuthenticate: true,
         totals: {},
         user: {
             email: '',
@@ -32,7 +33,6 @@ describe('reducer', () => {
             loggedIn: false,
             name: ''
         },
-        userModalVisible: false,
         users: null
     };
 
@@ -54,46 +54,6 @@ describe('reducer', () => {
         const actualState = reducer(undefined, anyAction);
 
         expect(actualState).toEqual(defaultState);
-    });
-
-    it('should set imageModalVisible when the action is SET_IMAGE_MODAL_VISIBLE', () => {
-        const originalState = {
-            [chance.string()]: chance.string(),
-            imageModalVisible: chance.bool()
-        };
-
-        const expectedData = chance.bool();
-        const action = {
-            data: expectedData,
-            type: SET_IMAGE_MODAL_VISIBLE
-        };
-
-        const actualState = reducer(originalState, action);
-
-        expect(actualState).toEqual({
-            ...originalState,
-            imageModalVisible: expectedData
-        });
-    });
-
-    it('should set userModalVisible when the action is SET_USER_MODAL_VISIBLE', () => {
-        const originalState = {
-            [chance.string()]: chance.string(),
-            userModalVisible: chance.bool()
-        };
-
-        const expectedData = chance.bool();
-        const action = {
-            data: expectedData,
-            type: SET_USER_MODAL_VISIBLE
-        };
-
-        const actualState = reducer(originalState, action);
-
-        expect(actualState).toEqual({
-            ...originalState,
-            userModalVisible: expectedData
-        });
     });
 
     it('should add cameraRollRows when the action is ADD_CAMERA_ROLL_ROW', () => {

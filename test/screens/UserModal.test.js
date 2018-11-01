@@ -1,7 +1,7 @@
 import React from 'react';
 import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
-import {FlatList, Modal, SafeAreaView, Switch, Text, TextInput, View} from 'react-native';
+import {FlatList, SafeAreaView, Switch, Text, TextInput, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
@@ -9,18 +9,18 @@ import UserModal from '../../src/screens/UserModal';
 import Button from '../../src/components/Button';
 import {addUser} from '../../src/services/firebase-service';
 import {createRandomUser} from '../model-factory';
+import {dismissModal} from '../../src/services/navigation-service';
 
 const chance = new Chance();
 
 jest.mock('../../src/services/firebase-service');
+jest.mock('../../src/services/navigation-service');
 
 describe('UserModal', () => {
     let expectedProps,
 
         renderedInstance,
         renderedComponent,
-
-        renderedSafeAreaView,
 
         renderedHeaderView,
         renderedBodyView,
@@ -45,12 +45,10 @@ describe('UserModal', () => {
         renderedCurrentUsersHeaderAdminText;
 
     const cacheChildren = () => {
-        renderedSafeAreaView = renderedComponent.props.children;
-
         [
             renderedHeaderView,
             renderedBodyView
-        ] = renderedSafeAreaView.props.children;
+        ] = renderedComponent.props.children;
 
         renderedCloseTouchable = renderedHeaderView.props.children;
 
@@ -93,22 +91,15 @@ describe('UserModal', () => {
 
     beforeEach(() => {
         expectedProps = {
-            actions: {
-                toggleUserModal: jest.fn()
-            },
-            userModalVisible: chance.bool(),
+            componentId: chance.natural(),
             users: chance.n(createRandomUser, chance.d6() + 1)
         };
 
         renderComponent();
     });
 
-    it('should render a root View', () => {
-        expect(renderedComponent.type).toBe(Modal);
-    });
-
     it('should render a SafeAreaView', () => {
-        expect(renderedSafeAreaView.type).toBe(SafeAreaView);
+        expect(renderedComponent.type).toBe(SafeAreaView);
     });
 
     it('should render a header view', () => {
@@ -117,7 +108,11 @@ describe('UserModal', () => {
 
     it('should render a close touchable', () => {
         expect(renderedCloseTouchable.type).toBe(Touchable);
-        expect(renderedCloseTouchable.props.onPress).toBe(expectedProps.actions.toggleUserModal);
+
+        renderedCloseTouchable.props.onPress();
+
+        expect(dismissModal).toHaveBeenCalledTimes(1);
+        expect(dismissModal).toHaveBeenCalledWith(expectedProps.componentId);
     });
 
     it('should render a close icon', () => {

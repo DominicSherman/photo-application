@@ -6,7 +6,6 @@ import {TextInput, View, Image} from 'react-native';
 import Login from '../../src/screens/Login';
 import {createRandomUser} from '../model-factory';
 import Button from '../../src/components/Button';
-import {login} from '../../src/services/helper-functions';
 
 jest.mock('../../src/services/helper-functions');
 
@@ -50,6 +49,7 @@ describe('Login', () => {
     beforeEach(() => {
         expectedProps = {
             actions: {
+                login: jest.fn(),
                 setEmail: jest.fn(),
                 setName: jest.fn(),
                 toggleUserModal: jest.fn()
@@ -99,15 +99,11 @@ describe('Login', () => {
 
     it('should render the login button', () => {
         expect(renderedLoginButton.type).toBe(Button);
+        expect(renderedLoginButton.props.action).toBe(expectedProps.actions.login);
         expect(renderedLoginButton.props.fontSize).toBe(30);
         expect(renderedLoginButton.props.height).toBe(15);
         expect(renderedLoginButton.props.text).toBe('LOGIN');
         expect(renderedLoginButton.props.width).toBe(80);
-
-        renderedLoginButton.props.action();
-
-        expect(login).toHaveBeenCalledTimes(1);
-        expect(login).toHaveBeenCalledWith(expectedProps.actions, expectedProps.user, expectedProps.users);
     });
 
     it('should render the logo', () => {

@@ -1,12 +1,15 @@
 import React from 'react';
 import Chance from 'chance';
-import {FlatList, Modal, SafeAreaView, Text, View} from 'react-native';
+import {FlatList, SafeAreaView, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import ShallowRenderer from 'react-test-renderer/shallow';
 
 import ImageSelectModal from '../../src/screens/ImageSelectModal';
 import CameraRollRow from '../../src/components/CameraRollRow';
+import {dismissModal} from '../../src/services/navigation-service';
+
+jest.mock('../../src/services/navigation-service');
 
 const chance = new Chance();
 
@@ -14,8 +17,6 @@ describe('ImageSelectModal', () => {
     let expectedProps,
 
         renderedComponent,
-
-        renderedSafeAreaView,
 
         renderedView,
         renderedFlatlist,
@@ -27,12 +28,10 @@ describe('ImageSelectModal', () => {
         renderedIcon;
 
     const cacheChildren = () => {
-        renderedSafeAreaView = renderedComponent.props.children;
-
         [
             renderedView,
             renderedFlatlist
-        ] = renderedSafeAreaView.props.children;
+        ] = renderedComponent.props.children;
 
         [
             renderedTouchable,
@@ -56,23 +55,22 @@ describe('ImageSelectModal', () => {
     beforeEach(() => {
         expectedProps = {
             actions: {
-                setSelectedImages: jest.fn(),
-                toggleImageModal: jest.fn()
+                setSelectedImages: jest.fn()
             },
             cameraRollRows: chance.n(chance.string, chance.d6() + 1),
-            imageModalVisible: chance.bool(),
+            componentId: chance.natural(),
             selectedImages: chance.n(chance.string, chance.d6() + 1)
         };
 
         renderComponent();
     });
 
-    it('should render a root modal', () => {
-        expect(renderedComponent.type).toBe(Modal);
+    afterEach(() => {
+        jest.resetAllMocks();
     });
 
     it('should render a SafeAreaView', () => {
-        expect(renderedSafeAreaView.type).toBe(SafeAreaView);
+        expect(renderedComponent.type).toBe(SafeAreaView);
     });
 
     it('should render a header view', () => {
@@ -84,7 +82,8 @@ describe('ImageSelectModal', () => {
 
         renderedTouchable.props.onPress();
 
-        expect(expectedProps.actions.toggleImageModal).toHaveBeenCalledTimes(1);
+        expect(dismissModal).toHaveBeenCalledTimes(1);
+        expect(dismissModal).toHaveBeenCalledWith(expectedProps.componentId);
         expect(expectedProps.actions.setSelectedImages).toHaveBeenCalledTimes(1);
         expect(expectedProps.actions.setSelectedImages).toHaveBeenCalledWith([]);
     });
@@ -100,7 +99,11 @@ describe('ImageSelectModal', () => {
 
     it('should render text for Done', () => {
         expect(renderedDoneText.type).toBe(Text);
-        expect(renderedDoneText.props.onPress).toBe(expectedProps.actions.toggleImageModal);
+
+        renderedDoneText.props.onPress();
+
+        expect(dismissModal).toHaveBeenCalledTimes(1);
+        expect(dismissModal).toHaveBeenCalledWith(expectedProps.componentId);
         expect(renderedDoneText.props.children).toBe('Done');
     });
 

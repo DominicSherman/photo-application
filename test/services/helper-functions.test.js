@@ -1,12 +1,6 @@
-import Chance from 'chance';
-
-import {getCurrentTime, getTimeForDisplay, login, logout} from '../../src/services/helper-functions';
-import {createRandomUser} from '../model-factory';
-import {removeCredentials, storeCredentials} from '../../src/services/async-storage-service';
+import {getCurrentTime, getTimeForDisplay} from '../../src/services/helper-functions';
 
 jest.mock('../../src/services/async-storage-service');
-
-const chance = new Chance();
 
 describe('helper-functions', () => {
     describe('getCurrentTime', () => {
@@ -72,61 +66,6 @@ describe('helper-functions', () => {
             const actualDisplay = getTimeForDisplay(duration);
 
             expect(actualDisplay).toEqual('1:00');
-        });
-    });
-
-    describe('login', () => {
-        let actions,
-            user,
-            users;
-
-        beforeEach(() => {
-            actions = {
-                setIsAdmin: jest.fn(),
-                setLoggedIn: jest.fn()
-            };
-            user = createRandomUser();
-            users = chance.shuffle([user, ...chance.n(createRandomUser, chance.d6() + 1)]);
-        });
-
-        it('should log in if the user is in the list of users passed in', () => {
-            login(actions, user, users);
-
-            expect(storeCredentials).toHaveBeenCalledTimes(1);
-            expect(storeCredentials).toHaveBeenCalledWith(user, user.name);
-            expect(actions.setIsAdmin).toHaveBeenCalledTimes(1);
-            expect(actions.setIsAdmin).toHaveBeenCalledWith(user.isAdmin);
-            expect(actions.setLoggedIn).toHaveBeenCalledTimes(1);
-            expect(actions.setLoggedIn).toHaveBeenCalledWith(true);
-        });
-
-        it('should not log in if the user is not in the list of users', () => {
-            login(actions, user, chance.n(createRandomUser, chance.d6() + 1));
-
-            expect(actions.setLoggedIn).not.toHaveBeenCalled();
-        });
-    });
-
-    describe('logout', () => {
-        it('should logout', () => {
-            const actions = {
-                setEmail: jest.fn(),
-                setIsAdmin: jest.fn(),
-                setLoggedIn: jest.fn(),
-                setName: jest.fn()
-            };
-
-            logout(actions);
-
-            expect(removeCredentials).toHaveBeenCalledTimes(1);
-            expect(actions.setEmail).toHaveBeenCalledTimes(1);
-            expect(actions.setEmail).toHaveBeenCalledWith('');
-            expect(actions.setName).toHaveBeenCalledTimes(1);
-            expect(actions.setName).toHaveBeenCalledWith('');
-            expect(actions.setIsAdmin).toHaveBeenCalledTimes(1);
-            expect(actions.setIsAdmin).toHaveBeenCalledWith(false);
-            expect(actions.setLoggedIn).toHaveBeenCalledTimes(1);
-            expect(actions.setLoggedIn).toHaveBeenCalledWith(false);
         });
     });
 });

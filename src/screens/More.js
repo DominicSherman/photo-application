@@ -31,7 +31,7 @@ export default class More extends Component {
         return (
             <View style={{flex: 1}}>
                 <View style={styles.userWrapper}>
-                    <Text style={darkFontStyles.regular}>{user.name && user.name}</Text>
+                    <Text style={darkFontStyles.regular}>{user.name}</Text>
                     <Text style={darkFontStyles.regular}>{user.email}</Text>
                 </View>
                 {
