@@ -1,83 +1,64 @@
+import {AsyncStorage} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+import thunk from 'redux-thunk';
+import {applyMiddleware, createStore} from 'redux';
 
-import {black, darkFont, white} from './src/constants/style-variables';
-import {getIcons, loadIcons} from './src/services/icons-factory';
-import Home from './src/screens/Home';
-import ReduxProvider from './src/ReduxProvider';
-import ImageSelectModalContainer from './src/screens/ImageSelectModalContainer';
-import {withProvider} from './src/services/redux-factory';
+import {loadIcons} from './src/services/icons-factory';
+import {getDefaultOptions, getRoot} from './src/services/layout-factory';
+import {HOME, LOGIN, MORE} from './src/constants/routes';
+import {withRedux} from './src/services/redux-factory';
+import App from './src/App';
+import More from './src/screens/More';
+import reducer from './src/reducer';
+import {SET_ADMIN, SET_EMAIL, SET_LOGGED_IN, SET_NAME} from './src/constants/action-types';
+import {action} from './src/constants/action';
+import {initializeFirebase} from './src/services/firebase-service';
+import Login from './src/screens/Login';
+import {setUsers} from './src/actions';
+
+console.disableYellowBox = true;
+const store = createStore(reducer, applyMiddleware(thunk));
 
 const registerScreens = () => {
-    Navigation.registerComponent('photoapplication.Home', () => ReduxProvider);
-    Navigation.registerComponent('photoapplication.Photos', () => withProvider(ImageSelectModalContainer));
+    Navigation.registerComponent(HOME, () => withRedux(App, store));
+    Navigation.registerComponent(LOGIN, () => withRedux(Login, store));
+    Navigation.registerComponent(MORE, () => withRedux(More, store));
 };
 
 registerScreens();
 
+const tryToLoadCredentials = () =>
+    AsyncStorage.multiGet(['email', 'name', 'isAdmin']).then((data) => {
+
+        const email = data[0][1];
+        const name = data[1][1];
+        const isAdmin = data[2][1];
+
+        if (email) {
+            store.dispatch(action(SET_EMAIL, email));
+            store.dispatch(action(SET_LOGGED_IN, true));
+        } else {
+            return false;
+        }
+
+        if (name) {
+            store.dispatch(action(SET_NAME, name));
+        }
+
+        if (isAdmin === 'true') {
+            store.dispatch(action(SET_ADMIN, isAdmin));
+        }
+
+        return true;
+    });
+
 Navigation.events().registerAppLaunchedListener(async () => {
+    initializeFirebase();
+    const [creds] = await Promise.all([tryToLoadCredentials(), setUsers()(store.dispatch)]);
+
     await loadIcons();
-    const icons = getIcons();
 
-    await Navigation.setDefaultOptions({
-        layout: {
-            orientation: 'portrait'
-        },
-        topBar: {
-            animate: false,
-            backButton: {
-                color: black,
-                icon: icons.arrowBack,
-                testID: 'backButton',
-                title: '',
-                visible: true
-            },
-            background: {
-                color: white
-            },
-            buttonColor: black,
-            drawBehind: true,
-            title: {
-                color: darkFont,
-                text: 'Wedding Photos'
-            },
-            visible: true
-        }
-    });
+    await Navigation.setDefaultOptions(getDefaultOptions());
 
-    Navigation.setRoot({
-        root: {
-            bottomTabs: {
-                children: [{
-                    stack: {
-                        children: [{
-                            component: {
-                                name: 'photoapplication.Home'
-                            }
-                        }],
-                        options: {
-                            bottomTab: {
-                                icon: icons.home,
-                                title: 'Home'
-                            }
-                        }
-                    }
-                },
-                {
-                    stack: {
-                        children: [{
-                            component: {
-                                name: 'photoapplication.Photos'
-                            }
-                        }],
-                        options: {
-                            bottomTab: {
-                                icon: icons.more,
-                                title: 'Photos'
-                            }
-                        }
-                    }
-                }]
-            }
-        }
-    });
+    Navigation.setRoot(getRoot(creds));
 });

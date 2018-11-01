@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, TextInput, View} from 'react-native';
+import {Navigation} from 'react-native-navigation';
 
 import {lightFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
@@ -26,6 +27,16 @@ const styles = StyleSheet.create({
 });
 
 export default class Login extends React.Component {
+    componentDidMount() {
+        Navigation.mergeOptions(this.props.componentId, {
+            options: {
+                bottomTabs: {
+                    visible: false
+                }
+            }
+        });
+    }
+
     render() {
         const {actions, user, users} = this.props;
 
@@ -48,7 +59,7 @@ export default class Login extends React.Component {
                     />
                 </View>
                 <Button
-                    action={() => login(actions, user, users)}
+                    action={actions.login}
                     fontSize={30}
                     height={15}
                     text={'LOGIN'}

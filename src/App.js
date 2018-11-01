@@ -2,23 +2,17 @@ import React, {Component} from 'react';
 import {CameraRoll} from 'react-native';
 
 import {numPictures} from './constants/variables';
-import {initializeFirebase} from './services/firebase-service';
 import Home from './screens/Home';
-import Login from './screens/Login';
 import LoadingView from './screens/LoadingView';
 import UserModal from './screens/UserModal';
 import ImageSelectModal from './screens/ImageSelectModal';
-import {tryToLoadCredentials} from './services/async-storage-service';
 
 export default class App extends Component {
     componentWillMount() {
-        tryToLoadCredentials(this.props.actions);
-        initializeFirebase();
         this.props.actions.setUsers();
     }
 
     componentDidMount() {
-        console.log('here');
         CameraRoll.getPhotos({
             assetType: 'All',
             first: numPictures
@@ -62,16 +56,6 @@ export default class App extends Component {
                     cameraRollRows={cameraRollRows}
                     imageModalVisible={imageModalVisible}
                     selectedImages={selectedImages}
-                />
-            );
-        }
-
-        if (!this.props.user.loggedIn && shouldAuthenticate) {
-            return (
-                <Login
-                    actions={actions}
-                    user={user}
-                    users={users}
                 />
             );
         }

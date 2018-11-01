@@ -1,17 +1,19 @@
 import React from 'react';
-import thunk from 'redux-thunk';
-import {applyMiddleware, createStore} from 'redux';
-import {Provider} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect, Provider} from 'react-redux';
+import * as ActionCreators from '../actions';
 
-import reducer from '../reducer';
+const mapDispatchToProps = (dispatch) => ({actions: bindActionCreators(ActionCreators, dispatch)});
 
-const store = createStore(reducer, applyMiddleware(thunk));
+const mapStateToProps = (state) => state;
 
-export const withProvider = (Component) => class ProviderComponent extends React.Component {
+export const withRedux = (Component, store) => class ReduxComponent extends React.Component {
     render() {
+        const ConnectedComponent = connect(mapStateToProps, mapDispatchToProps)(Component);
+
         return (
             <Provider store={store}>
-                <Component />
+                <ConnectedComponent {...this.props} />
             </Provider>
         );
     }

@@ -28,7 +28,7 @@ export default class ImageSelectModal extends Component {
             <Modal
                 animationType={'slide'}
                 transparent={false}
-                visible={true}
+                visible={imageModalVisible}
             >
                 <SafeAreaView>
                     <View style={styles.header}>

@@ -1,3 +1,5 @@
+import {Navigation} from 'react-native-navigation';
+
 import {
     ADD_CAMERA_ROLL_ROW,
     SET_ADMIN,
@@ -17,6 +19,9 @@ import {
 import {action} from './constants/action';
 import {numPerRow} from './constants/variables';
 import {getUsers} from './services/firebase-service';
+import {clean} from './services/helper-functions';
+import {removeCredentials, storeCredentials} from './services/async-storage-service';
+import {getRoot} from './services/layout-factory';
 
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
@@ -147,10 +152,30 @@ export const setUsers = () => async (dispatch) => {
     );
 };
 
+export const login = () => (dispatch, getState) => {
+    const {user, users} = getState();
+    const {email, name} = user;
+    const authUser = users.find((u) => clean(u.email) === clean(email));
+
+    if (authUser) {
+        storeCredentials(authUser, name);
+        dispatch(action(SET_ADMIN, authUser.isAdmin));
+        dispatch(action(SET_LOGGED_IN, true));
+    }
+
+    Navigation.setRoot(getRoot(true));
+};
+
+export const logout = () => (dispatch) => {
+    removeCredentials();
+    dispatch(action(SET_EMAIL, ''));
+    dispatch(action(SET_NAME, ''));
+    dispatch(action(SET_ADMIN, false));
+    dispatch(action(SET_LOGGED_IN, false));
+
+    Navigation.setRoot(getRoot(false));
+};
+
 export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, email));
 
 export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
-
-export const setIsAdmin = (isAdmin) => (dispatch) => dispatch(action(SET_ADMIN, isAdmin));
-
-export const setLoggedIn = (isLoggedIn) => (dispatch) => dispatch(action(SET_LOGGED_IN, isLoggedIn));
