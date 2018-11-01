@@ -18,6 +18,7 @@ export default class App extends Component {
     }
 
     componentDidMount() {
+        console.log('here');
         CameraRoll.getPhotos({
             assetType: 'All',
             first: numPictures

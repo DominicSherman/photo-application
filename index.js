@@ -1,14 +1,15 @@
-import {AppRegistry} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
-import ReduxProvider from './src/ReduxProvider';
 import {black, darkFont, white} from './src/constants/style-variables';
 import {getIcons, loadIcons} from './src/services/icons-factory';
 import Home from './src/screens/Home';
+import ReduxProvider from './src/ReduxProvider';
+import ImageSelectModalContainer from './src/screens/ImageSelectModalContainer';
+import {withProvider} from './src/services/redux-factory';
 
 const registerScreens = () => {
-    Navigation.registerComponent('Home', () => require('./src/screens/Home').default);
-    Navigation.registerComponent('Photos', () => require('./src/screens/ImageSelectModal').default);
+    Navigation.registerComponent('photoapplication.Home', () => ReduxProvider);
+    Navigation.registerComponent('photoapplication.Photos', () => withProvider(ImageSelectModalContainer));
 };
 
 registerScreens();
@@ -44,55 +45,38 @@ Navigation.events().registerAppLaunchedListener(async () => {
     });
 
     Navigation.setRoot({
-        bottomTabs: {
-            children: [
-                {
+        root: {
+            bottomTabs: {
+                children: [{
                     stack: {
-                        children: [
-                            {
-                                component: {
-                                    name: Home
-                                }
+                        children: [{
+                            component: {
+                                name: 'photoapplication.Home'
                             }
-                        ],
+                        }],
                         options: {
                             bottomTab: {
                                 icon: icons.home,
-                                testID: 'navHome',
-                                title: 'HOME'
-                            },
-                            sideMenu: {
-                                enabled: false,
-                                visible: false
+                                title: 'Home'
                             }
                         }
                     }
                 },
                 {
                     stack: {
-                        children: [
-                            {
-                                component: {
-                                    name: Photos
-                                }
+                        children: [{
+                            component: {
+                                name: 'photoapplication.Photos'
                             }
-                        ],
+                        }],
                         options: {
                             bottomTab: {
-                                icon: icons.lists,
-                                testID: 'navPhotos',
-                                title: 'PHOTOS'
+                                icon: icons.more,
+                                title: 'Photos'
                             }
                         }
                     }
-                }
-            ],
-            options: {
-                bottomTabs: {
-                    animate: false,
-                    drawBehind: true,
-                    selectedTabColor: black
-                }
+                }]
             }
         }
     });
