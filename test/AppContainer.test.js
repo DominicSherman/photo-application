@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Chance from 'chance';
 
-import * as ActionCreators from '../src/actions';
+import * as ActionCreators from '../src/action-creators/actions';
 
 const chance = new Chance();
 

@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import reducer from '../src/reducer';
+import reducer from '../src/reducers/reducer';
 import {
     ADD_CAMERA_ROLL_ROW, SET_ADMIN, SET_EMAIL,
     SET_IMAGE_MODAL_VISIBLE,

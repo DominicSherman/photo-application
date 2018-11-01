@@ -7,7 +7,7 @@ import {
     setSelectedImages, setSelectedRow,
     setTotal,
     setUploading, setUsers, toggleImageModal, toggleSelected, toggleUserModal
-} from '../src/actions';
+} from '../src/action-creators/actions';
 import {numPerRow} from '../src/constants/variables';
 import {action} from '../src/constants/action';
 import {

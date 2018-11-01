@@ -1,27 +1,16 @@
-import {Navigation} from 'react-native-navigation';
-
 import {
     ADD_CAMERA_ROLL_ROW,
-    SET_ADMIN,
-    SET_EMAIL,
     SET_IMAGE_MODAL_VISIBLE,
     SET_IS_UPLOADING,
-    SET_LOGGED_IN,
-    SET_NAME,
     SET_NUM_FINISHED,
     SET_NUM_TO_UPLOAD,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
     SET_TOTALS,
-    SET_USER_MODAL_VISIBLE,
-    SET_USERS
-} from './constants/action-types';
-import {action} from './constants/action';
-import {numPerRow} from './constants/variables';
-import {getUsers} from './services/firebase-service';
-import {clean} from './services/helper-functions';
-import {removeCredentials, storeCredentials} from './services/async-storage-service';
-import {getRoot} from './services/layout-factory';
+    SET_USER_MODAL_VISIBLE
+} from '../constants/action-types';
+import {action} from '../constants/action';
+import {numPerRow} from '../constants/variables';
 
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
@@ -35,7 +24,9 @@ export const setCameraRollRows = (r) => (dispatch) => {
         }
     }
 
-    dispatch(action(ADD_CAMERA_ROLL_ROW, row));
+    if (row.length) {
+        dispatch(action(ADD_CAMERA_ROLL_ROW, row));
+    }
 };
 
 export const incrementFinished = () => (dispatch, getState) => {
@@ -132,50 +123,3 @@ export const toggleUserModal = () => (dispatch, getState) => {
 
     dispatch(action(SET_USER_MODAL_VISIBLE, !userModalVisible));
 };
-
-export const setUsers = () => async (dispatch) => {
-    await getUsers().on('value',
-        (snapshot) => {
-            const userMap = snapshot.val();
-
-            if (userMap) {
-                const users = Object.keys(userMap).map((key) => ({
-                    email: userMap[key].email,
-                    isAdmin: userMap[key].isAdmin
-                }));
-
-                dispatch(action(SET_USERS, users));
-            } else {
-                dispatch(action(SET_USERS, []));
-            }
-        }
-    );
-};
-
-export const login = () => (dispatch, getState) => {
-    const {user, users} = getState();
-    const {email, name} = user;
-    const authUser = users.find((u) => clean(u.email) === clean(email));
-
-    if (authUser) {
-        storeCredentials(authUser, name);
-        dispatch(action(SET_ADMIN, authUser.isAdmin));
-        dispatch(action(SET_LOGGED_IN, true));
-    }
-
-    Navigation.setRoot(getRoot(true));
-};
-
-export const logout = () => (dispatch) => {
-    removeCredentials();
-    dispatch(action(SET_EMAIL, ''));
-    dispatch(action(SET_NAME, ''));
-    dispatch(action(SET_ADMIN, false));
-    dispatch(action(SET_LOGGED_IN, false));
-
-    Navigation.setRoot(getRoot(false));
-};
-
-export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, email));
-
-export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));

@@ -24,15 +24,21 @@ const styles = StyleSheet.create({
 
 export default class LoadingView extends Component {
     render() {
+        let percentage = 0;
+
         const {
             progresses,
             totals,
             numFinished,
             numToUpload
         } = this.props;
-        const total = Object.keys(totals).reduce((accum, key) => accum + totals[key], 0);
-        const progress = Object.keys(progresses).reduce((accum, key) => accum + progresses[key], 0);
-        const percentage = total ? progress / total : 0;
+
+        if (numToUpload) {
+            const total = Object.keys(totals).reduce((accum, key) => accum + totals[key], 0);
+            const progress = Object.keys(progresses).reduce((accum, key) => accum + progresses[key], 0);
+
+            percentage = total ? progress / total : 0;
+        }
 
         return (
             <View style={styles.wrapper}>

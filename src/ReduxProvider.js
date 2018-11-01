@@ -3,7 +3,7 @@ import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
 
-import reducer from './reducer';
+import reducer from './reducers/reducer';
 import AppContainer from './AppContainer';
 
 export default class ReduxProvider extends Component {

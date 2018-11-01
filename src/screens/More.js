@@ -1,31 +1,26 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
-
-import {logout} from '../services/helper-functions';
-import Button from '../components/Button';
-import {green, lightFont} from '../constants/style-variables';
 import Feather from 'react-native-vector-icons/Feather';
+
+import Button from '../components/Button';
+import {green} from '../constants/style-variables';
+import {USER_MODAL} from '../constants/routes';
+import {showModal} from '../services/navigation-service';
+import {darkFontStyles} from '../constants/font-styles';
 
 const styles = StyleSheet.create({
     userButtonWrapper: {
-        flex: 1,
+        flex: 0.3,
         flexDirection: 'row',
         justifyContent: 'center',
-        paddingVertical: 20,
         width: '100%'
-    },
-    userText: {
-        color: lightFont,
-        flex: 1,
-        fontSize: 15,
-        fontWeight: '200'
     },
     userWrapper: {
         alignItems: 'center',
-        flex: 1,
-        justifyContent: 'center',
-        marginBottom: 10
+        flex: 0.2,
+        justifyContent: 'space-evenly',
+        marginBottom: '5%'
     }
 });
 
@@ -36,18 +31,15 @@ export default class More extends Component {
         return (
             <View style={{flex: 1}}>
                 <View style={styles.userWrapper}>
-                    <Text style={styles.userText}>
-                        {user.name !== '' ?
-                            `${user.name} - ${user.email}`
-                            :
-                            user.email
-                        }
-                    </Text>
+                    <Text style={darkFontStyles.regular}>{user.name && user.name}</Text>
+                    <Text style={darkFontStyles.regular}>{user.email}</Text>
                 </View>
                 {
                     user.isAdmin &&
                     <View style={styles.userButtonWrapper}>
-                        <Touchable onPress={actions.toggleUserModal}>
+                        <Touchable
+                            onPress={() => showModal(USER_MODAL)}
+                        >
                             <Feather
                                 color={green}
                                 name={'user-plus'}

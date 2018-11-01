@@ -5,16 +5,18 @@ import {applyMiddleware, createStore} from 'redux';
 
 import {loadIcons} from './src/services/icons-factory';
 import {getDefaultOptions, getRoot} from './src/services/layout-factory';
-import {HOME, LOGIN, MORE} from './src/constants/routes';
+import {HOME, IMAGE_MODAL, LOGIN, MORE, USER_MODAL} from './src/constants/routes';
 import {withRedux} from './src/services/redux-factory';
 import App from './src/App';
 import More from './src/screens/More';
-import reducer from './src/reducer';
+import reducer from './src/reducers/reducer';
 import {SET_ADMIN, SET_EMAIL, SET_LOGGED_IN, SET_NAME} from './src/constants/action-types';
 import {action} from './src/constants/action';
 import {initializeFirebase} from './src/services/firebase-service';
 import Login from './src/screens/Login';
-import {setUsers} from './src/actions';
+import {setUsers} from './src/action-creators/user-actions';
+import UserModal from './src/screens/UserModal';
+import ImageSelectModal from './src/screens/ImageSelectModal';
 
 console.disableYellowBox = true;
 const store = createStore(reducer, applyMiddleware(thunk));
@@ -23,6 +25,8 @@ const registerScreens = () => {
     Navigation.registerComponent(HOME, () => withRedux(App, store));
     Navigation.registerComponent(LOGIN, () => withRedux(Login, store));
     Navigation.registerComponent(MORE, () => withRedux(More, store));
+    Navigation.registerComponent(USER_MODAL, () => withRedux(UserModal, store));
+    Navigation.registerComponent(IMAGE_MODAL, () => withRedux(ImageSelectModal, store));
 };
 
 registerScreens();

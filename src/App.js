@@ -4,8 +4,6 @@ import {CameraRoll} from 'react-native';
 import {numPictures} from './constants/variables';
 import Home from './screens/Home';
 import LoadingView from './screens/LoadingView';
-import UserModal from './screens/UserModal';
-import ImageSelectModal from './screens/ImageSelectModal';
 
 export default class App extends Component {
     componentWillMount() {
@@ -23,40 +21,14 @@ export default class App extends Component {
     render() {
         const {
             actions,
-            cameraRollRows,
-            imageModalVisible,
             isUploading,
             selectedImages,
-            shouldAuthenticate,
-            user,
-            userModalVisible,
-            users
+            user
         } = this.props;
 
-        if (isUploading || !user.loggedIn && !users && shouldAuthenticate) {
+        if (isUploading) {
             return (
                 <LoadingView {...this.props} />
-            );
-        }
-
-        if (userModalVisible) {
-            return (
-                <UserModal
-                    actions={actions}
-                    userModalVisible={userModalVisible}
-                    users={users}
-                />
-            );
-        }
-
-        if (imageModalVisible) {
-            return (
-                <ImageSelectModal
-                    actions={actions}
-                    cameraRollRows={cameraRollRows}
-                    imageModalVisible={imageModalVisible}
-                    selectedImages={selectedImages}
-                />
             );
         }
 

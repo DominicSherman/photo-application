@@ -1,4 +1,4 @@
-import {black, darkFont, white} from '../constants/style-variables';
+import {black, darkFont, green, white} from '../constants/style-variables';
 import {HOME, LOGIN, MORE} from '../constants/routes';
 
 import {getIcons} from './icons-factory';
@@ -26,7 +26,7 @@ export const getDefaultOptions = () => {
             drawBehind: false,
             title: {
                 color: darkFont,
-                text: 'Wedding Photos'
+                text: '🎉 Dominic & Mary Wedding Photos 🎉'
             },
             visible: true
         }
@@ -70,7 +70,14 @@ export const getRoot = (isLoggedIn) => {
                                     }
                                 }
                             }
-                        }]
+                        }],
+                        options: {
+                            bottomTabs: {
+                                animate: true,
+                                drawBehind: false,
+                                selectedTabColor: green
+                            }
+                        }
                     }
                 }
             }

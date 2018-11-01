@@ -1,11 +1,12 @@
 import React from 'react';
-import {FlatList, Modal, SafeAreaView, StyleSheet, Switch, Text, TextInput, View} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet, Switch, Text, TextInput, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import {darkFontStyles, lightFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
 import {addUser} from '../services/firebase-service';
+import {dismissModal} from '../services/navigation-service';
 
 const styles = StyleSheet.create({
     currentUsers: {
@@ -61,85 +62,79 @@ export default class UserModal extends React.Component {
     setIsAdmin = (isAdmin) => this.setState({isAdmin});
 
     render() {
-        const {actions, users, userModalVisible} = this.props;
+        const {users} = this.props;
         const {email, isAdmin} = this.state;
 
         return (
-            <Modal
-                animationType={'slide'}
-                transparent={false}
-                visible={userModalVisible}
-            >
-                <SafeAreaView style={{flex: 1}}>
-                    <View style={styles.header}>
-                        <Touchable
-                            onPress={actions.toggleUserModal}
-                        >
-                            <EvilIcons
-                                name={'close'}
-                                size={30}
-                            />
-                        </Touchable>
-                    </View>
-                    <View style={styles.wrapperView}>
-                        <TextInput
-                            autoCapitalize={'none'}
-                            clearTextOnFocus
-                            numberOfLines={2}
-                            onChangeText={(inputEmail) => this.setEmail(inputEmail)}
-                            placeholder={'Email'}
-                            style={[lightFontStyles.light, {fontSize: 25}]}
-                            value={email}
+            <SafeAreaView style={{flex: 1}}>
+                <View style={styles.header}>
+                    <Touchable
+                        onPress={() => dismissModal(this.props.componentId)}
+                    >
+                        <EvilIcons
+                            name={'close'}
+                            size={30}
                         />
-                        <View style={styles.switch}>
-                            <Text style={darkFontStyles.regular}>{'Admin'}</Text>
-                            <Switch
-                                onValueChange={(inputIsAdmin) => this.setIsAdmin(inputIsAdmin)}
-                                value={isAdmin}
-                            />
-                        </View>
-                        <Button
-                            action={() => {
-                                addUser(email.toLowerCase(), isAdmin);
-                                this.resetState();
-                            }}
-                            fontSize={25}
-                            height={18}
-                            text={'ADD'}
-                            width={50}
+                    </Touchable>
+                </View>
+                <View style={styles.wrapperView}>
+                    <TextInput
+                        autoCapitalize={'none'}
+                        clearTextOnFocus
+                        numberOfLines={2}
+                        onChangeText={(inputEmail) => this.setEmail(inputEmail)}
+                        placeholder={'Email'}
+                        style={[lightFontStyles.light, {fontSize: 25}]}
+                        value={email}
+                    />
+                    <View style={styles.switch}>
+                        <Text style={darkFontStyles.regular}>{'Admin'}</Text>
+                        <Switch
+                            onValueChange={(inputIsAdmin) => this.setIsAdmin(inputIsAdmin)}
+                            value={isAdmin}
                         />
-                        <View style={styles.currentUsers}>
-                            <Text style={[darkFontStyles.medium, {fontSize: 25}]}>{'Current Users'}</Text>
-                            <View style={styles.row}>
-                                <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'EMAIL'}</Text>
-                                <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'ADMIN'}</Text>
-                            </View>
-                            <FlatList
-                                data={users}
-                                keyExtractor={(user) => user.email}
-                                renderItem={({item}) => (
-                                    <View style={styles.row}>
-                                        <Text
-                                            numberOfLines={1}
-                                            style={[darkFontStyles.regular, {
-                                                fontSize: 15,
-                                                width: '90%'
-                                            }]}
-                                        >
-                                            {item.email}
-                                        </Text>
-                                        <Text
-                                            style={[darkFontStyles.regular, {fontSize: 15}]}
-                                        >
-                                            {item.isAdmin ? 'Yes' : 'No'}
-                                        </Text>
-                                    </View>
-                                )}
-                            />
-                        </View>
                     </View>
-                </SafeAreaView>
-            </Modal>
+                    <Button
+                        action={() => {
+                            addUser(email.toLowerCase(), isAdmin);
+                            this.resetState();
+                        }}
+                        fontSize={25}
+                        height={18}
+                        text={'ADD'}
+                        width={50}
+                    />
+                    <View style={styles.currentUsers}>
+                        <Text style={[darkFontStyles.medium, {fontSize: 25}]}>{'Current Users'}</Text>
+                        <View style={styles.row}>
+                            <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'EMAIL'}</Text>
+                            <Text style={[darkFontStyles.medium, {fontSize: 15}]}>{'ADMIN'}</Text>
+                        </View>
+                        <FlatList
+                            data={users}
+                            keyExtractor={(user) => user.email}
+                            renderItem={({item}) => (
+                                <View style={styles.row}>
+                                    <Text
+                                        numberOfLines={1}
+                                        style={[darkFontStyles.regular, {
+                                            fontSize: 15,
+                                            width: '90%'
+                                        }]}
+                                    >
+                                        {item.email}
+                                    </Text>
+                                    <Text
+                                        style={[darkFontStyles.regular, {fontSize: 15}]}
+                                    >
+                                        {item.isAdmin ? 'Yes' : 'No'}
+                                    </Text>
+                                </View>
+                            )}
+                        />
+                    </View>
+                </View>
+            </SafeAreaView>
         );
     }
 }

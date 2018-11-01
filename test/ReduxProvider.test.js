@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 
 import ReduxProvider from '../src/ReduxProvider';
 import AppContainer from '../src/AppContainer';
-import reducer from '../src/reducer';
+import reducer from '../src/reducers/reducer';
 
 jest.mock('redux');
 jest.mock('redux-thunk');
