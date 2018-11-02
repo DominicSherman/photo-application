@@ -1,5 +1,5 @@
 import {black, darkFont, green, white} from '../constants/style-variables';
-import {HOME, LOGIN, MORE} from '../constants/routes';
+import {HOME, LOGIN, MORE, PHOTOS} from '../constants/routes';
 
 import {getIcons} from './icons-factory';
 
@@ -41,36 +41,53 @@ export const getRoot = (isLoggedIn) => {
             {
                 root: {
                     bottomTabs: {
-                        children: [{
-                            stack: {
-                                children: [{
-                                    component: {
-                                        name: HOME
+                        children: [
+                            {
+                                stack: {
+                                    children: [{
+                                        component: {
+                                            name: HOME
+                                        }
+                                    }],
+                                    options: {
+                                        bottomTab: {
+                                            icon: icons.home,
+                                            title: 'Home'
+                                        }
                                     }
-                                }],
-                                options: {
-                                    bottomTab: {
-                                        icon: icons.home,
-                                        title: 'Home'
+                                }
+                            },
+                            {
+                                stack: {
+                                    children: [{
+                                        component: {
+                                            name: PHOTOS
+                                        }
+                                    }],
+                                    options: {
+                                        bottomTab: {
+                                            icon: icons.list,
+                                            title: 'Photos'
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                stack: {
+                                    children: [{
+                                        component: {
+                                            name: MORE
+                                        }
+                                    }],
+                                    options: {
+                                        bottomTab: {
+                                            icon: icons.more,
+                                            title: 'More'
+                                        }
                                     }
                                 }
                             }
-                        },
-                        {
-                            stack: {
-                                children: [{
-                                    component: {
-                                        name: MORE
-                                    }
-                                }],
-                                options: {
-                                    bottomTab: {
-                                        icon: icons.more,
-                                        title: 'More'
-                                    }
-                                }
-                            }
-                        }],
+                        ],
                         options: {
                             bottomTabs: {
                                 animate: true,
