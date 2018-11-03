@@ -16,7 +16,7 @@ export const showModal = (route, options) => {
                     ...options
                 }
             }]
-        },
+        }
     });
 };
 
