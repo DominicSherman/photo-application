@@ -3,10 +3,21 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 
 import {darkFontStyles} from '../constants/font-styles';
-import {lightFont} from '../constants/style-variables';
-import {openHRLink, openMcMenaminLink} from '../services/helper-functions';
+import {darkGray, lightFont} from '../constants/style-variables';
+import {calculateDaysLeft, openHRLink, openMcMenaminLink} from '../services/helper-functions';
 
 const styles = StyleSheet.create({
+    begins: {
+        alignItems: 'center',
+        flex: 0.4,
+        justifyContent: 'center',
+        width: '100%'
+    },
+    daysLeft: {
+        color: darkGray,
+        fontSize: 30,
+        fontWeight: '200'
+    },
     headerWrapper: {
         marginVertical: 15
     },
@@ -38,19 +49,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: '2%',
         width: '100%'
+    },
+    wrapper: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-evenly'
     }
 });
 
 export default class WeddingInformation extends Component {
     render() {
         return (
-            <View>
+            <View style={styles.wrapper}>
+                <View style={styles.begins}>
+                    <Text style={styles.daysLeft}>{`${calculateDaysLeft()} days left`}</Text>
+                </View>
                 <View style={styles.row}>
-                    <Image
-                        resizeMode={'contain'}
-                        source={require('../assets/church.png')}
-                        style={styles.image}
-                    />
                     <View style={styles.textWrapper}>
                         <View style={styles.headerWrapper}>
                             <Text style={darkFontStyles.regular}>{'The Ceremony'}</Text>
@@ -69,8 +83,18 @@ export default class WeddingInformation extends Component {
                             </View>
                         </Touchable>
                     </View>
+                    <Image
+                        resizeMode={'contain'}
+                        source={require('../assets/church.png')}
+                        style={styles.image}
+                    />
                 </View>
                 <View style={styles.row}>
+                    <Image
+                        resizeMode={'contain'}
+                        source={require('../assets/cake.png')}
+                        style={styles.image}
+                    />
                     <View style={styles.textWrapper}>
                         <View style={styles.headerWrapper}>
                             <Text style={darkFontStyles.regular}>{'The Reception'}</Text>
@@ -89,11 +113,6 @@ export default class WeddingInformation extends Component {
                             </View>
                         </Touchable>
                     </View>
-                    <Image
-                        resizeMode={'contain'}
-                        source={require('../assets/cake.png')}
-                        style={styles.image}
-                    />
                 </View>
             </View>
         );

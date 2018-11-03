@@ -129,7 +129,7 @@ export const setMedia = () => (dispatch) => {
 
             sets.forEach((set) => set.forEach((item) => all = [...all, item]));
 
-            all.forEach(({url, width, height, isVideo}) => {
+            all.forEach(({url, width, height, isVideo, name}) => {
                 if (isVideo) {
                     videos = [
                         ...videos,
@@ -140,7 +140,16 @@ export const setMedia = () => (dispatch) => {
                 } else {
                     photos = [
                         ...photos,
-                        {uri: url}
+                        {
+                            dimensions: {
+                                height,
+                                width
+                            },
+                            source: {
+                                uri: url
+                            },
+                            name
+                        }
                     ];
                 }
             });

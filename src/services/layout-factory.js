@@ -106,7 +106,7 @@ export const getRoot = (isLoggedIn) => {
                         options: {
                             bottomTabs: {
                                 animate: true,
-                                drawBehind: true,
+                                drawBehind: false,
                                 selectedTabColor: green
                             }
                         }

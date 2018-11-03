@@ -49,6 +49,8 @@ export default class Login extends React.Component {
 
         return (
             <View style={styles.wrapperView}>
+                <View>
+                </View>
                 <View style={styles.textWrapper}>
                     <TextInput
                         autoCapitalize={'none'}

@@ -34,3 +34,11 @@ export const openMcMenaminLink = Platform.select({
         Linking.openURL('http://maps.apple.com/maps?daddr=45.549305, -122.900486');
     }
 });
+
+export const calculateDaysLeft = () => {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const weddingDay = new Date('2019-05-28T14:00:00-07:00').getTime();
+    const now = Date.now();
+
+    return Math.floor(Math.abs((weddingDay - now) / oneDay));
+};

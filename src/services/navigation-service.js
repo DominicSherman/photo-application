@@ -2,7 +2,7 @@ import {Navigation} from 'react-native-navigation';
 
 import {getRoot} from './layout-factory';
 
-export const showModal = (route) => {
+export const showModal = (route, options) => {
     Navigation.showModal({
         stack: {
             children: [{
@@ -12,10 +12,11 @@ export const showModal = (route) => {
                         topBar: {
                             visible: false
                         }
-                    }
+                    },
+                    ...options
                 }
             }]
-        }
+        },
     });
 };
 
