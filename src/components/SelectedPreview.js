@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     },
     wrapperView: {
         flex: 1,
-        paddingBottom: '6%'
+        paddingBottom: '6%',
+        paddingTop: '5%'
     }
 });
 

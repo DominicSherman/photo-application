@@ -6,11 +6,11 @@ import {
     SET_LOGGED_IN,
     SET_NAME,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD,
+    SET_NUM_TO_UPLOAD, SET_PICTURES,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
     SET_TOTALS,
-    SET_USERS
+    SET_USERS, SET_VIDEOS
 } from '../constants/action-types';
 
 const defaultState = {
@@ -18,6 +18,7 @@ const defaultState = {
     isUploading: false,
     numFinished: 0,
     numToUpload: 0,
+    pictures: null,
     progresses: {},
     selectedImages: {},
     totals: {},
@@ -27,7 +28,8 @@ const defaultState = {
         loggedIn: false,
         name: ''
     },
-    users: null
+    users: null,
+    videos: []
 };
 
 const addCameraRollRow = (state, row) => ({
@@ -102,6 +104,16 @@ const setUsers = (state, users) => ({
     users
 });
 
+const setPictures = (state, pictures) => ({
+    ...state,
+    pictures
+});
+
+const setVideos = (state, videos) => ({
+    ...state,
+    videos
+});
+
 const reducerMap = {
     [ADD_CAMERA_ROLL_ROW]: addCameraRollRow,
     [SET_ADMIN]: setAdmin,
@@ -111,10 +123,12 @@ const reducerMap = {
     [SET_NAME]: setUserName,
     [SET_NUM_FINISHED]: setNumFinished,
     [SET_NUM_TO_UPLOAD]: setNumToUpload,
+    [SET_PICTURES]: setPictures,
     [SET_PROGRESSES]: setProgresses,
     [SET_SELECTED_IMAGES]: setSelectedImages,
     [SET_TOTALS]: setTotals,
-    [SET_USERS]: setUsers
+    [SET_USERS]: setUsers,
+    [SET_VIDEOS]: setVideos
 };
 
 export default (state = defaultState, {type, data}) => {

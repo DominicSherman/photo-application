@@ -74,7 +74,7 @@ export default class Login extends React.Component {
                 />
                 <Image
                     resizeMode={'contain'}
-                    source={require('../assets/cake.png')}
+                    source={require('../assets/D&M-logo.png')}
                     style={{
                         height: '75%',
                         width: '75%'

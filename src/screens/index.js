@@ -1,6 +1,6 @@
 import {Navigation} from 'react-native-navigation/lib/dist/index';
 
-import {HOME, IMAGE_MODAL, LOGIN, MORE, PHOTOS, USER_MODAL} from '../constants/routes';
+import {HOME, IMAGE_MODAL, LOGIN, MORE, PHOTOS, USER_MODAL, WEDDING_INFORMATION} from '../constants/routes';
 import {withRedux} from '../services/redux-factory';
 
 import Home from './Home';
@@ -9,6 +9,7 @@ import More from './More';
 import UserModal from './UserModal';
 import ImageSelectModal from './ImageSelectModal';
 import Photos from './Photos';
+import WeddingInformation from './WeddingInformation';
 
 const screens = [
     {
@@ -34,6 +35,10 @@ const screens = [
     {
         component: Photos,
         route: PHOTOS
+    },
+    {
+        component: WeddingInformation,
+        route: WEDDING_INFORMATION
     }
 ];
 

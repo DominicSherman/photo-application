@@ -111,6 +111,8 @@ export const addUser = (email, isAdmin) =>
         isAdmin
     });
 
+export const getMedia = (env) => firebase.database().ref(`${env}/media`);
+
 export const initializeFirebase = () => {
     if (!isInitialized) {
         firebase.initializeApp(config);

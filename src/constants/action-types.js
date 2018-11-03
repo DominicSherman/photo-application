@@ -10,3 +10,5 @@ export const SET_NAME = 'SET_NAME';
 export const SET_LOGGED_IN = 'SET_LOGGED_IN';
 export const SET_USERS = 'SET_USERS';
 export const SET_ADMIN = 'SET_ADMIN';
+export const SET_PICTURES = 'SET_PICTURES';
+export const SET_VIDEOS = 'SET_VIDEOS';

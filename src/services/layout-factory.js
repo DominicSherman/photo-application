@@ -1,5 +1,5 @@
 import {black, darkFont, green, white} from '../constants/style-variables';
-import {HOME, LOGIN, MORE, PHOTOS} from '../constants/routes';
+import {HOME, LOGIN, MORE, PHOTOS, WEDDING_INFORMATION} from '../constants/routes';
 
 import {getIcons} from './icons-factory';
 
@@ -26,7 +26,7 @@ export const getDefaultOptions = () => {
             drawBehind: false,
             title: {
                 color: darkFont,
-                text: '🎉 Dominic & Mary Wedding Photos 🎉'
+                text: '🎉 Dominic & Mary 🎉'
             },
             visible: true
         }
@@ -66,8 +66,23 @@ export const getRoot = (isLoggedIn) => {
                                     }],
                                     options: {
                                         bottomTab: {
-                                            icon: icons.list,
+                                            icon: icons.image,
                                             title: 'Photos'
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                stack: {
+                                    children: [{
+                                        component: {
+                                            name: WEDDING_INFORMATION
+                                        }
+                                    }],
+                                    options: {
+                                        bottomTab: {
+                                            icon: icons.info,
+                                            title: 'Information'
                                         }
                                     }
                                 }
@@ -91,7 +106,7 @@ export const getRoot = (isLoggedIn) => {
                         options: {
                             bottomTabs: {
                                 animate: true,
-                                drawBehind: false,
+                                drawBehind: true,
                                 selectedTabColor: green
                             }
                         }

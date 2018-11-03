@@ -10,13 +10,15 @@ import {setUsers} from './src/action-creators/user-actions';
 import {registerScreens} from './src/screens';
 import {tryToLoadCredentials} from './src/services/async-storage-service';
 
+console.disableYellowBox = true;
 const store = createStore(reducer, applyMiddleware(thunk));
 
 registerScreens(store);
 
 Navigation.events().registerAppLaunchedListener(async () => {
     initializeFirebase();
-    const [creds] = await Promise.all([tryToLoadCredentials(), setUsers()(store.dispatch)]);
+    setUsers()(store.dispatch);
+    const creds = await tryToLoadCredentials(store);
 
     await loadIcons();
 

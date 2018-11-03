@@ -44,17 +44,17 @@ export default class Home extends React.Component {
         return (
             <SafeAreaView style={styles.safeAreaView}>
                 <ScrollView style={styles.scrollView}>
+                    <UploadButton
+                        actions={actions}
+                        selectedImages={selectedImages}
+                        user={user}
+                    />
                     <Button
                         action={() => showModal(IMAGE_MODAL)}
                         fontSize={18}
                         height={20}
                         text={'Select Images'}
                         width={30}
-                    />
-                    <UploadButton
-                        actions={actions}
-                        selectedImages={selectedImages}
-                        user={user}
                     />
                     <SelectedPreview
                         actions={actions}

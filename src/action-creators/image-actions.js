@@ -2,13 +2,15 @@ import {
     ADD_CAMERA_ROLL_ROW,
     SET_IS_UPLOADING,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD,
+    SET_NUM_TO_UPLOAD, SET_PICTURES,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
-    SET_TOTALS
+    SET_TOTALS, SET_VIDEOS
 } from '../constants/action-types';
 import {action} from '../constants/action';
 import {numPerRow} from '../constants/variables';
+import {getMedia} from '../services/firebase-service';
+import {ENV} from '../config';
 
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
@@ -108,4 +110,46 @@ export const toggleSelected = (item) => (dispatch, getState) => {
     } else {
         dispatch(action(SET_SELECTED_IMAGES, removeItem(selectedImages, filename)));
     }
+};
+
+export const setMedia = () => (dispatch) => {
+    getMedia(ENV).on('value', (snapshot) => {
+        let all = [],
+            photos = [],
+            videos = [];
+
+        const media = snapshot.val();
+
+        if (media) {
+            const sets = Object.keys(media).map((key) => {
+                const sessionImages = media[key];
+
+                return Object.keys(sessionImages).map((key) => sessionImages[key]);
+            });
+
+            sets.forEach((set) => set.forEach((item) => all = [...all, item]));
+
+            all.forEach(({url, width, height, isVideo}) => {
+                if (isVideo) {
+                    videos = [
+                        ...videos,
+                        {
+                            uri: url
+                        }
+                    ];
+                } else {
+                    photos = [
+                        ...photos,
+                        {uri: url}
+                    ];
+                }
+            });
+
+            dispatch(action(SET_PICTURES, photos.reverse()));
+            dispatch(action(SET_VIDEOS, videos));
+        } else {
+            dispatch(action(SET_PICTURES, []));
+            dispatch(action(SET_VIDEOS, []));
+        }
+    });
 };

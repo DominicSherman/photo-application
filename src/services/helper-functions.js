@@ -1,3 +1,5 @@
+import {Platform, Linking} from 'react-native';
+
 export const getCurrentTime = () => {
     const today = new Date();
     const minutes = today.getMinutes() < 10 ? `0${today.getMinutes()}` : today.getMinutes();
@@ -14,3 +16,21 @@ export const getTimeForDisplay = (duration) => {
 };
 
 export const clean = (string) => string.replace(/[^a-zA-Z0-9]/g, '');
+
+export const openHRLink = Platform.select({
+    android: () => {
+        Linking.openURL('http://maps.google.com/maps?daddr=45.533226,-122.662230');
+    },
+    ios: () => {
+        Linking.openURL('http://maps.apple.com/maps?daddr=45.533226,-122.662230');
+    }
+});
+
+export const openMcMenaminLink = Platform.select({
+    android: () => {
+        Linking.openURL('http://maps.google.com/maps?daddr=45.549305, -122.900486');
+    },
+    ios: () => {
+        Linking.openURL('http://maps.apple.com/maps?daddr=45.549305, -122.900486');
+    }
+});

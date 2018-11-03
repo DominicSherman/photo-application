@@ -7974,6 +7974,14 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-mixin@^3.0.5:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-mixin/-/react-mixin-3.1.1.tgz#68749756bfe32699e561372a4aeecb926db72b7f"
+  integrity sha512-z9fZ0aCRDjlgxLdMeWkJ9TwhmVLhQ09r8RFpin/cEPA2T6jsb7YHNWcIe0Oii+hhJNyMymdy91CSya5mRkuCkg==
+  dependencies:
+    object-assign "^4.0.1"
+    smart-mixin "^2.0.0"
+
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-dismiss-keyboard/-/react-native-dismiss-keyboard-1.0.0.tgz#32886242b3f2317e121f3aeb9b0a585e2b879b49"
@@ -8006,10 +8014,31 @@ react-native-heic-converter@^1.1.1:
   resolved "https://registry.yarnpkg.com/react-native-heic-converter/-/react-native-heic-converter-1.1.1.tgz#a19f6fcf8ced6f918c359f6e1b66176cc0b4ff79"
   integrity sha512-1AjW00FeJzlQmuK8+ubVl+SlAEv7/sZLPPoNeht/eBEQjAwJnK7SIU/KPEzYHz0U5/jjaIp6z9MirIVz//fIQw==
 
+react-native-image-gallery@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-image-gallery/-/react-native-image-gallery-2.1.5.tgz#f524b92ef7284d30ffbbd63f93019e0647e23229"
+  integrity sha512-xC7nuPu4GUH0da6byofQ10LjtqlKj+VaLc0NHBJmeMHVvdvmRvFEO6UOq0Q0m/ePx3OQiPTNwGbf5BSPJEKa0w==
+  dependencies:
+    prop-types "^15.6.0"
+    react-mixin "^3.0.5"
+    react-timer-mixin "^0.13.3"
+
 react-native-image-picker@^0.26.10:
   version "0.26.10"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.26.10.tgz#0bb9ab928984948c67aee0b9e64216bee007a9fc"
   integrity sha512-z6gAbru2E6SyGWm4ZTbiM9hPHZ5Tsl9kXGfRxW6YQXf9us7zybKoS7dKE1fQPsssv/OSvpPDKannJNncE+ATRA==
+
+react-native-image-placeholder@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/react-native-image-placeholder/-/react-native-image-placeholder-1.0.14.tgz#74f8a74f0d9f2732cc55bc65eb9d6adb668c7c1d"
+  integrity sha512-t7A/qb9hW7PoaeY+S65S92l4W4p+pnWI3zPCtOVKgLm6r3fDENNY2UOdI9wl7Mngb32Ql/NXzGdmZ/DBXK2DGg==
+  dependencies:
+    prop-types "^15.5.10"
+
+react-native-interactive-image-gallery@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-interactive-image-gallery/-/react-native-interactive-image-gallery-0.1.2.tgz#35a35ddddabb9713e7180f3bd932f55287b25c81"
+  integrity sha512-gjQfPePnH/qJ3I5DkoPaEqWSVX15ojK/MG0TCBa58PyGmmcbZcj7aPqo+S3YkWz0vxFR/4yWxzR48TRwYQzj9g==
 
 react-native-navigation@2.0.2373:
   version "2.0.2373"
@@ -8071,6 +8100,13 @@ react-native-tab-view@^1.0.0:
   integrity sha512-x8I43V1X7/AyMnIwnqJGMU54LqQRlV6vJ9irbls9asA/axdHIdxagPIV6Jx1ttFe/bPKhFwXL+lRYdYxGyUlWg==
   dependencies:
     prop-types "^15.6.1"
+
+react-native-thumbnail-grid@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-thumbnail-grid/-/react-native-thumbnail-grid-0.3.0.tgz#ac06013b615baba528b51ba7c116533f752b3a4a"
+  integrity sha512-kWZTRwUZrl6xHaLr00KGEl/UQsipjGlrxOezYiC8dbb3FYMU8u1B/jJY9c5S59PDOTVIP46RaVwdbFav7SFeXA==
+  dependencies:
+    react-native-image-placeholder "^1.0.14"
 
 react-native-vector-icons@^5.0.0:
   version "5.0.0"
@@ -8223,7 +8259,7 @@ react-test-renderer@16.3.1:
     prop-types "^15.6.0"
     react-is "^16.3.1"
 
-react-timer-mixin@^0.13.2:
+react-timer-mixin@^0.13.2, react-timer-mixin@^0.13.3:
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
@@ -8935,6 +8971,11 @@ slide@^1.1.5:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
   integrity sha1-VusCfWW00tzmyy4tMsTUr8nh1wc=
+
+smart-mixin@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/smart-mixin/-/smart-mixin-2.0.0.tgz#a34a1055e32a75b30d2b4e3ca323dc99cb53f437"
+  integrity sha1-o0oQVeMqdbMNK048oyPcmctT9Dc=
 
 snakeize@^0.1.0:
   version "0.1.0"
