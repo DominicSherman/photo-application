@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import Gallery from 'react-native-image-gallery';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 
-import {darkGray, lightGray} from '../constants/style-variables';
+import {lightGray} from '../constants/style-variables';
 import {dismissModal} from '../services/navigation-service';
 import {lightFontStyles} from '../constants/font-styles';
 
@@ -28,18 +28,13 @@ export default class GalleryModal extends Component {
     }
 
     render() {
-        const {actions, initialPage, pictures} = this.props;
+        const {initialPage, pictures} = this.props;
 
         return (
             <SafeAreaView style={{flex: 1}}>
                 <View style={styles.header}>
                     <Text style={lightFontStyles.regular}>{`${this.state.currIndex}/${this.state.total}`}</Text>
-                    <Touchable
-                        onPress={() => {
-                            dismissModal(this.props.componentId);
-                            actions.setSelectedImages([]);
-                        }}
-                    >
+                    <Touchable onPress={() => dismissModal(this.props.componentId)}>
                         <EvilIcons
                             name={'close'}
                             size={30}

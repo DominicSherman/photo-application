@@ -1,20 +1,22 @@
 import React from 'react';
 import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
-import {TextInput, View, Image} from 'react-native';
+import {TextInput, View, Image, ActivityIndicator} from 'react-native';
+import {Navigation} from 'react-native-navigation';
 
 import Login from '../../src/screens/Login';
 import {createRandomUser} from '../model-factory';
 import Button from '../../src/components/Button';
 
-jest.mock('../../src/services/helper-functions');
-
 const chance = new Chance();
+
+jest.mock('react-native-navigation');
 
 describe('Login', () => {
     let expectedProps,
 
         renderedComponent,
+        renderedInstance,
 
         renderedTextWrapper,
         renderedLoginButton,
@@ -42,6 +44,7 @@ describe('Login', () => {
         shallowRenderer.render(<Login {...expectedProps} />);
 
         renderedComponent = shallowRenderer.getRenderOutput();
+        renderedInstance = shallowRenderer.getMountedInstance();
 
         cacheChildren();
     };
@@ -51,14 +54,27 @@ describe('Login', () => {
             actions: {
                 login: jest.fn(),
                 setEmail: jest.fn(),
-                setName: jest.fn(),
-                toggleUserModal: jest.fn()
+                setName: jest.fn()
             },
+            componentId: chance.natural(),
             user: createRandomUser(),
             users: chance.n(createRandomUser, chance.d6() + 1)
         };
 
         renderComponent();
+    });
+
+    it('should merge options on componentDidMount', () => {
+        renderedInstance.componentDidMount();
+
+        expect(Navigation.mergeOptions).toHaveBeenCalledTimes(1);
+        expect(Navigation.mergeOptions).toHaveBeenCalledWith(expectedProps.componentId, {
+            options: {
+                bottomTabs: {
+                    visible: false
+                }
+            }
+        });
     });
 
     it('should render a root View', () => {
@@ -106,9 +122,15 @@ describe('Login', () => {
         expect(renderedLoginButton.props.width).toBe(80);
     });
 
+    it('should render the loading indicator instead of the button when there are not users', () => {
+        expectedProps.users = null;
+        renderComponent();
+
+        expect(renderedLoginButton.type).toBe(ActivityIndicator);
+    });
+
     it('should render the logo', () => {
         expect(renderedLogo.type).toBe(Image);
         expect(renderedLogo.props.resizeMode).toBe('contain');
-        expect(renderedLogo.props.source).toBe(require('../../src/assets/cake.png'));
     });
 });

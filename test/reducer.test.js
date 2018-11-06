@@ -9,11 +9,11 @@ import {
     SET_LOGGED_IN,
     SET_NAME,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD,
+    SET_NUM_TO_UPLOAD, SET_PICTURES,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
     SET_TOTALS,
-    SET_USERS
+    SET_USERS, SET_VIDEOS
 } from '../src/constants/action-types';
 
 const chance = new Chance();
@@ -24,6 +24,7 @@ describe('reducer', () => {
         isUploading: false,
         numFinished: 0,
         numToUpload: 0,
+        pictures: null,
         progresses: {},
         selectedImages: {},
         totals: {},
@@ -33,7 +34,8 @@ describe('reducer', () => {
             loggedIn: false,
             name: ''
         },
-        users: null
+        users: null,
+        videos: []
     };
 
     let anyAction;
@@ -317,6 +319,46 @@ describe('reducer', () => {
         expect(actualState).toEqual({
             ...originalState,
             users: expectedData
+        });
+    });
+
+    it('should set pictures when the action is SET_PICTURES', () => {
+        const originalState = {
+            [chance.string()]: chance.string(),
+            pictures: chance.string()
+        };
+
+        const expectedData = chance.string();
+        const action = {
+            data: expectedData,
+            type: SET_PICTURES
+        };
+
+        const actualState = reducer(originalState, action);
+
+        expect(actualState).toEqual({
+            ...originalState,
+            pictures: expectedData
+        });
+    });
+
+    it('should set videos when the action is SET_VIDEOS', () => {
+        const originalState = {
+            [chance.string()]: chance.string(),
+            videos: chance.string()
+        };
+
+        const expectedData = chance.string();
+        const action = {
+            data: expectedData,
+            type: SET_VIDEOS
+        };
+
+        const actualState = reducer(originalState, action);
+
+        expect(actualState).toEqual({
+            ...originalState,
+            videos: expectedData
         });
     });
 });

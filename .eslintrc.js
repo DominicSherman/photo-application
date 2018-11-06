@@ -11,6 +11,7 @@ module.exports = {
         'react/no-did-mount-set-state': 0,
         'react/no-did-update-set-state': 0,
         'react/no-access-state-in-setstate': 0,
-        'import/exports-last': 0
+        'import/exports-last': 0,
+        'max-nested-callbacks': 0
     }
 };

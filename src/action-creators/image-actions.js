@@ -112,7 +112,7 @@ export const toggleSelected = (item) => (dispatch, getState) => {
     }
 };
 
-export const setMedia = () => (dispatch) => {
+export const setMedia = () => (dispatch) =>
     getMedia(ENV).on('value', (snapshot) => {
         let all = [],
             photos = [],
@@ -124,17 +124,26 @@ export const setMedia = () => (dispatch) => {
             const sets = Object.keys(media).map((key) => {
                 const sessionImages = media[key];
 
-                return Object.keys(sessionImages).map((key) => sessionImages[key]);
+                return Object.keys(sessionImages).map((k) => sessionImages[k]);
             });
 
-            sets.forEach((set) => set.forEach((item) => all = [...all, item]));
+            sets.forEach((set) => set.forEach((item) => {
+                all = [...all, item];
+            }));
 
             all.forEach(({url, width, height, isVideo, name}) => {
                 if (isVideo) {
                     videos = [
                         ...videos,
                         {
-                            uri: url
+                            dimensions: {
+                                height,
+                                width
+                            },
+                            name,
+                            source: {
+                                uri: url
+                            }
                         }
                     ];
                 } else {
@@ -145,10 +154,10 @@ export const setMedia = () => (dispatch) => {
                                 height,
                                 width
                             },
+                            name,
                             source: {
                                 uri: url
-                            },
-                            name
+                            }
                         }
                     ];
                 }
@@ -161,4 +170,3 @@ export const setMedia = () => (dispatch) => {
             dispatch(action(SET_VIDEOS, []));
         }
     });
-};

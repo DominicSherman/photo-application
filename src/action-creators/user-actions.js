@@ -24,6 +24,10 @@ export const setUsers = () => async (dispatch) => {
     );
 };
 
+export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, email));
+
+export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
+
 export const login = () => (dispatch, getState) => {
     const {user, users} = getState();
     const {email, name} = user;
@@ -47,7 +51,3 @@ export const logout = () => (dispatch) => {
 
     setRoot(false);
 };
-
-export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, email));
-
-export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));

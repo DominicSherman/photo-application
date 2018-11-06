@@ -1,13 +1,15 @@
 import React from 'react';
-import {Image, StyleSheet, TextInput, View} from 'react-native';
+import {ActivityIndicator, Image, StyleSheet, TextInput, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
 import {lightFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
 
-import LoadingView from './LoadingView';
-
 const styles = StyleSheet.create({
+    image: {
+        height: '75%',
+        width: '75%'
+    },
     textWrapper: {
         alignItems: 'flex-start',
         flexDirection: 'column',
@@ -41,16 +43,8 @@ export default class Login extends React.Component {
     render() {
         const {actions, user, users} = this.props;
 
-        if (!users) {
-            return (
-                <LoadingView />
-            );
-        }
-
         return (
             <View style={styles.wrapperView}>
-                <View>
-                </View>
                 <View style={styles.textWrapper}>
                     <TextInput
                         autoCapitalize={'none'}
@@ -67,20 +61,22 @@ export default class Login extends React.Component {
                         value={user.name}
                     />
                 </View>
-                <Button
-                    action={actions.login}
-                    fontSize={30}
-                    height={15}
-                    text={'LOGIN'}
-                    width={80}
-                />
+                {
+                    users ?
+                        <Button
+                            action={actions.login}
+                            fontSize={30}
+                            height={15}
+                            text={'LOGIN'}
+                            width={80}
+                        />
+                        :
+                        <ActivityIndicator />
+                }
                 <Image
                     resizeMode={'contain'}
                     source={require('../assets/D&M-logo.png')}
-                    style={{
-                        height: '75%',
-                        width: '75%'
-                    }}
+                    style={styles.image}
                 />
             </View>
         );

@@ -1,41 +1,36 @@
 import Chance from 'chance';
 
 import {
+    ADD_CAMERA_ROLL_ROW,
+    SET_IS_UPLOADING,
+    SET_NUM_FINISHED,
+    SET_NUM_TO_UPLOAD, SET_PICTURES,
+    SET_PROGRESSES,
+    SET_SELECTED_IMAGES,
+    SET_TOTALS, SET_VIDEOS
+} from '../../src/constants/action-types';
+import {
     incrementFinished,
     setCameraRollRows,
-    setEmail,
-    setName,
+    setMedia,
     setProgress,
     setSelectedImages,
     setSelectedRow,
     setTotal,
     setUploading,
-    setUsers,
     toggleSelected
-} from '../src/action-creators/actions';
-import {numPerRow} from '../src/constants/variables';
-import {action} from '../src/constants/action';
-import {
-    ADD_CAMERA_ROLL_ROW,
-    SET_EMAIL,
-    SET_IS_UPLOADING,
-    SET_NAME,
-    SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD,
-    SET_PROGRESSES,
-    SET_SELECTED_IMAGES,
-    SET_TOTALS,
-    SET_USERS
-} from '../src/constants/action-types';
-import {getUsers} from '../src/services/firebase-service';
+} from '../../src/action-creators/index';
+import {action} from '../../src/constants/action';
+import {numPerRow} from '../../src/constants/variables';
+import {createRandomImage} from '../model-factory';
+import {getMedia} from '../../src/services/firebase-service';
+import {ENV} from '../../src/config';
 
-import {createRandomImage, createRandomUser} from './model-factory';
-
-jest.mock('../src/services/firebase-service');
+jest.mock('../../src/services/firebase-service');
 
 const chance = new Chance();
 
-describe('actions', () => {
+describe('image-actions', () => {
     let dispatchSpy,
         getStateStub,
         expectedSelectedImages,
@@ -80,15 +75,34 @@ describe('actions', () => {
             node: chance.string()
         });
 
-        beforeEach(() => {
+        it('should dispatch an action for every row if r is a multiple of numPerRow', () => {
             r = {
-                edges: chance.n(createRandomNode, chance.d10() + 1)
+                edges: chance.n(createRandomNode, numPerRow * (chance.d6() + 1))
             };
 
             setCameraRollRows(r)(dispatchSpy);
+
+            let timesCalled = Math.floor(r.edges.length / numPerRow);
+
+            if (r.edges.length % numPerRow > 0) {
+                timesCalled += 1;
+            }
+
+            expect(dispatchSpy).toHaveBeenCalledTimes(timesCalled);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(ADD_CAMERA_ROLL_ROW, expect.anything()));
         });
 
-        it('should dispatch an action for every row', () => {
+        it('should dispatch an action for every row if r is not a multiple of numPerRow', () => {
+            r = {
+                edges: chance.n(createRandomNode, numPerRow * (chance.d6() + 1))
+            };
+
+            if (r.edges.length % numPerRow === 0) {
+                r.edges = [...r.edges, createRandomNode()];
+            }
+
+            setCameraRollRows(r)(dispatchSpy);
+
             let timesCalled = Math.floor(r.edges.length / numPerRow);
 
             if (r.edges.length % numPerRow > 0) {
@@ -259,85 +273,109 @@ describe('actions', () => {
         });
     });
 
-    describe('setUsers', () => {
-        let expectedUsers,
-            expectedUserMap = {},
-            expectedSnapshot,
-            onSpy;
+    const createRandomMedia = () => ({
+        height: chance.natural(),
+        isVideo: chance.bool(),
+        name: chance.string(),
+        url: chance.string(),
+        width: chance.natural()
+    });
 
-        beforeEach(async () => {
-            const keys = chance.n(chance.string, chance.d6() + 1);
+    const mapValue = (value) => ({
+        dimensions: {
+            height: value.height,
+            width: value.width
+        },
+        name: value.name,
+        source: {
+            uri: value.url
+        }
+    });
 
-            expectedUsers = keys.map(() => createRandomUser());
-            keys.forEach((key, index) => {
-                expectedUserMap = {
-                    ...expectedUserMap,
-                    [key]: expectedUsers[index]
+    describe('setMedia', () => {
+        let onSpy,
+            snapshot,
+            sessionData,
+            expectedSessionKeys,
+            expectedPictures,
+            expectedVideos,
+            expectedMedia;
+
+        beforeEach(() => {
+            expectedSessionKeys = chance.n(chance.string, chance.d6() + 1);
+            sessionData = {};
+            expectedMedia = {};
+            expectedPictures = [];
+            expectedVideos = [];
+
+            expectedSessionKeys.forEach((key) => {
+                const innerKeys = chance.n(chance.string, chance.d6() + 1);
+
+                sessionData = {};
+                innerKeys.forEach((innerKey) => {
+                    const value = createRandomMedia();
+
+                    sessionData = {
+                        ...sessionData,
+                        [innerKey]: value
+                    };
+
+                    if (value.isVideo) {
+                        expectedVideos = [...expectedVideos, mapValue(value)];
+                    } else {
+                        expectedPictures = [...expectedPictures, mapValue(value)];
+                    }
+                });
+                expectedMedia = {
+                    ...expectedMedia,
+                    [key]: sessionData
                 };
             });
-            expectedSnapshot = {
-                val: jest.fn().mockReturnValue(expectedUserMap)
+
+            snapshot = {
+                val: jest.fn(() => expectedMedia)
             };
             onSpy = jest.fn();
-            getUsers.mockReturnValue({
+            getMedia.mockReturnValue({
                 on: onSpy
             });
 
-            await setUsers()(dispatchSpy);
+            setMedia()(dispatchSpy, getStateStub);
         });
 
         afterEach(() => {
-            expectedUserMap = {};
+            jest.resetAllMocks();
         });
 
-        it('should get the users from firebase', () => {
-            expect(getUsers).toHaveBeenCalledTimes(1);
+        it('should call getMedia', () => {
+            expect(getMedia).toHaveBeenCalledTimes(1);
+            expect(getMedia).toHaveBeenCalledWith(ENV);
         });
 
-        it('should use on', () => {
+        it('should call on', () => {
             expect(onSpy).toHaveBeenCalledTimes(1);
             expect(onSpy).toHaveBeenCalledWith('value', expect.anything());
         });
 
-        it('should add the users to redux if there are any', () => {
+        it('should set the pictures and videos if data is returned', () => {
             const snapshotCall = onSpy.mock.calls[0][1];
 
-            snapshotCall(expectedSnapshot);
-            expect(dispatchSpy).toHaveBeenCalledTimes(1);
-            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_USERS, expectedUsers));
+            snapshotCall(snapshot);
+            expect(dispatchSpy).toHaveBeenCalledTimes(2);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_PICTURES, expectedPictures.reverse()));
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_VIDEOS, expectedVideos));
         });
 
-        it('should set an empty list to redux if there are any', () => {
-            expectedSnapshot = {
-                val: jest.fn().mockReturnValue(null)
+        it('should set the pictures and videos to empty lists if media is not returned', () => {
+            const snapshotCall = onSpy.mock.calls[0][1];
+
+            snapshot = {
+                val: jest.fn(() => null)
             };
-            const snapshotCall = onSpy.mock.calls[0][1];
-
-            snapshotCall(expectedSnapshot);
-            expect(dispatchSpy).toHaveBeenCalledTimes(1);
-            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_USERS, []));
-        });
-    });
-
-    describe('setEmail', () => {
-        it('should set the email', () => {
-            const email = chance.string();
-
-            setEmail(email)(dispatchSpy);
-
-            expect(dispatchSpy).toHaveBeenCalledTimes(1);
-            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EMAIL, email));
-        });
-    });
-
-    describe('setName', () => {
-        it('should set the name', () => {
-            const name = chance.string();
-
-            setName(name)(dispatchSpy);
-
-            expect(dispatchSpy).toHaveBeenCalledTimes(1);
-            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_NAME, name));
+            snapshotCall(snapshot);
+            expect(dispatchSpy).toHaveBeenCalledTimes(2);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_PICTURES, []));
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_VIDEOS, []));
         });
     });
 });

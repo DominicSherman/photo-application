@@ -10,6 +10,7 @@ import UploadButton from '../../src/components/UploadButton';
 import {numPictures} from '../../src/constants/variables';
 import {showModal} from '../../src/services/navigation-service';
 import {IMAGE_MODAL} from '../../src/constants/routes';
+import LoadingView from '../../src/screens/LoadingView';
 
 jest.mock('../../src/services/navigation-service');
 
@@ -23,16 +24,16 @@ describe('Home', () => {
 
         renderedScrollView,
 
-        renderedSelectButton,
         renderedUploadButton,
+        renderedSelectButton,
         renderedSelectedPreview;
 
     const cacheChildren = () => {
         renderedScrollView = renderedComponent.props.children;
 
         [
-            renderedSelectButton,
             renderedUploadButton,
+            renderedSelectButton,
             renderedSelectedPreview
         ] = renderedScrollView.props.children;
     };
@@ -44,8 +45,6 @@ describe('Home', () => {
 
         renderedComponent = shallowRenderer.getRenderOutput();
         renderedInstance = shallowRenderer.getMountedInstance();
-
-        cacheChildren();
     };
 
     beforeEach(() => {
@@ -63,6 +62,7 @@ describe('Home', () => {
         };
 
         renderComponent();
+        cacheChildren();
     });
 
     describe('componentDidMount', () => {
@@ -106,6 +106,13 @@ describe('Home', () => {
         expect(renderedScrollView.type).toBe(ScrollView);
     });
 
+    it('should render the UploadButton', () => {
+        expect(renderedUploadButton.type).toBe(UploadButton);
+        expect(renderedUploadButton.props.actions).toBe(expectedProps.actions);
+        expect(renderedUploadButton.props.selectedImages).toBe(expectedProps.selectedImages);
+        expect(renderedUploadButton.props.user).toBe(expectedProps.user);
+    });
+
     it('should render the select images button', () => {
         expect(renderedSelectButton.type).toBe(Button);
         expect(renderedSelectButton.props.fontSize).toBe(18);
@@ -119,16 +126,16 @@ describe('Home', () => {
         expect(showModal).toHaveBeenCalledWith(IMAGE_MODAL);
     });
 
-    it('should render the UploadButton', () => {
-        expect(renderedUploadButton.type).toBe(UploadButton);
-        expect(renderedUploadButton.props.actions).toBe(expectedProps.actions);
-        expect(renderedUploadButton.props.selectedImages).toBe(expectedProps.selectedImages);
-        expect(renderedUploadButton.props.user).toBe(expectedProps.user);
-    });
-
     it('should render the SelectedPreview', () => {
         expect(renderedSelectedPreview.type).toBe(SelectedPreview);
         expect(renderedSelectedPreview.props.actions).toBe(expectedProps.actions);
         expect(renderedSelectedPreview.props.selectedImages).toBe(expectedProps.selectedImages);
+    });
+
+    it('should return LoadingView if isUploading', () => {
+        expectedProps.isUploading = true;
+        renderComponent();
+
+        expect(renderedComponent.type).toBe(LoadingView);
     });
 });

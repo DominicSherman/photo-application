@@ -21,3 +21,14 @@ export const createRandomUser = () => ({
     email: chance.string(),
     isAdmin: chance.bool()
 });
+
+export const createRandomPicture = () => ({
+    dimension: {
+        height: chance.natural(),
+        width: chance.natural()
+    },
+    name: chance.string(),
+    source: {
+        uri: chance.string()
+    }
+});

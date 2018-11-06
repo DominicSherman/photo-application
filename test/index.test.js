@@ -1,37 +1,82 @@
-import {Navigation} from 'react-native-navigation';
-import thunk from 'redux-thunk';
-import {applyMiddleware, createStore} from 'redux';
 import Chance from 'chance';
 
 import reducer from '../src/reducers/reducer';
-import {registerScreens} from '../src/screens';
-import {initializeFirebase} from '../src/services/firebase-service';
 
-jest.mock('redux');
-jest.mock('redux-thunk');
-jest.mock('react-native-navigation');
-jest.mock('../src/screens');
+jest.mock('redux', () => ({
+    applyMiddleware: jest.fn(),
+    createStore: jest.fn()
+}));
+jest.mock('../src/screens', () => ({registerScreens: jest.fn()}));
+jest.mock('../src/services/async-storage-service', () => ({tryToLoadCredentials: jest.fn()}));
+jest.mock('../src/services/icons-factory', () => ({loadIcons: jest.fn()}));
+jest.mock('../src/services/layout-factory', () => ({
+    getDefaultOptions: jest.fn(),
+    getRoot: jest.fn()
+}));
+jest.mock('../src/services/firebase-service');
+jest.mock('../src/action-creators/index', () => ({setUsers: jest.fn()}));
 
 const chance = new Chance();
 
 describe('index', () => {
-    let expectedStore,
+    let Navigation,
+        createStore,
+        applyMiddleware,
+        registerScreens,
+        tryToLoadCredentials,
+        initializeFirebase,
+        setUsers,
+        loadIcons,
+        getDefaultOptions,
+        getRoot,
+        thunkSpy,
+        expectedStore,
         expectedThunk,
+        expectedCreds,
+        expectedDefaultOptions,
+        expectedRoot,
         registerAppSpy;
 
     beforeEach(() => {
-        expectedThunk = chance.string();
-        applyMiddleware.mockReturnValue(expectedThunk);
+        Navigation = require('react-native-navigation').Navigation;
+        createStore = require('redux').createStore;
+        applyMiddleware = require('redux').applyMiddleware;
+        registerScreens = require('../src/screens').registerScreens;
+        tryToLoadCredentials = require('../src/services/async-storage-service').tryToLoadCredentials;
+        initializeFirebase = require('../src/services/firebase-service').initializeFirebase;
+        setUsers = require('../src/action-creators/index').setUsers;
+        loadIcons = require('../src/services/icons-factory').loadIcons;
+        thunkSpy = jest.fn();
+        setUsers.mockReturnValue(thunkSpy);
+        expectedDefaultOptions = chance.string();
+        getDefaultOptions = require('../src/services/layout-factory').getDefaultOptions;
+        getDefaultOptions.mockReturnValue(expectedDefaultOptions);
+        expectedRoot = chance.string();
+        getRoot = require('../src/services/layout-factory').getRoot;
+        getRoot.mockReturnValue(expectedRoot);
+
+        registerAppSpy = jest.fn();
+        Navigation.events = jest.fn().mockReturnValue({
+            registerAppLaunchedListener: registerAppSpy
+        });
+        Navigation.setDefaultOptions = jest.fn();
+        Navigation.setRoot = jest.fn();
 
         expectedStore = chance.string();
         createStore.mockReturnValue(expectedStore);
 
-        registerAppSpy = jest.fn();
-        Navigation.events.mockReturnValue({
-            registerAppLaunchedListener: registerAppSpy
-        });
+        expectedThunk = chance.string();
+        applyMiddleware.mockReturnValue(expectedThunk);
+
+        expectedCreds = chance.string();
+        tryToLoadCredentials.mockReturnValue(Promise.resolve(expectedCreds));
 
         require('../index');
+    });
+
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.resetModules();
     });
 
     it('should create the store', () => {
@@ -41,7 +86,6 @@ describe('index', () => {
 
     it('should apply the middleware', () => {
         expect(applyMiddleware).toHaveBeenCalledTimes(1);
-        expect(applyMiddleware).toHaveBeenCalledWith(thunk);
     });
 
     it('should register the screens', () => {
@@ -49,19 +93,57 @@ describe('index', () => {
         expect(registerScreens).toHaveBeenCalledWith(expectedStore);
     });
 
-    it('should call Navigation.events', () => {
-        expect(Navigation.events).toHaveBeenCalledTimes(1);
-    });
+    const triggerAppLaunchedListener = () => {
+        const [listener] = registerAppSpy.mock.calls[0];
+
+        return listener();
+    };
 
     describe('registerAppLaunchedListener', () => {
-        beforeEach(async () => {
-            const callback = Navigation.events.mock.calls[0][0];
-
-            await callback();
+        it('should register a listener for app launch', () => {
+            expect(registerAppSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('should initialize firebase', () => {
+        it('should initialize firebase', async () => {
+            await triggerAppLaunchedListener();
+
             expect(initializeFirebase).toHaveBeenCalledTimes(1);
+        });
+
+        it('should set the users', async () => {
+            await triggerAppLaunchedListener();
+
+            expect(thunkSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should try to load credentials', async () => {
+            await triggerAppLaunchedListener();
+
+            expect(tryToLoadCredentials).toHaveBeenCalledTimes(1);
+            expect(tryToLoadCredentials).toHaveBeenCalledWith(expectedStore);
+        });
+
+        it('should load the icons', async () => {
+            await triggerAppLaunchedListener();
+
+            expect(loadIcons).toHaveBeenCalledTimes(1);
+        });
+
+        it('should set the default options for Navigation', async () => {
+            await triggerAppLaunchedListener();
+
+            expect(getDefaultOptions).toHaveBeenCalledTimes(1);
+            expect(Navigation.setDefaultOptions).toHaveBeenCalledTimes(1);
+            expect(Navigation.setDefaultOptions).toHaveBeenCalledWith(expectedDefaultOptions);
+        });
+
+        it('should set the root for Navigation', async () => {
+            await triggerAppLaunchedListener();
+
+            expect(getRoot).toHaveBeenCalledTimes(1);
+            expect(getRoot).toHaveBeenCalledWith(expectedCreds);
+            expect(Navigation.setRoot).toHaveBeenCalledTimes(1);
+            expect(Navigation.setRoot).toHaveBeenCalledWith(expectedRoot);
         });
     });
 });
