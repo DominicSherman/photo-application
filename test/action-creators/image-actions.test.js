@@ -4,10 +4,12 @@ import {
     ADD_CAMERA_ROLL_ROW,
     SET_IS_UPLOADING,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD, SET_PICTURES,
+    SET_NUM_TO_UPLOAD,
+    SET_PICTURES,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
-    SET_TOTALS, SET_VIDEOS
+    SET_TOTALS,
+    SET_VIDEOS
 } from '../../src/constants/action-types';
 import {
     incrementFinished,
@@ -24,7 +26,6 @@ import {action} from '../../src/constants/action';
 import {numPerRow} from '../../src/constants/variables';
 import {createRandomImage} from '../model-factory';
 import {getMedia} from '../../src/services/firebase-service';
-import {ENV} from '../../src/config';
 
 jest.mock('../../src/services/firebase-service');
 
@@ -349,7 +350,6 @@ describe('image-actions', () => {
 
         it('should call getMedia', () => {
             expect(getMedia).toHaveBeenCalledTimes(1);
-            expect(getMedia).toHaveBeenCalledWith(ENV);
         });
 
         it('should call on', () => {

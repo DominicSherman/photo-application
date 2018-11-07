@@ -1,4 +1,16 @@
-import {Platform, Linking} from 'react-native';
+import {Linking, Platform} from 'react-native';
+
+import {HRLinkAndroid, HRLinkApple, McMenaminLinkAndroid, McMenaminLinkApple} from '../constants/variables';
+
+export const calculateDaysLeft = () => {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const weddingDay = new Date('2019-05-28T14:00:00-07:00').getTime();
+    const now = Date.now();
+
+    return Math.floor(Math.abs((weddingDay - now) / oneDay));
+};
+
+export const clean = (string) => string.replace(/[^a-zA-Z0-9]/g, '');
 
 export const getCurrentTime = () => {
     const today = new Date();
@@ -15,30 +27,12 @@ export const getTimeForDisplay = (duration) => {
     return `${min}:${sec}`;
 };
 
-export const clean = (string) => string.replace(/[^a-zA-Z0-9]/g, '');
-
-export const openHRLink = Platform.select({
-    android: () => {
-        Linking.openURL('http://maps.google.com/maps?daddr=45.533226,-122.662230');
-    },
-    ios: () => {
-        Linking.openURL('http://maps.apple.com/maps?daddr=45.533226,-122.662230');
-    }
+export const openHRLink = () => Platform.select({
+    android: () => Linking.openURL(HRLinkAndroid),
+    ios: () => Linking.openURL(HRLinkApple)
 });
 
-export const openMcMenaminLink = Platform.select({
-    android: () => {
-        Linking.openURL('http://maps.google.com/maps?daddr=45.549305, -122.900486');
-    },
-    ios: () => {
-        Linking.openURL('http://maps.apple.com/maps?daddr=45.549305, -122.900486');
-    }
+export const openMcMenaminLink = () => Platform.select({
+    android: () => Linking.openURL(McMenaminLinkAndroid),
+    ios: () => Linking.openURL(McMenaminLinkApple)
 });
-
-export const calculateDaysLeft = () => {
-    const oneDay = 24 * 60 * 60 * 1000;
-    const weddingDay = new Date('2019-05-28T14:00:00-07:00').getTime();
-    const now = Date.now();
-
-    return Math.floor(Math.abs((weddingDay - now) / oneDay));
-};

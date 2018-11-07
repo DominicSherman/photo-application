@@ -1,18 +1,6 @@
-import * as Feather from 'react-native-vector-icons/Feather';
-import * as EvilIcons from 'react-native-vector-icons/EvilIcons';
+import {mediumGray} from '../constants/style-variables';
 
-import {black, mediumGray} from '../constants/style-variables';
-
-const sets = {
-    EvilIcons,
-    Feather
-};
-
-const sharedGetImageSource = (iconSet, ...args) => {
-    const iconLibrary = sets[iconSet];
-
-    return iconLibrary.getImageSource(...args);
-};
+import {sharedGetImageSource} from './icon-loader';
 
 let icons = {
     home: {},

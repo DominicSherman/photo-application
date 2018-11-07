@@ -1,4 +1,5 @@
 import {AsyncStorage} from 'react-native';
+
 import {SET_ADMIN, SET_EMAIL, SET_LOGGED_IN, SET_NAME} from '../constants/action-types';
 import {action} from '../constants/action';
 
@@ -30,7 +31,7 @@ export const tryToLoadCredentials = (store) =>
         }
 
         if (isAdmin === 'true') {
-            store.dispatch(action(SET_ADMIN, isAdmin));
+            store.dispatch(action(SET_ADMIN, true));
         }
 
         return true;

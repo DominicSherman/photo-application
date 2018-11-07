@@ -3,35 +3,24 @@ import {HOME, LOGIN, MORE, PHOTOS} from '../constants/routes';
 
 import {getIcons} from './icons-factory';
 
-export const getDefaultOptions = () => {
-    const icons = getIcons();
-
-    return {
-        layout: {
-            orientation: 'portrait'
+export const getDefaultOptions = () => ({
+    layout: {
+        orientation: 'portrait'
+    },
+    topBar: {
+        animate: false,
+        background: {
+            color: white
         },
-        topBar: {
-            animate: false,
-            backButton: {
-                color: black,
-                icon: icons.arrowBack,
-                testID: 'backButton',
-                title: '',
-                visible: true
-            },
-            background: {
-                color: white
-            },
-            buttonColor: black,
-            drawBehind: false,
-            title: {
-                color: darkFont,
-                text: 'D&M Photos'
-            },
-            visible: true
-        }
-    };
-};
+        buttonColor: black,
+        drawBehind: false,
+        title: {
+            color: darkFont,
+            text: 'D&M Photos'
+        },
+        visible: true
+    }
+});
 
 export const getRoot = (isLoggedIn) => {
     const icons = getIcons();

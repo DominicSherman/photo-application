@@ -2,15 +2,16 @@ import {
     ADD_CAMERA_ROLL_ROW,
     SET_IS_UPLOADING,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD, SET_PICTURES,
+    SET_NUM_TO_UPLOAD,
+    SET_PICTURES,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
-    SET_TOTALS, SET_VIDEOS
+    SET_TOTALS,
+    SET_VIDEOS
 } from '../constants/action-types';
 import {action} from '../constants/action';
 import {numPerRow} from '../constants/variables';
 import {getMedia} from '../services/firebase-service';
-import {ENV} from '../config';
 
 export const setCameraRollRows = (r) => (dispatch) => {
     let row = [];
@@ -113,7 +114,7 @@ export const toggleSelected = (item) => (dispatch, getState) => {
 };
 
 export const setMedia = () => (dispatch) =>
-    getMedia(ENV).on('value', (snapshot) => {
+    getMedia().on('value', (snapshot) => {
         let all = [],
             photos = [],
             videos = [];

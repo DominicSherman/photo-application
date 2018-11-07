@@ -5,7 +5,7 @@ import RNHeicConverter from 'react-native-heic-converter';
 import RNFetchBlob from 'react-native-fetch-blob';
 
 import {createRandomImage, createRandomUser} from '../model-factory';
-import {addUser, getUsers, initializeFirebase, uploadImage} from '../../src/services/firebase-service';
+import {addUser, getMedia, getUsers, initializeFirebase, uploadImage} from '../../src/services/firebase-service';
 import {config, ENV} from '../../src/config';
 import {clean} from '../../src/services/helper-functions';
 
@@ -33,7 +33,6 @@ global.window = {
     XMLHttpRequest: {}
 };
 
-/* eslint-disable max-nested-callbacks */
 describe('firebase-service', () => {
     afterEach(() => {
         firebase.database.mockClear();
@@ -422,6 +421,29 @@ describe('firebase-service', () => {
         });
     });
 
+    describe('getMedia', () => {
+        let refSpy;
+
+        beforeEach(() => {
+            refSpy = jest.fn();
+
+            firebase.database.mockReturnValue({
+                ref: refSpy
+            });
+
+            getMedia();
+        });
+
+        it('should use the database', () => {
+            expect(firebase.database).toHaveBeenCalledTimes(1);
+        });
+
+        it('should get the users from the database', () => {
+            expect(refSpy).toHaveBeenCalledTimes(1);
+            expect(refSpy).toHaveBeenCalledWith(`${ENV}/media`);
+        });
+    });
+
     describe('initalizeFirebase', () => {
         it('should initialize firebase', () => {
             initializeFirebase();
@@ -440,4 +462,3 @@ describe('firebase-service', () => {
         });
     });
 });
-/* eslint-enable max-nested-callbacks */

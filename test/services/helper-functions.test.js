@@ -1,8 +1,23 @@
-import {getCurrentTime, getTimeForDisplay} from '../../src/services/helper-functions';
+import {getCurrentTime, getTimeForDisplay, openHRLink, openMcMenaminLink} from '../../src/services/helper-functions';
+import {HRLinkAndroid, HRLinkApple, McMenaminLinkAndroid, McMenaminLinkApple} from '../../src/constants/variables';
 
 jest.mock('../../src/services/async-storage-service');
 
 describe('helper-functions', () => {
+    let Platform,
+        Linking;
+
+    beforeEach(() => {
+        Platform = require('react-native').Platform;
+        Linking = require('react-native').Linking;
+
+        Platform.select = jest.fn();
+    });
+
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+
     describe('getCurrentTime', () => {
         it('should return the formatted date', () => {
             const year = () => 1;
@@ -66,6 +81,70 @@ describe('helper-functions', () => {
             const actualDisplay = getTimeForDisplay(duration);
 
             expect(actualDisplay).toEqual('1:00');
+        });
+    });
+
+    describe('openHRLink', () => {
+        beforeEach(() => {
+            openHRLink();
+        });
+
+        it('should use Platform select', () => {
+            expect(Platform.select).toHaveBeenCalledTimes(1);
+            expect(Platform.select).toHaveBeenCalledWith({
+                android: expect.any(Function),
+                ios: expect.any(Function)
+            });
+        });
+
+        it('should open the android link for android', () => {
+            const options = Platform.select.mock.calls[0][0];
+
+            options.android();
+
+            expect(Linking.openURL).toHaveBeenCalledTimes(1);
+            expect(Linking.openURL).toHaveBeenCalledWith(HRLinkAndroid);
+        });
+
+        it('should open the apple link for ios', () => {
+            const options = Platform.select.mock.calls[0][0];
+
+            options.ios();
+
+            expect(Linking.openURL).toHaveBeenCalledTimes(1);
+            expect(Linking.openURL).toHaveBeenCalledWith(HRLinkApple);
+        });
+    });
+
+    describe('openMcMenaminLink', () => {
+        beforeEach(() => {
+            openMcMenaminLink();
+        });
+
+        it('should use Platform select', () => {
+            expect(Platform.select).toHaveBeenCalledTimes(1);
+            expect(Platform.select).toHaveBeenCalledWith({
+                android: expect.any(Function),
+                ios: expect.any(Function)
+            });
+        });
+
+        it('should open the android link for android', () => {
+            const options = Platform.select.mock.calls[0][0];
+
+            options.android();
+
+            expect(Linking.openURL).toHaveBeenCalledTimes(1);
+            expect(Linking.openURL).toHaveBeenCalledWith(McMenaminLinkAndroid);
+        });
+
+        it('should open the apple link for ios', () => {
+            const options = Platform.select.mock.calls[0][0];
+
+            options.ios();
+
+            expect(Linking.openURL).toHaveBeenCalledTimes(1);
+            expect(Linking.openURL).toHaveBeenCalledWith(McMenaminLinkApple);
         });
     });
 });

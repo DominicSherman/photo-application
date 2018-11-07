@@ -1,4 +1,4 @@
-import {Navigation} from 'react-native-navigation/lib/dist/index';
+import {Navigation} from 'react-native-navigation';
 
 import {GALLERY, HOME, IMAGE_MODAL, LOGIN, MORE, PHOTOS, USER_MODAL, WEDDING_INFORMATION} from '../constants/routes';
 import {withRedux} from '../services/redux-factory';
@@ -12,7 +12,7 @@ import Photos from './Photos';
 import WeddingInformation from './WeddingInformation';
 import GalleryModal from './GalleryModal';
 
-const screens = [
+export const screens = [
     {
         component: Home,
         route: HOME
