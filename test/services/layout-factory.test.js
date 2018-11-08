@@ -3,7 +3,7 @@ import Chance from 'chance';
 import {getDefaultOptions, getRoot} from '../../src/services/layout-factory';
 import {black, darkFont, green, white} from '../../src/constants/style-variables';
 import {getIcons} from '../../src/services/icons-factory';
-import {HOME, LOGIN, MORE, PHOTOS} from '../../src/constants/routes';
+import {HOME, LOGIN, MORE, PHOTOS, WEDDING_INFORMATION} from '../../src/constants/routes';
 
 jest.mock('../../src/services/icons-factory');
 
@@ -42,6 +42,7 @@ describe('layout-factory', () => {
             icons = {
                 home: chance.string(),
                 image: chance.string(),
+                info: chance.string(),
                 more: chance.string()
             };
 
@@ -81,6 +82,21 @@ describe('layout-factory', () => {
                                         bottomTab: {
                                             icon: icons.image,
                                             title: 'Photos'
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                stack: {
+                                    children: [{
+                                        component: {
+                                            name: WEDDING_INFORMATION
+                                        }
+                                    }],
+                                    options: {
+                                        bottomTab: {
+                                            icon: icons.info,
+                                            title: 'Information'
                                         }
                                     }
                                 }

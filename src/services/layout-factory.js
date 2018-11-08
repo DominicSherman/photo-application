@@ -1,5 +1,5 @@
 import {black, darkFont, green, white} from '../constants/style-variables';
-import {HOME, LOGIN, MORE, PHOTOS} from '../constants/routes';
+import {HOME, LOGIN, MORE, PHOTOS, WEDDING_INFORMATION} from '../constants/routes';
 
 import {getIcons} from './icons-factory';
 
@@ -57,6 +57,21 @@ export const getRoot = (isLoggedIn) => {
                                         bottomTab: {
                                             icon: icons.image,
                                             title: 'Photos'
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                stack: {
+                                    children: [{
+                                        component: {
+                                            name: WEDDING_INFORMATION
+                                        }
+                                    }],
+                                    options: {
+                                        bottomTab: {
+                                            icon: icons.info,
+                                            title: 'Information'
                                         }
                                     }
                                 }

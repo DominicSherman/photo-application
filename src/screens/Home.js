@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, CameraRoll} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, CameraRoll, Platform} from 'react-native';
 
 import SelectedPreview from '../components/SelectedPreview';
 import UploadButton from '../components/UploadButton';
@@ -7,6 +7,7 @@ import Button from '../components/Button';
 import {IMAGE_MODAL} from '../constants/routes';
 import {showModal} from '../services/navigation-service';
 import {numPictures} from '../constants/variables';
+import {requestExternalStorage} from '../services/permission-service';
 
 import LoadingView from './LoadingView';
 
@@ -20,11 +21,13 @@ const styles = StyleSheet.create({
 });
 
 export default class Home extends React.Component {
-    componentDidMount() {
-        CameraRoll.getPhotos({
-            assetType: 'All',
-            first: numPictures
-        }).then((r) => this.props.actions.setCameraRollRows(r));
+    async componentDidMount() {
+        if (Platform.OS === 'ios' || await requestExternalStorage()) {
+            CameraRoll.getPhotos({
+                assetType: 'All',
+                first: numPictures
+            }).then((r) => this.props.actions.setCameraRollRows(r));
+        }
     }
 
     render() {

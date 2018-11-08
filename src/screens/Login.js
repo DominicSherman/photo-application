@@ -1,21 +1,29 @@
 import React from 'react';
 import {ActivityIndicator, Image, StyleSheet, TextInput, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
-
-import {lightFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
+import {lightFont} from '../constants/style-variables';
 
 const styles = StyleSheet.create({
     image: {
         height: '75%',
         width: '75%'
     },
+    textInputStyle: {
+        color: lightFont,
+        fontSize: 18,
+        fontWeight: '200',
+        width: '100%'
+    },
+    textInputWrapper: {
+        flexDirection: 'row',
+        width: '80%'
+    },
     textWrapper: {
         alignItems: 'flex-start',
         flexDirection: 'column',
-        height: '12%',
-        justifyContent: 'space-between',
-        marginBottom: '2%',
+        height: '15%',
+        justifyContent: 'space-evenly',
         paddingLeft: '16%',
         width: '100%'
     },
@@ -46,30 +54,36 @@ export default class Login extends React.Component {
         return (
             <View style={styles.wrapperView}>
                 <View style={styles.textWrapper}>
-                    <TextInput
-                        autoCapitalize={'none'}
-                        onChangeText={(email) => actions.setEmail(email.toLowerCase())}
-                        placeholder={'Email'}
-                        style={[lightFontStyles.light, {fontSize: 18}]}
-                        value={user.email}
-                    />
-                    <TextInput
-                        autoCapitalize={'words'}
-                        onChangeText={(name) => actions.setName(name)}
-                        placeholder={'Name'}
-                        style={[lightFontStyles.light, {fontSize: 18}]}
-                        value={user.name}
-                    />
+                    <View style={styles.textInputWrapper}>
+                        <TextInput
+                            autoCapitalize={'none'}
+                            onChangeText={(email) => actions.setEmail(email.toLowerCase())}
+                            placeholder={'Email'}
+                            style={styles.textInputStyle}
+                            value={user.email}
+                        />
+                    </View>
+                    <View style={styles.textInputWrapper}>
+                        <TextInput
+                            autoCapitalize={'words'}
+                            onChangeText={(name) => actions.setName(name)}
+                            placeholder={'Name'}
+                            style={styles.textInputStyle}
+                            value={user.name}
+                        />
+                    </View>
                 </View>
                 {
                     users ?
-                        <Button
-                            action={actions.login}
-                            fontSize={30}
-                            height={15}
-                            text={'LOGIN'}
-                            width={80}
-                        />
+                        <View style={{paddingTop: 20}}>
+                            <Button
+                                action={actions.login}
+                                fontSize={30}
+                                height={15}
+                                text={'LOGIN'}
+                                width={80}
+                            />
+                        </View>
                         :
                         <ActivityIndicator />
                 }

@@ -10,6 +10,10 @@ import {setUsers} from './src/action-creators/index';
 import {registerScreens} from './src/screens';
 import {tryToLoadCredentials} from './src/services/async-storage-service';
 
+/* eslint-disable no-console */
+console.disableYellowBox = true;
+/* eslint-enable no-console */
+
 const store = createStore(reducer, applyMiddleware(thunk));
 
 registerScreens(store);
