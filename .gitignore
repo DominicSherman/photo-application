@@ -48,3 +48,4 @@ google-play-android-developer.json
 testConfig.js
 
 config.js
+*.keystore
