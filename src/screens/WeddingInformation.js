@@ -4,7 +4,7 @@ import Touchable from 'react-native-platform-touchable';
 
 import {darkFontStyles} from '../constants/font-styles';
 import {darkGray, lightFont} from '../constants/style-variables';
-import {calculateDaysLeft, openHRLink, openMcMenaminLink} from '../services/helper-functions';
+import {calculateDaysLeft, openHRLink, openMcMenaminLink} from '../constants/service';
 
 const styles = StyleSheet.create({
     begins: {

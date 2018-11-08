@@ -2,7 +2,7 @@ import {SET_ADMIN, SET_EMAIL, SET_ENV, SET_LOGGED_IN, SET_NAME, SET_USERS} from 
 import {getUsers} from '../services/firebase-service';
 import {action} from '../constants/action';
 import {removeCredentials, storeCredentials} from '../services/async-storage-service';
-import {clean} from '../services/helper-functions';
+import {clean} from '../constants/service';
 import {setRoot} from '../services/navigation-service';
 import {reverseEnum} from '../constants/variables';
 
@@ -42,7 +42,7 @@ export const login = () => (dispatch, getState) => {
         dispatch(action(SET_LOGGED_IN, true));
     }
 
-    setRoot(true);
+    setRoot(true, authUser ? authUser.isAdmin : false);
 };
 
 export const logout = () => (dispatch) => {

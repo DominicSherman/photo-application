@@ -33,6 +33,7 @@ describe('index', () => {
         expectedStore,
         expectedThunk,
         expectedCreds,
+        expectedIsAdmin,
         expectedDefaultOptions,
         expectedRoot,
         registerAppSpy;
@@ -68,8 +69,9 @@ describe('index', () => {
         expectedThunk = chance.string();
         applyMiddleware.mockReturnValue(expectedThunk);
 
-        expectedCreds = chance.string();
-        tryToLoadCredentials.mockReturnValue(Promise.resolve(expectedCreds));
+        expectedCreds = chance.bool();
+        expectedIsAdmin = chance.bool();
+        tryToLoadCredentials.mockReturnValue(Promise.resolve([expectedCreds, expectedIsAdmin]));
 
         require('../index');
     });
@@ -141,7 +143,7 @@ describe('index', () => {
             await triggerAppLaunchedListener();
 
             expect(getRoot).toHaveBeenCalledTimes(1);
-            expect(getRoot).toHaveBeenCalledWith(expectedCreds);
+            expect(getRoot).toHaveBeenCalledWith(expectedCreds, expectedIsAdmin);
             expect(Navigation.setRoot).toHaveBeenCalledTimes(1);
             expect(Navigation.setRoot).toHaveBeenCalledWith(expectedRoot);
         });

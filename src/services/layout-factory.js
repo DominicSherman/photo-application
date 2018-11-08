@@ -22,93 +22,161 @@ export const getDefaultOptions = () => ({
     }
 });
 
-export const getRoot = (isLoggedIn) => {
-    const icons = getIcons();
+const loggedOutRoot = {
+    root: {
+        component: {
+            name: LOGIN
+        }
+    }
+};
 
-    return (
-        isLoggedIn ?
-            {
-                root: {
-                    bottomTabs: {
-                        children: [
-                            {
-                                stack: {
-                                    children: [{
-                                        component: {
-                                            name: HOME
-                                        }
-                                    }],
-                                    options: {
-                                        bottomTab: {
-                                            icon: icons.home,
-                                            title: 'Home'
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                stack: {
-                                    children: [{
-                                        component: {
-                                            name: PHOTOS
-                                        }
-                                    }],
-                                    options: {
-                                        bottomTab: {
-                                            icon: icons.image,
-                                            title: 'Photos'
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                stack: {
-                                    children: [{
-                                        component: {
-                                            name: WEDDING_INFORMATION
-                                        }
-                                    }],
-                                    options: {
-                                        bottomTab: {
-                                            icon: icons.info,
-                                            title: 'Information'
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                stack: {
-                                    children: [{
-                                        component: {
-                                            name: MORE
-                                        }
-                                    }],
-                                    options: {
-                                        bottomTab: {
-                                            icon: icons.more,
-                                            title: 'More'
-                                        }
-                                    }
-                                }
+const getMainRoot = (icons) => ({
+    root: {
+        bottomTabs: {
+            children: [
+                {
+                    stack: {
+                        children: [{
+                            component: {
+                                name: HOME
                             }
-                        ],
+                        }],
                         options: {
-                            bottomTabs: {
-                                animate: true,
-                                drawBehind: false,
-                                selectedTabColor: green
+                            bottomTab: {
+                                icon: icons.home,
+                                title: 'Home'
+                            }
+                        }
+                    }
+                },
+                {
+                    stack: {
+                        children: [{
+                            component: {
+                                name: PHOTOS
+                            }
+                        }],
+                        options: {
+                            bottomTab: {
+                                icon: icons.image,
+                                title: 'Photos'
+                            }
+                        }
+                    }
+                },
+                {
+                    stack: {
+                        children: [{
+                            component: {
+                                name: MORE
+                            }
+                        }],
+                        options: {
+                            bottomTab: {
+                                icon: icons.more,
+                                title: 'More'
                             }
                         }
                     }
                 }
-            }
-            :
-            {
-                root: {
-                    component: {
-                        name: LOGIN
-                    }
+            ],
+            options: {
+                bottomTabs: {
+                    animate: true,
+                    drawBehind: false,
+                    selectedTabColor: green
                 }
             }
-    );
+        }
+    }
+});
+
+const getAdminRoot = (icons) => ({
+    root: {
+        bottomTabs: {
+            children: [
+                {
+                    stack: {
+                        children: [{
+                            component: {
+                                name: HOME
+                            }
+                        }],
+                        options: {
+                            bottomTab: {
+                                icon: icons.home,
+                                title: 'Home'
+                            }
+                        }
+                    }
+                },
+                {
+                    stack: {
+                        children: [{
+                            component: {
+                                name: PHOTOS
+                            }
+                        }],
+                        options: {
+                            bottomTab: {
+                                icon: icons.image,
+                                title: 'Photos'
+                            }
+                        }
+                    }
+                },
+                {
+                    stack: {
+                        children: [{
+                            component: {
+                                name: WEDDING_INFORMATION
+                            }
+                        }],
+                        options: {
+                            bottomTab: {
+                                icon: icons.info,
+                                title: 'Information'
+                            }
+                        }
+                    }
+                },
+                {
+                    stack: {
+                        children: [{
+                            component: {
+                                name: MORE
+                            }
+                        }],
+                        options: {
+                            bottomTab: {
+                                icon: icons.more,
+                                title: 'More'
+                            }
+                        }
+                    }
+                }
+            ],
+            options: {
+                bottomTabs: {
+                    animate: true,
+                    drawBehind: false,
+                    selectedTabColor: green
+                }
+            }
+        }
+    }
+});
+
+export const getRoot = (isLoggedIn, isAdmin) => {
+    const icons = getIcons();
+
+    if (!isLoggedIn) {
+        return loggedOutRoot;
+    }
+
+    if (isAdmin) {
+        return getAdminRoot(icons);
+    }
+
+    return getMainRoot(icons);
 };

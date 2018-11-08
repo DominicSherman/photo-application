@@ -23,7 +23,7 @@ export const tryToLoadCredentials = (store) =>
             store.dispatch(action(SET_EMAIL, email));
             store.dispatch(action(SET_LOGGED_IN, true));
         } else {
-            return false;
+            return [false, false];
         }
 
         if (name) {
@@ -34,5 +34,5 @@ export const tryToLoadCredentials = (store) =>
             store.dispatch(action(SET_ADMIN, true));
         }
 
-        return true;
+        return [true, isAdmin === 'true'];
     });

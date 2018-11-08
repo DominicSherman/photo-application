@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import Entypo from 'react-native-vector-icons/Entypo';
 
-import {getCurrentTime} from '../services/helper-functions';
+import {getCurrentTime} from '../constants/service';
 import {uploadImage} from '../services/firebase-service';
 import {lightFontStyles} from '../constants/font-styles';
 

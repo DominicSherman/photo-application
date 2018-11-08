@@ -11,8 +11,10 @@ import {numPictures} from '../../src/constants/variables';
 import {showModal} from '../../src/services/navigation-service';
 import {IMAGE_MODAL} from '../../src/constants/routes';
 import LoadingView from '../../src/screens/LoadingView';
+import {requestExternalStorage} from '../../src/services/permission-service';
 
 jest.mock('../../src/services/navigation-service');
+jest.mock('../../src/services/permission-service');
 
 const chance = new Chance();
 
@@ -75,10 +77,11 @@ describe('Home', () => {
                 then: thenSpy
             }));
             ReactNative.CameraRoll.getPhotos = getPhotosSpy;
-            renderedInstance.componentDidMount();
         });
 
-        it('should call getPhotos', () => {
+        it('should call getPhotos if is ios', async () => {
+            await renderedInstance.componentDidMount();
+
             expect(getPhotosSpy).toHaveBeenCalledTimes(1);
             expect(getPhotosSpy).toHaveBeenCalledWith({
                 assetType: 'All',
@@ -86,7 +89,27 @@ describe('Home', () => {
             });
         });
 
-        it('should call then', () => {
+        it('should not call getPhotos if is android requestExternalStorage returns false', async () => {
+            ReactNative.Platform.OS = 'android';
+            requestExternalStorage.mockReturnValue(Promise.resolve(false));
+
+            await renderedInstance.componentDidMount();
+
+            expect(getPhotosSpy).not.toHaveBeenCalled();
+        });
+
+        it('should call getPhotos if is android and requestExternalStorage returns true', async () => {
+            ReactNative.Platform.OS = 'android';
+            requestExternalStorage.mockReturnValue(Promise.resolve(true));
+
+            await renderedInstance.componentDidMount();
+
+            expect(getPhotosSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should call then', async () => {
+            await renderedInstance.componentDidMount();
+
             expect(thenSpy).toHaveBeenCalledTimes(1);
 
             const r = chance.string();

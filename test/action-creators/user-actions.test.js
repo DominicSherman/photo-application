@@ -1,12 +1,13 @@
 import Chance from 'chance';
 
-import {login, setEmail, setName, setUsers, logout} from '../../src/action-creators/index';
+import {login, logout, setEmail, setName, setUsers, toggleEnv} from '../../src/action-creators';
 import {action} from '../../src/constants/action';
-import {SET_ADMIN, SET_EMAIL, SET_LOGGED_IN, SET_NAME, SET_USERS} from '../../src/constants/action-types';
+import {SET_ADMIN, SET_EMAIL, SET_ENV, SET_LOGGED_IN, SET_NAME, SET_USERS} from '../../src/constants/action-types';
 import {getUsers} from '../../src/services/firebase-service';
 import {createRandomUser} from '../model-factory';
 import {removeCredentials, storeCredentials} from '../../src/services/async-storage-service';
 import {setRoot} from '../../src/services/navigation-service';
+import {reverseEnum} from '../../src/constants/variables';
 
 jest.mock('../../src/services/firebase-service');
 jest.mock('../../src/services/async-storage-service');
@@ -15,10 +16,17 @@ jest.mock('../../src/services/navigation-service');
 const chance = new Chance();
 
 describe('user-actions', () => {
-    let dispatchSpy;
+    let dispatchSpy,
+        getStateStub,
+        expectedState;
 
     beforeEach(() => {
+        expectedState = {
+            env: chance.string()
+        };
+
         dispatchSpy = jest.fn();
+        getStateStub = jest.fn(() => expectedState);
     });
 
     afterEach(() => {
@@ -49,7 +57,7 @@ describe('user-actions', () => {
                 on: onSpy
             });
 
-            await setUsers()(dispatchSpy);
+            await setUsers()(dispatchSpy, getStateStub);
         });
 
         afterEach(() => {
@@ -58,6 +66,7 @@ describe('user-actions', () => {
 
         it('should get the users from firebase', () => {
             expect(getUsers).toHaveBeenCalledTimes(1);
+            expect(getUsers).toHaveBeenCalledWith(expectedState.env);
         });
 
         it('should use on', () => {
@@ -109,14 +118,13 @@ describe('user-actions', () => {
 
     describe('login', () => {
         let expectedUser,
-            expectedUsers,
-            expectedState,
-            getStateStub;
+            expectedUsers;
 
         beforeEach(() => {
             expectedUser = createRandomUser({name: chance.string()});
             expectedUsers = [expectedUser, ...chance.n(createRandomUser, chance.d6() + 1)];
             expectedState = {
+                ...expectedState,
                 user: expectedUser,
                 users: expectedUsers
             };
@@ -147,7 +155,7 @@ describe('user-actions', () => {
             login()(dispatchSpy, getStateStub);
 
             expect(setRoot).toHaveBeenCalledTimes(1);
-            expect(setRoot).toHaveBeenCalledWith(true);
+            expect(setRoot).toHaveBeenCalledWith(true, expectedUser.isAdmin);
         });
     });
 
@@ -171,6 +179,19 @@ describe('user-actions', () => {
         it('should set the root to be logged out', () => {
             expect(setRoot).toHaveBeenCalledTimes(1);
             expect(setRoot).toHaveBeenCalledWith(false);
+        });
+    });
+
+    describe('toggleEnv', () => {
+        beforeEach(() => {
+            toggleEnv()(dispatchSpy, getStateStub);
+        });
+
+        it('should dispatch an action to toggle the environment', () => {
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(
+                action(SET_ENV, reverseEnum[expectedState.env])
+            );
         });
     });
 });

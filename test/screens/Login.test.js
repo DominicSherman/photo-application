@@ -19,23 +19,34 @@ describe('Login', () => {
         renderedInstance,
 
         renderedTextWrapper,
-        renderedLoginButton,
+        renderedLoginButtonWrapper,
         renderedLogo,
 
+        renderedEmailInputWrapper,
+        renderedNameInputWrapper,
+
         renderedEmailInput,
-        renderedNameInput;
+        renderedNameInput,
+
+        renderedLoginButton;
 
     const cacheChildren = () => {
         [
             renderedTextWrapper,
-            renderedLoginButton,
+            renderedLoginButtonWrapper,
             renderedLogo
         ] = renderedComponent.props.children;
 
         [
-            renderedEmailInput,
-            renderedNameInput
+            renderedEmailInputWrapper,
+            renderedNameInputWrapper
         ] = renderedTextWrapper.props.children;
+
+        renderedEmailInput = renderedEmailInputWrapper.props.children;
+
+        renderedNameInput = renderedNameInputWrapper.props.children;
+
+        renderedLoginButton = renderedLoginButtonWrapper.props.children;
     };
 
     const renderComponent = () => {
@@ -85,6 +96,10 @@ describe('Login', () => {
         expect(renderedTextWrapper.type).toBe(View);
     });
 
+    it('should render the email input wrapper', () => {
+        expect(renderedEmailInputWrapper.type).toBe(View);
+    });
+
     it('should render the email text input', () => {
         expect(renderedEmailInput.type).toBe(TextInput);
         expect(renderedEmailInput.props.autoCapitalize).toBe('none');
@@ -97,6 +112,10 @@ describe('Login', () => {
 
         expect(expectedProps.actions.setEmail).toHaveBeenCalledTimes(1);
         expect(expectedProps.actions.setEmail).toHaveBeenCalledWith(email.toLowerCase());
+    });
+
+    it('should render the name input wrapper', () => {
+        expect(renderedNameInputWrapper.type).toBe(View);
     });
 
     it('should render the name text input', () => {
@@ -113,6 +132,10 @@ describe('Login', () => {
         expect(expectedProps.actions.setName).toHaveBeenCalledWith(name);
     });
 
+    it('should render a wrapper for the login button', () => {
+        expect(renderedLoginButtonWrapper.type).toBe(View);
+    });
+
     it('should render the login button', () => {
         expect(renderedLoginButton.type).toBe(Button);
         expect(renderedLoginButton.props.action).toBe(expectedProps.actions.login);
@@ -126,7 +149,7 @@ describe('Login', () => {
         expectedProps.users = null;
         renderComponent();
 
-        expect(renderedLoginButton.type).toBe(ActivityIndicator);
+        expect(renderedLoginButtonWrapper.type).toBe(ActivityIndicator);
     });
 
     it('should render the logo', () => {

@@ -49,8 +49,8 @@ describe('layout-factory', () => {
             getIcons.mockReturnValue(icons);
         });
 
-        it('should return the root layout when the user is loggedIn', () => {
-            const expectedLayout = getRoot(true);
+        it('should return the admin root layout when the user is loggedIn and admin', () => {
+            const expectedLayout = getRoot(true, true);
 
             expect(expectedLayout).toEqual({
                 root: {
@@ -97,6 +97,71 @@ describe('layout-factory', () => {
                                         bottomTab: {
                                             icon: icons.info,
                                             title: 'Information'
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                stack: {
+                                    children: [{
+                                        component: {
+                                            name: MORE
+                                        }
+                                    }],
+                                    options: {
+                                        bottomTab: {
+                                            icon: icons.more,
+                                            title: 'More'
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        options: {
+                            bottomTabs: {
+                                animate: true,
+                                drawBehind: false,
+                                selectedTabColor: green
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        it('should return the main root layout when the user is loggedIn and not an amin', () => {
+            const expectedLayout = getRoot(true, false);
+
+            expect(expectedLayout).toEqual({
+                root: {
+                    bottomTabs: {
+                        children: [
+                            {
+                                stack: {
+                                    children: [{
+                                        component: {
+                                            name: HOME
+                                        }
+                                    }],
+                                    options: {
+                                        bottomTab: {
+                                            icon: icons.home,
+                                            title: 'Home'
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                stack: {
+                                    children: [{
+                                        component: {
+                                            name: PHOTOS
+                                        }
+                                    }],
+                                    options: {
+                                        bottomTab: {
+                                            icon: icons.image,
+                                            title: 'Photos'
                                         }
                                     }
                                 }

@@ -6,8 +6,8 @@ import RNFetchBlob from 'react-native-fetch-blob';
 
 import {createRandomImage, createRandomUser} from '../model-factory';
 import {addUser, getMedia, getUsers, initializeFirebase, uploadImage} from '../../src/services/firebase-service';
-import {config, ENV} from '../../src/config';
-import {clean} from '../../src/services/helper-functions';
+import {config} from '../../src/config';
+import {clean} from '../../src/constants/service';
 
 const chance = new Chance();
 
@@ -57,6 +57,7 @@ describe('firebase-service', () => {
                     setProgress: jest.fn(),
                     setTotal: jest.fn()
                 },
+                env: chance.string(),
                 image: createRandomImage().image,
                 index: chance.natural(),
                 sessionId: chance.natural(),
@@ -115,7 +116,7 @@ describe('firebase-service', () => {
         it('should create an imageRef', () => {
             expect(firebase.storage).toHaveBeenCalledTimes(1);
             expect(storageRefSpy).toHaveBeenCalledTimes(1);
-            expect(storageRefSpy).toHaveBeenCalledWith(`${ENV}/${expectedProps.sessionId}`);
+            expect(storageRefSpy).toHaveBeenCalledWith(`${expectedProps.env}/${expectedProps.sessionId}`);
             expect(childSpy).toHaveBeenCalledTimes(1);
             expect(childSpy).toHaveBeenCalledWith(`${expectedProps.image.filename}`);
         });
@@ -254,7 +255,7 @@ describe('firebase-service', () => {
 
                 expect(firebase.database).toHaveBeenCalledTimes(1);
                 expect(firebase.database().ref).toHaveBeenCalledTimes(1);
-                expect(firebase.database().ref).toHaveBeenCalledWith(`${ENV}/media`);
+                expect(firebase.database().ref).toHaveBeenCalledWith(`${expectedProps.env}/media`);
                 expect(setSpy).toHaveBeenCalledTimes(1);
                 expect(setSpy).toHaveBeenCalledWith({
                     email: expectedProps.user.email,
@@ -278,7 +279,7 @@ describe('firebase-service', () => {
 
                 expect(firebase.database).toHaveBeenCalledTimes(1);
                 expect(firebase.database().ref).toHaveBeenCalledTimes(1);
-                expect(firebase.database().ref).toHaveBeenCalledWith(`${ENV}/media`);
+                expect(firebase.database().ref).toHaveBeenCalledWith(`${expectedProps.env}/media`);
                 expect(setSpy).toHaveBeenCalledTimes(1);
                 expect(setSpy).toHaveBeenCalledWith({
                     email: expectedProps.user.email,
@@ -302,7 +303,7 @@ describe('firebase-service', () => {
 
                 expect(firebase.database).toHaveBeenCalledTimes(1);
                 expect(firebase.database().ref).toHaveBeenCalledTimes(1);
-                expect(firebase.database().ref).toHaveBeenCalledWith(`${ENV}/media`);
+                expect(firebase.database().ref).toHaveBeenCalledWith(`${expectedProps.env}/media`);
                 expect(setSpy).toHaveBeenCalledTimes(1);
                 expect(setSpy).toHaveBeenCalledWith({
                     email: expectedProps.user.email,
@@ -352,16 +353,18 @@ describe('firebase-service', () => {
     });
 
     describe('getUsers', () => {
-        let refSpy;
+        let refSpy,
+            expectedEnv;
 
         beforeEach(() => {
+            expectedEnv = chance.string();
             refSpy = jest.fn();
 
             firebase.database.mockReturnValue({
                 ref: refSpy
             });
 
-            getUsers();
+            getUsers(expectedEnv);
         });
 
         it('should use the database', () => {
@@ -370,7 +373,7 @@ describe('firebase-service', () => {
 
         it('should get the users from the database', () => {
             expect(refSpy).toHaveBeenCalledTimes(1);
-            expect(refSpy).toHaveBeenCalledWith(`${ENV}/users`);
+            expect(refSpy).toHaveBeenCalledWith(`${expectedEnv}/users`);
         });
     });
 
@@ -379,9 +382,11 @@ describe('firebase-service', () => {
             isAdmin,
             setSpy,
             childSpy,
-            refSpy;
+            refSpy,
+            expectedEnv;
 
         beforeEach(() => {
+            expectedEnv = chance.string();
             email = chance.string();
             isAdmin = chance.bool();
             setSpy = jest.fn();
@@ -395,7 +400,7 @@ describe('firebase-service', () => {
                 ref: refSpy
             });
 
-            addUser(email, isAdmin);
+            addUser(email, isAdmin, expectedEnv);
         });
 
         it('should use the database', () => {
@@ -404,7 +409,7 @@ describe('firebase-service', () => {
 
         it('should create the ref', () => {
             expect(refSpy).toHaveBeenCalledTimes(1);
-            expect(refSpy).toHaveBeenCalledWith(`${ENV}/users`);
+            expect(refSpy).toHaveBeenCalledWith(`${expectedEnv}/users`);
         });
 
         it('should create the child ref', () => {
@@ -422,16 +427,18 @@ describe('firebase-service', () => {
     });
 
     describe('getMedia', () => {
-        let refSpy;
+        let refSpy,
+            expectedEnv;
 
         beforeEach(() => {
+            expectedEnv = chance.string();
             refSpy = jest.fn();
 
             firebase.database.mockReturnValue({
                 ref: refSpy
             });
 
-            getMedia();
+            getMedia(expectedEnv);
         });
 
         it('should use the database', () => {
@@ -440,7 +447,7 @@ describe('firebase-service', () => {
 
         it('should get the users from the database', () => {
             expect(refSpy).toHaveBeenCalledTimes(1);
-            expect(refSpy).toHaveBeenCalledWith(`${ENV}/media`);
+            expect(refSpy).toHaveBeenCalledWith(`${expectedEnv}/media`);
         });
     });
 

@@ -27,10 +27,12 @@ describe('UserModal', () => {
 
         renderedCloseTouchable,
 
-        renderedEmailInput,
+        renderedEmailInputWrapper,
         renderedAdminView,
         renderedAddButton,
         renderedCurrentUsersView,
+
+        renderedEmailInput,
 
         renderedCloseIcon,
 
@@ -53,13 +55,15 @@ describe('UserModal', () => {
         renderedCloseTouchable = renderedHeaderView.props.children;
 
         [
-            renderedEmailInput,
+            renderedEmailInputWrapper,
             renderedAdminView,
             renderedAddButton,
             renderedCurrentUsersView
         ] = renderedBodyView.props.children;
 
         renderedCloseIcon = renderedCloseTouchable.props.children;
+
+        renderedEmailInput = renderedEmailInputWrapper.props.children;
 
         [
             renderedAdminText,
@@ -92,6 +96,7 @@ describe('UserModal', () => {
     beforeEach(() => {
         expectedProps = {
             componentId: chance.natural(),
+            env: chance.string(),
             users: chance.n(createRandomUser, chance.d6() + 1)
         };
 
@@ -123,6 +128,10 @@ describe('UserModal', () => {
 
     it('should render a wrapper view for the body ', () => {
         expect(renderedBodyView.type).toBe(View);
+    });
+
+    it('should render a wrapper view for the textInput', () => {
+        expect(renderedEmailInputWrapper.type).toBe(View);
     });
 
     it('should render TextInput for the email', () => {
@@ -183,7 +192,7 @@ describe('UserModal', () => {
         renderedAddButton.props.action();
 
         expect(addUser).toHaveBeenCalledTimes(1);
-        expect(addUser).toHaveBeenCalledWith(email.toLowerCase(), isAdmin);
+        expect(addUser).toHaveBeenCalledWith(email.toLowerCase(), isAdmin, expectedProps.env);
     });
 
     it('should render a view for current users', () => {

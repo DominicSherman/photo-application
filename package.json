@@ -18,6 +18,9 @@
       "<rootDir>/src/*.js",
       "<rootDir>/index.js"
     ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/constants"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 100,

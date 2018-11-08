@@ -65,19 +65,21 @@ describe('navigation-service', () => {
 
     describe('setRoot', () => {
         let isLoggedIn,
-            expectedOptions;
+            expectedOptions,
+            isAdmin;
 
         beforeEach(() => {
             isLoggedIn = chance.bool();
+            isAdmin = chance.bool();
             expectedOptions = chance.string();
 
             getRoot.mockReturnValue(expectedOptions);
-            setRoot(isLoggedIn);
+            setRoot(isLoggedIn, isAdmin);
         });
 
         it('should get the root options for the layout-factory', () => {
             expect(getRoot).toHaveBeenCalledTimes(1);
-            expect(getRoot).toHaveBeenCalledWith(isLoggedIn);
+            expect(getRoot).toHaveBeenCalledWith(isLoggedIn, isAdmin);
         });
 
         it('should set the root with the returned options', () => {

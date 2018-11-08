@@ -6,11 +6,11 @@ import {ImageBackground, Text, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import TouchableImage from '../../src/components/TouchableImage';
-import {getTimeForDisplay} from '../../src/services/helper-functions';
+import {getTimeForDisplay} from '../../src/constants/service';
 
 const chance = new Chance();
 
-jest.mock('../../src/services/helper-functions');
+jest.mock('../../src/constants/service');
 
 describe('TouchableImage', () => {
     let expectedProps,

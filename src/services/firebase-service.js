@@ -6,8 +6,7 @@ import 'firebase/storage';
 import RNHeicConverter from 'react-native-heic-converter';
 
 import {config} from '../config';
-
-import {clean} from './helper-functions';
+import {clean} from '../constants/service';
 
 let isInitialized = false;
 const getPayload = (image, user, downloadUrl) => {

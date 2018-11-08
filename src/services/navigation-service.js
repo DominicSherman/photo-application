@@ -23,4 +23,4 @@ export const showModal = (route, options) => {
 
 export const dismissModal = (componentId) => Navigation.dismissModal(componentId);
 
-export const setRoot = (isLoggedIn) => Navigation.setRoot(getRoot(isLoggedIn));
+export const setRoot = (isLoggedIn, isAdmin) => Navigation.setRoot(getRoot(isLoggedIn, isAdmin));

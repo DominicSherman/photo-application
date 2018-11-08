@@ -4,7 +4,7 @@ import reducer from '../src/reducers/reducer';
 import {
     ADD_CAMERA_ROLL_ROW,
     SET_ADMIN,
-    SET_EMAIL,
+    SET_EMAIL, SET_ENV,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
     SET_NAME,
@@ -15,12 +15,14 @@ import {
     SET_TOTALS,
     SET_USERS, SET_VIDEOS
 } from '../src/constants/action-types';
+import {PROD} from '../src/constants/variables';
 
 const chance = new Chance();
 
 describe('reducer', () => {
     const defaultState = {
         cameraRollRows: [],
+        env: PROD,
         isUploading: false,
         numFinished: 0,
         numToUpload: 0,
@@ -359,6 +361,26 @@ describe('reducer', () => {
         expect(actualState).toEqual({
             ...originalState,
             videos: expectedData
+        });
+    });
+
+    it('should set env when the action is SET_ENV', () => {
+        const originalState = {
+            [chance.string()]: chance.string(),
+            env: chance.string()
+        };
+
+        const expectedData = chance.string();
+        const action = {
+            data: expectedData,
+            type: SET_ENV
+        };
+
+        const actualState = reducer(originalState, action);
+
+        expect(actualState).toEqual({
+            ...originalState,
+            env: expectedData
         });
     });
 });

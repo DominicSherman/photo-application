@@ -1,6 +1,7 @@
 import React from 'react';
+import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
-import {Text, View} from 'react-native';
+import {Switch, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -13,10 +14,13 @@ import Button from '../../src/components/Button';
 
 jest.mock('../../src/services/navigation-service');
 
+const chance = new Chance();
+
 describe('More', () => {
     let expectedProps,
 
         renderedComponent,
+        renderedInstance,
 
         renderedUserWrapper,
         renderedAdminButtonWrapper,
@@ -26,13 +30,27 @@ describe('More', () => {
         renderedUserEmail,
 
         renderedAdminButtonTouchable,
+        renderedSwitchWrapper,
 
-        renderedAdminButtonIcon;
+        renderedAdminButtonIcon,
+
+        renderedDevText,
+        renderedSwitch,
+        renderedProdText;
 
     const cacheChildrenIsAdmin = () => {
-        renderedAdminButtonTouchable = renderedAdminButtonWrapper.props.children;
+        [
+            renderedAdminButtonTouchable,
+            renderedSwitchWrapper
+        ] = renderedAdminButtonWrapper.props.children;
 
         renderedAdminButtonIcon = renderedAdminButtonTouchable.props.children;
+
+        [
+            renderedDevText,
+            renderedSwitch,
+            renderedProdText
+        ] = renderedSwitchWrapper.props.children;
     };
 
     const cacheChildren = () => {
@@ -54,6 +72,7 @@ describe('More', () => {
         shallowRenderer.render(<More {...expectedProps} />);
 
         renderedComponent = shallowRenderer.getRenderOutput();
+        renderedInstance = shallowRenderer.getMountedInstance();
 
         cacheChildren();
     };
@@ -61,12 +80,38 @@ describe('More', () => {
     beforeEach(() => {
         expectedProps = {
             actions: {
-                logout: jest.fn()
+                logout: jest.fn(),
+                setUsers: jest.fn(),
+                toggleEnv: jest.fn()
             },
+            env: chance.string(),
             user: createRandomUser()
         };
 
         renderComponent();
+    });
+
+    describe('componentDidUpdate', () => {
+        afterEach(() => {
+            jest.resetAllMocks();
+        });
+
+        it('should set users again if the env has changed', () => {
+            const prevProps = {
+                ...expectedProps,
+                env: chance.string()
+            };
+
+            renderedInstance.componentDidUpdate(prevProps);
+
+            expect(expectedProps.actions.setUsers).toHaveBeenCalledTimes(1);
+        });
+
+        it('should do nothing if props have not changed', () => {
+            renderedInstance.componentDidUpdate(expectedProps);
+
+            expect(expectedProps.actions.setUsers).not.toHaveBeenCalled();
+        });
     });
 
     it('should render a root View', () => {
@@ -87,23 +132,49 @@ describe('More', () => {
         expect(renderedUserEmail.props.children).toBe(expectedProps.user.email);
     });
 
-    it('should render the Admin button if the user is an admin', () => {
-        expectedProps.user.isAdmin = true;
-        renderComponent();
-        cacheChildrenIsAdmin();
+    describe('if the user is an admin', () => {
+        beforeEach(() => {
+            expectedProps.user.isAdmin = true;
+            renderComponent();
+            cacheChildrenIsAdmin();
+        });
 
-        expect(renderedAdminButtonWrapper.type).toBe(View);
-        expect(renderedAdminButtonTouchable.type).toBe(Touchable);
+        it('should render the touchable for the userModal', () => {
+            expect(renderedAdminButtonWrapper.type).toBe(View);
+            expect(renderedAdminButtonTouchable.type).toBe(Touchable);
 
-        renderedAdminButtonTouchable.props.onPress();
+            renderedAdminButtonTouchable.props.onPress();
 
-        expect(showModal).toHaveBeenCalledTimes(1);
-        expect(showModal).toHaveBeenCalledWith(USER_MODAL);
+            expect(showModal).toHaveBeenCalledTimes(1);
+            expect(showModal).toHaveBeenCalledWith(USER_MODAL);
+        });
 
-        expect(renderedAdminButtonIcon.type).toBe(Feather);
-        expect(renderedAdminButtonIcon.props.color).toBe(green);
-        expect(renderedAdminButtonIcon.props.name).toBe('user-plus');
-        expect(renderedAdminButtonIcon.props.size).toBe(80);
+        it('should render an icon for the userModal', () => {
+            expect(renderedAdminButtonIcon.type).toBe(Feather);
+            expect(renderedAdminButtonIcon.props.color).toBe(green);
+            expect(renderedAdminButtonIcon.props.name).toBe('user-plus');
+            expect(renderedAdminButtonIcon.props.size).toBe(80);
+        });
+
+        it('should render a view for the switch', () => {
+            expect(renderedSwitchWrapper.type).toBe(View);
+        });
+
+        it('should render text for DEV', () => {
+            expect(renderedDevText.type).toBe(Text);
+            expect(renderedDevText.props.children).toBe('DEV');
+        });
+
+        it('should render a switch', () => {
+            expect(renderedSwitch.type).toBe(Switch);
+            expect(renderedSwitch.props.onValueChange).toBe(expectedProps.actions.toggleEnv);
+            expect(renderedSwitch.props.value).toBeFalsy();
+        });
+
+        it('should render text for PROD', () => {
+            expect(renderedProdText.type).toBe(Text);
+            expect(renderedProdText.props.children).toBe('PROD');
+        });
     });
 
     it('should not render the Admin button if the user is not an admin', () => {

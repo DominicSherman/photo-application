@@ -5,7 +5,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import {imageSize} from '../constants/variables';
 import {whiteFontStyles} from '../constants/font-styles';
-import {getTimeForDisplay} from '../services/helper-functions';
+import {getTimeForDisplay} from '../constants/service';
 
 const styles = StyleSheet.create({
     colorOverlay: {

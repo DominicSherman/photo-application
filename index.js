@@ -21,11 +21,11 @@ registerScreens(store);
 Navigation.events().registerAppLaunchedListener(async () => {
     initializeFirebase();
     setUsers()(store.dispatch, store.getState);
-    const creds = await tryToLoadCredentials(store);
+    const [creds, isAdmin] = await tryToLoadCredentials(store);
 
     await loadIcons();
 
     await Navigation.setDefaultOptions(getDefaultOptions());
 
-    Navigation.setRoot(getRoot(creds));
+    Navigation.setRoot(getRoot(creds, isAdmin));
 });

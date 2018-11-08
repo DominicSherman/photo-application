@@ -1,6 +1,6 @@
 import {Linking, Platform} from 'react-native';
 
-import {HRLinkAndroid, HRLinkApple, McMenaminLinkAndroid, McMenaminLinkApple} from '../constants/variables';
+import {HRLinkAndroid, HRLinkApple, McMenaminLinkAndroid, McMenaminLinkApple} from './variables';
 
 export const calculateDaysLeft = () => {
     const oneDay = 24 * 60 * 60 * 1000;
