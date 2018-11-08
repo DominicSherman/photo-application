@@ -113,8 +113,10 @@ export const toggleSelected = (item) => (dispatch, getState) => {
     }
 };
 
-export const setMedia = () => (dispatch) =>
-    getMedia().on('value', (snapshot) => {
+export const setMedia = () => async (dispatch, getState) => {
+    const {env} = getState();
+
+    await getMedia(env).on('value', (snapshot) => {
         let all = [],
             photos = [],
             videos = [];
@@ -171,3 +173,4 @@ export const setMedia = () => (dispatch) =>
             dispatch(action(SET_VIDEOS, []));
         }
     });
+};

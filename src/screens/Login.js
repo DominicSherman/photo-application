@@ -1,6 +1,7 @@
 import React from 'react';
 import {ActivityIndicator, Image, StyleSheet, TextInput, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+
 import Button from '../components/Button';
 import {lightFont} from '../constants/style-variables';
 

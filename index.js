@@ -20,7 +20,7 @@ registerScreens(store);
 
 Navigation.events().registerAppLaunchedListener(async () => {
     initializeFirebase();
-    setUsers()(store.dispatch);
+    setUsers()(store.dispatch, store.getState);
     const creds = await tryToLoadCredentials(store);
 
     await loadIcons();

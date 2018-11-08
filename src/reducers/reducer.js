@@ -2,19 +2,24 @@ import {
     ADD_CAMERA_ROLL_ROW,
     SET_ADMIN,
     SET_EMAIL,
+    SET_ENV,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
     SET_NAME,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD, SET_PICTURES,
+    SET_NUM_TO_UPLOAD,
+    SET_PICTURES,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
     SET_TOTALS,
-    SET_USERS, SET_VIDEOS
+    SET_USERS,
+    SET_VIDEOS
 } from '../constants/action-types';
+import {PROD} from '../constants/variables';
 
 const defaultState = {
     cameraRollRows: [],
+    env: PROD,
     isUploading: false,
     numFinished: 0,
     numToUpload: 0,
@@ -114,10 +119,16 @@ const setVideos = (state, videos) => ({
     videos
 });
 
+const setEnv = (state, env) => ({
+    ...state,
+    env
+});
+
 const reducerMap = {
     [ADD_CAMERA_ROLL_ROW]: addCameraRollRow,
     [SET_ADMIN]: setAdmin,
     [SET_EMAIL]: setUserEmail,
+    [SET_ENV]: setEnv,
     [SET_IS_UPLOADING]: setIsUploading,
     [SET_LOGGED_IN]: setUserLoggedIn,
     [SET_NAME]: setUserName,

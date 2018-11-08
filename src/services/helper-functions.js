@@ -27,12 +27,12 @@ export const getTimeForDisplay = (duration) => {
     return `${min}:${sec}`;
 };
 
-export const openHRLink = () => Platform.select({
+export const openHRLink = Platform.select({
     android: () => Linking.openURL(HRLinkAndroid),
     ios: () => Linking.openURL(HRLinkApple)
 });
 
-export const openMcMenaminLink = () => Platform.select({
+export const openMcMenaminLink = Platform.select({
     android: () => Linking.openURL(McMenaminLinkAndroid),
     ios: () => Linking.openURL(McMenaminLinkApple)
 });

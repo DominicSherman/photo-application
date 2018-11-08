@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Switch, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -7,14 +7,23 @@ import Button from '../components/Button';
 import {green} from '../constants/style-variables';
 import {USER_MODAL} from '../constants/routes';
 import {showModal} from '../services/navigation-service';
-import {darkFontStyles} from '../constants/font-styles';
+import {darkFontStyles, lightFontStyles} from '../constants/font-styles';
+import {PROD} from '../constants/variables';
 
 const styles = StyleSheet.create({
-    userButtonWrapper: {
+    adminWrapper: {
+        alignItems: 'center',
         flex: 0.3,
-        flexDirection: 'row',
-        justifyContent: 'center',
+        flexDirection: 'column',
+        justifyContent: 'space-evenly',
         width: '100%'
+    },
+    switchWrapper: {
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '50%'
     },
     userWrapper: {
         alignItems: 'center',
@@ -25,8 +34,14 @@ const styles = StyleSheet.create({
 });
 
 export default class More extends Component {
+    componentDidUpdate(prevProps) {
+        if (prevProps.env !== this.props.env) {
+            this.props.actions.setUsers();
+        }
+    }
+
     render() {
-        const {actions, user} = this.props;
+        const {actions, env, user} = this.props;
 
         return (
             <View style={{flex: 1}}>
@@ -36,7 +51,7 @@ export default class More extends Component {
                 </View>
                 {
                     user.isAdmin &&
-                    <View style={styles.userButtonWrapper}>
+                    <View style={styles.adminWrapper}>
                         <Touchable
                             onPress={() => showModal(USER_MODAL)}
                         >
@@ -46,6 +61,14 @@ export default class More extends Component {
                                 size={80}
                             />
                         </Touchable>
+                        <View style={styles.switchWrapper}>
+                            <Text style={lightFontStyles.light}>{'DEV'}</Text>
+                            <Switch
+                                onValueChange={actions.toggleEnv}
+                                value={env === PROD}
+                            />
+                            <Text style={lightFontStyles.light}>{'PROD'}</Text>
+                        </View>
                     </View>
                 }
                 <Button

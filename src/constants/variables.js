@@ -9,3 +9,10 @@ export const HRLinkAndroid = 'http://maps.google.com/maps?daddr=45.533226,-122.6
 export const HRLinkApple = 'http://maps.apple.com/maps?daddr=45.533226,-122.662230';
 export const McMenaminLinkAndroid = 'http://maps.google.com/maps?daddr=45.549305, -122.900486';
 export const McMenaminLinkApple = 'http://maps.apple.com/maps?daddr=45.549305, -122.900486';
+
+export const DEV = 'dev';
+export const PROD = 'prod';
+export const reverseEnum = {
+    [DEV]: PROD,
+    [PROD]: DEV
+};

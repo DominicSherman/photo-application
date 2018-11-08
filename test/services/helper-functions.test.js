@@ -10,8 +10,6 @@ describe('helper-functions', () => {
     beforeEach(() => {
         Platform = require('react-native').Platform;
         Linking = require('react-native').Linking;
-
-        Platform.select = jest.fn();
     });
 
     afterEach(() => {
@@ -85,31 +83,16 @@ describe('helper-functions', () => {
     });
 
     describe('openHRLink', () => {
-        beforeEach(() => {
-            openHRLink();
-        });
-
-        it('should use Platform select', () => {
-            expect(Platform.select).toHaveBeenCalledTimes(1);
-            expect(Platform.select).toHaveBeenCalledWith({
-                android: expect.any(Function),
-                ios: expect.any(Function)
-            });
-        });
-
         it('should open the android link for android', () => {
-            const options = Platform.select.mock.calls[0][0];
-
-            options.android();
+            Platform.OS = 'android';
+            openHRLink();
 
             expect(Linking.openURL).toHaveBeenCalledTimes(1);
             expect(Linking.openURL).toHaveBeenCalledWith(HRLinkAndroid);
         });
 
         it('should open the apple link for ios', () => {
-            const options = Platform.select.mock.calls[0][0];
-
-            options.ios();
+            openHRLink();
 
             expect(Linking.openURL).toHaveBeenCalledTimes(1);
             expect(Linking.openURL).toHaveBeenCalledWith(HRLinkApple);
@@ -117,31 +100,16 @@ describe('helper-functions', () => {
     });
 
     describe('openMcMenaminLink', () => {
-        beforeEach(() => {
-            openMcMenaminLink();
-        });
-
-        it('should use Platform select', () => {
-            expect(Platform.select).toHaveBeenCalledTimes(1);
-            expect(Platform.select).toHaveBeenCalledWith({
-                android: expect.any(Function),
-                ios: expect.any(Function)
-            });
-        });
-
         it('should open the android link for android', () => {
-            const options = Platform.select.mock.calls[0][0];
-
-            options.android();
+            Platform.OS = 'android';
+            openMcMenaminLink();
 
             expect(Linking.openURL).toHaveBeenCalledTimes(1);
             expect(Linking.openURL).toHaveBeenCalledWith(McMenaminLinkAndroid);
         });
 
         it('should open the apple link for ios', () => {
-            const options = Platform.select.mock.calls[0][0];
-
-            options.ios();
+            openMcMenaminLink();
 
             expect(Linking.openURL).toHaveBeenCalledTimes(1);
             expect(Linking.openURL).toHaveBeenCalledWith(McMenaminLinkApple);

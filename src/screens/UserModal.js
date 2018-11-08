@@ -3,10 +3,11 @@ import {FlatList, SafeAreaView, StyleSheet, Switch, Text, TextInput, View} from 
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
-import {darkFontStyles, lightFontStyles} from '../constants/font-styles';
+import {darkFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
 import {addUser} from '../services/firebase-service';
 import {dismissModal} from '../services/navigation-service';
+import {lightFont} from '../constants/style-variables';
 
 const styles = StyleSheet.create({
     currentUsers: {
@@ -35,6 +36,16 @@ const styles = StyleSheet.create({
         paddingTop: '4%',
         width: '40%'
     },
+    textInputStyle: {
+        color: lightFont,
+        fontSize: 25,
+        fontWeight: '200',
+        width: '100%'
+    },
+    textInputWrapper: {
+        flexDirection: 'row',
+        width: '90%'
+    },
     wrapperView: {
         alignItems: 'center',
         flex: 1,
@@ -62,7 +73,7 @@ export default class UserModal extends React.Component {
     setIsAdmin = (isAdmin) => this.setState({isAdmin});
 
     render() {
-        const {users} = this.props;
+        const {env, users} = this.props;
         const {email, isAdmin} = this.state;
 
         return (
@@ -78,15 +89,17 @@ export default class UserModal extends React.Component {
                     </Touchable>
                 </View>
                 <View style={styles.wrapperView}>
-                    <TextInput
-                        autoCapitalize={'none'}
-                        clearTextOnFocus
-                        numberOfLines={2}
-                        onChangeText={(inputEmail) => this.setEmail(inputEmail)}
-                        placeholder={'Email'}
-                        style={[lightFontStyles.light, {fontSize: 25}]}
-                        value={email}
-                    />
+                    <View style={styles.textInputWrapper}>
+                        <TextInput
+                            autoCapitalize={'none'}
+                            clearTextOnFocus
+                            numberOfLines={2}
+                            onChangeText={(inputEmail) => this.setEmail(inputEmail)}
+                            placeholder={'Email'}
+                            style={styles.textInputStyle}
+                            value={email}
+                        />
+                    </View>
                     <View style={styles.switch}>
                         <Text style={darkFontStyles.regular}>{'Admin'}</Text>
                         <Switch
@@ -96,7 +109,7 @@ export default class UserModal extends React.Component {
                     </View>
                     <Button
                         action={() => {
-                            addUser(email.toLowerCase(), isAdmin);
+                            addUser(email.toLowerCase(), isAdmin, env);
                             this.resetState();
                         }}
                         fontSize={25}

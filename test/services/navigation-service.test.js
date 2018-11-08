@@ -36,6 +36,7 @@ describe('navigation-service', () => {
                             name: route,
                             options: {
                                 topBar: {
+                                    drawBehind: true,
                                     visible: false
                                 }
                             },

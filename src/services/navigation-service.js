@@ -10,6 +10,7 @@ export const showModal = (route, options) => {
                     name: route,
                     options: {
                         topBar: {
+                            drawBehind: true,
                             visible: false
                         }
                     },

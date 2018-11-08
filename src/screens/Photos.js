@@ -13,6 +13,12 @@ export default class Photos extends Component {
         this.props.actions.setMedia();
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.env !== this.props.env) {
+            this.props.actions.setMedia();
+        }
+    }
+
     render() {
         const {pictures} = this.props;
 

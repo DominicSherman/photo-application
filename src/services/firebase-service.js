@@ -5,7 +5,7 @@ import 'firebase/database';
 import 'firebase/storage';
 import RNHeicConverter from 'react-native-heic-converter';
 
-import {config, ENV} from '../config';
+import {config} from '../config';
 
 import {clean} from './helper-functions';
 
@@ -32,9 +32,9 @@ const getPayload = (image, user, downloadUrl) => {
     };
 };
 
-const insertDatabaseRef = ({downloadUrl, sessionId, image, actions, user}) =>
+const insertDatabaseRef = ({downloadUrl, env, sessionId, image, actions, user}) =>
     firebase.database()
-        .ref(`${ENV}/media`)
+        .ref(`${env}/media`)
         .child(sessionId)
         .child(`${Date.now()}`)
         .set(getPayload(image, user, downloadUrl),
@@ -44,11 +44,12 @@ const insertDatabaseRef = ({downloadUrl, sessionId, image, actions, user}) =>
                 }
             });
 
-const handleSuccess = ({uploadTask, sessionId, image, actions, user}) =>
+const handleSuccess = ({uploadTask, env, sessionId, image, actions, user}) =>
     uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) =>
         insertDatabaseRef({
             actions,
             downloadUrl,
+            env,
             image,
             sessionId,
             user
@@ -75,7 +76,7 @@ const getUploadUri = (image) => {
     return path;
 };
 
-export const uploadImage = async ({actions, image, index, sessionId, user}) => {
+export const uploadImage = async ({actions, env, image, index, sessionId, user}) => {
     const Blob = RNFetchBlob.polyfill.Blob;
     const fs = RNFetchBlob.fs;
 
@@ -83,7 +84,7 @@ export const uploadImage = async ({actions, image, index, sessionId, user}) => {
     window.Blob = Blob;
 
     const mime = 'application/octet-stream';
-    const imageRef = firebase.storage().ref(`${ENV}/${sessionId}`).child(`${image.filename}`);
+    const imageRef = firebase.storage().ref(`${env}/${sessionId}`).child(`${image.filename}`);
 
     const uploadUri = await getUploadUri(image);
     const blob = await fs.readFile(uploadUri, 'base64').then((data) => Blob.build(data, {type: `${mime};BASE64`}));
@@ -95,6 +96,7 @@ export const uploadImage = async ({actions, image, index, sessionId, user}) => {
         null,
         () => handleSuccess({
             actions,
+            env,
             image,
             sessionId,
             uploadTask,
@@ -103,15 +105,15 @@ export const uploadImage = async ({actions, image, index, sessionId, user}) => {
     );
 };
 
-export const getUsers = () => firebase.database().ref(`${ENV}/users`);
+export const getUsers = (env) => firebase.database().ref(`${env}/users`);
 
-export const addUser = (email, isAdmin) =>
-    firebase.database().ref(`${ENV}/users`).child(`${clean(email)}`).set({
+export const addUser = (email, isAdmin, env) =>
+    firebase.database().ref(`${env}/users`).child(`${clean(email)}`).set({
         email,
         isAdmin
     });
 
-export const getMedia = () => firebase.database().ref(`${ENV}/media`);
+export const getMedia = (env) => firebase.database().ref(`${env}/media`);
 
 export const initializeFirebase = () => {
     if (!isInitialized) {

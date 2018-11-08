@@ -12,3 +12,4 @@ export const SET_USERS = 'SET_USERS';
 export const SET_ADMIN = 'SET_ADMIN';
 export const SET_PICTURES = 'SET_PICTURES';
 export const SET_VIDEOS = 'SET_VIDEOS';
+export const SET_ENV = 'SET_ENV';
