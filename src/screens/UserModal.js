@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Switch, Text, TextInput, View} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Linking} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
@@ -110,6 +110,7 @@ export default class UserModal extends React.Component {
                     <Button
                         action={() => {
                             addUser(email.toLowerCase(), isAdmin, env);
+                            Linking.openURL(`mailto:${email.toLowerCase()}?subject=RE: DMPhotos Access&body=Access granted`);
                             this.resetState();
                         }}
                         fontSize={25}

@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-import {darkFont, lightFont, white} from './style-variables';
+import {darkFont, hyveeRed, lightFont, white} from './style-variables';
 
 export const darkFontStyles = StyleSheet.create({
     light: {
@@ -51,6 +51,24 @@ export const whiteFontStyles = StyleSheet.create({
     },
     regular: {
         color: white,
+        fontSize: 20,
+        fontWeight: '400'
+    }
+});
+
+export const redFontStyles = StyleSheet.create({
+    light: {
+        color: hyveeRed,
+        fontSize: 20,
+        fontWeight: '200'
+    },
+    medium: {
+        color: hyveeRed,
+        fontSize: 20,
+        fontWeight: '600'
+    },
+    regular: {
+        color: hyveeRed,
         fontSize: 20,
         fontWeight: '400'
     }

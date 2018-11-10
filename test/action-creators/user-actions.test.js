@@ -2,7 +2,15 @@ import Chance from 'chance';
 
 import {login, logout, setEmail, setName, setUsers, toggleEnv} from '../../src/action-creators';
 import {action} from '../../src/constants/action';
-import {SET_ADMIN, SET_EMAIL, SET_ENV, SET_LOGGED_IN, SET_NAME, SET_USERS} from '../../src/constants/action-types';
+import {
+    SET_ADMIN,
+    SET_EMAIL,
+    SET_ENV,
+    SET_FAILED_LOGIN,
+    SET_LOGGED_IN,
+    SET_NAME,
+    SET_USERS
+} from '../../src/constants/action-types';
 import {getUsers} from '../../src/services/firebase-service';
 import {createRandomUser} from '../model-factory';
 import {removeCredentials, storeCredentials} from '../../src/services/async-storage-service';
@@ -132,30 +140,28 @@ describe('user-actions', () => {
             getStateStub = jest.fn(() => expectedState);
         });
 
-        it('should storeCredentials if it as an authUser', () => {
+        it('should storeCredentials, login, and the set the root if it as an authUser', () => {
             login()(dispatchSpy, getStateStub);
 
             expect(storeCredentials).toHaveBeenCalledTimes(1);
             expect(storeCredentials).toHaveBeenCalledWith(expectedUser, expectedUser.name);
-            expect(dispatchSpy).toHaveBeenCalledTimes(2);
+            expect(dispatchSpy).toHaveBeenCalledTimes(3);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_ADMIN, expectedUser.isAdmin));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_LOGGED_IN, true));
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_FAILED_LOGIN, false));
+            expect(setRoot).toHaveBeenCalledTimes(1);
+            expect(setRoot).toHaveBeenCalledWith(true, expectedUser.isAdmin);
         });
 
-        it('should not storeCredentials if it is not an authUser', () => {
+        it('should not storeCredentials and set failedLogin to true if it is not an authUser', () => {
             expectedState.users = chance.n(createRandomUser, chance.d6() + 1);
             getStateStub = jest.fn(() => expectedState);
 
             login()(dispatchSpy, getStateStub);
 
             expect(storeCredentials).not.toHaveBeenCalled();
-        });
-
-        it('should set the root to be logged in', () => {
-            login()(dispatchSpy, getStateStub);
-
-            expect(setRoot).toHaveBeenCalledTimes(1);
-            expect(setRoot).toHaveBeenCalledWith(true, expectedUser.isAdmin);
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_FAILED_LOGIN, true));
         });
     });
 

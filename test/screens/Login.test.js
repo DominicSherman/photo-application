@@ -1,12 +1,13 @@
 import React from 'react';
 import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
-import {TextInput, View, Image, ActivityIndicator} from 'react-native';
+import {TextInput, View, Image, ActivityIndicator, Text} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
 import Login from '../../src/screens/Login';
 import {createRandomUser} from '../model-factory';
 import Button from '../../src/components/Button';
+import RequestAccess from '../../src/components/RequestAccess';
 
 const chance = new Chance();
 
@@ -20,6 +21,8 @@ describe('Login', () => {
 
         renderedTextWrapper,
         renderedLoginButtonWrapper,
+        renderedNotAuthorizedText,
+        renderedRequestAccessText,
         renderedLogo,
 
         renderedEmailInputWrapper,
@@ -34,6 +37,8 @@ describe('Login', () => {
         [
             renderedTextWrapper,
             renderedLoginButtonWrapper,
+            renderedNotAuthorizedText,
+            renderedRequestAccessText,
             renderedLogo
         ] = renderedComponent.props.children;
 
@@ -68,6 +73,7 @@ describe('Login', () => {
                 setName: jest.fn()
             },
             componentId: chance.natural(),
+            failedLogin: chance.bool(),
             user: createRandomUser(),
             users: chance.n(createRandomUser, chance.d6() + 1)
         };
@@ -150,6 +156,25 @@ describe('Login', () => {
         renderComponent();
 
         expect(renderedLoginButtonWrapper.type).toBe(ActivityIndicator);
+    });
+
+    it('should render the email not authorized text when there has been a failed login', () => {
+        expectedProps.failedLogin = true;
+        renderComponent();
+
+        expect(renderedNotAuthorizedText.type).toBe(Text);
+        expect(renderedNotAuthorizedText.props.children).toBe('Email not authorized');
+    });
+
+    it('should return false if failedLogin is false', () => {
+        expectedProps.failedLogin = false;
+        renderComponent();
+
+        expect(renderedNotAuthorizedText).toBeFalsy();
+    });
+
+    it('should render the RequestAccess component', () => {
+        expect(renderedRequestAccessText.type).toBe(RequestAccess);
     });
 
     it('should render the logo', () => {

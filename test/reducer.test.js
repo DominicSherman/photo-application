@@ -4,7 +4,7 @@ import reducer from '../src/reducers/reducer';
 import {
     ADD_CAMERA_ROLL_ROW,
     SET_ADMIN,
-    SET_EMAIL, SET_ENV,
+    SET_EMAIL, SET_ENV, SET_FAILED_LOGIN,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
     SET_NAME,
@@ -23,6 +23,7 @@ describe('reducer', () => {
     const defaultState = {
         cameraRollRows: [],
         env: PROD,
+        failedLogin: false,
         isUploading: false,
         numFinished: 0,
         numToUpload: 0,
@@ -381,6 +382,26 @@ describe('reducer', () => {
         expect(actualState).toEqual({
             ...originalState,
             env: expectedData
+        });
+    });
+
+    it('should set failedLogin when the action is SET_FAILED_LOGIN', () => {
+        const originalState = {
+            [chance.string()]: chance.string(),
+            failedLogin: chance.string()
+        };
+
+        const expectedData = chance.string();
+        const action = {
+            data: expectedData,
+            type: SET_FAILED_LOGIN
+        };
+
+        const actualState = reducer(originalState, action);
+
+        expect(actualState).toEqual({
+            ...originalState,
+            failedLogin: expectedData
         });
     });
 });

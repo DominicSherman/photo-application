@@ -1,4 +1,12 @@
-import {SET_ADMIN, SET_EMAIL, SET_ENV, SET_LOGGED_IN, SET_NAME, SET_USERS} from '../constants/action-types';
+import {
+    SET_ADMIN,
+    SET_EMAIL,
+    SET_ENV,
+    SET_FAILED_LOGIN,
+    SET_LOGGED_IN,
+    SET_NAME,
+    SET_USERS
+} from '../constants/action-types';
 import {getUsers} from '../services/firebase-service';
 import {action} from '../constants/action';
 import {removeCredentials, storeCredentials} from '../services/async-storage-service';
@@ -40,9 +48,11 @@ export const login = () => (dispatch, getState) => {
         storeCredentials(authUser, name);
         dispatch(action(SET_ADMIN, authUser.isAdmin));
         dispatch(action(SET_LOGGED_IN, true));
+        dispatch(action(SET_FAILED_LOGIN, false));
+        setRoot(true, authUser.isAdmin);
+    } else {
+        dispatch(action(SET_FAILED_LOGIN, true));
     }
-
-    setRoot(true, authUser ? authUser.isAdmin : false);
 };
 
 export const logout = () => (dispatch) => {

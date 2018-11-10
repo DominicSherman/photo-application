@@ -1,14 +1,16 @@
 import React from 'react';
-import {ActivityIndicator, Image, StyleSheet, TextInput, View} from 'react-native';
+import {ActivityIndicator, Image, StyleSheet, Text, TextInput, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
 import Button from '../components/Button';
 import {lightFont} from '../constants/style-variables';
+import RequestAccess from '../components/RequestAccess';
+import {redFontStyles} from '../constants/font-styles';
 
 const styles = StyleSheet.create({
     image: {
-        height: '75%',
-        width: '75%'
+        height: '50%',
+        width: '50%'
     },
     textInputStyle: {
         color: lightFont,
@@ -50,7 +52,7 @@ export default class Login extends React.Component {
     }
 
     render() {
-        const {actions, user, users} = this.props;
+        const {actions, failedLogin, user, users} = this.props;
 
         return (
             <View style={styles.wrapperView}>
@@ -88,6 +90,11 @@ export default class Login extends React.Component {
                         :
                         <ActivityIndicator />
                 }
+                {
+                    failedLogin &&
+                        <Text style={[redFontStyles.light, {paddingTop: 20}]}>{'Email not authorized'}</Text>
+                }
+                <RequestAccess />
                 <Image
                     resizeMode={'contain'}
                     source={require('../assets/D&M-logo.png')}
