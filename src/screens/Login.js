@@ -80,7 +80,10 @@ export default class Login extends React.Component {
                 </View>
                 {
                     users ?
-                        <View style={{paddingTop: 20}} testID={'loginButton'}>
+                        <View
+                            style={{paddingTop: 20}}
+                            testID={'loginButton'}
+                        >
                             <Button
                                 action={actions.login}
                                 fontSize={30}
@@ -94,7 +97,12 @@ export default class Login extends React.Component {
                 }
                 {
                     failedLogin &&
-                        <Text style={[redFontStyles.light, {paddingTop: 20}]}>{'Email not authorized'}</Text>
+                        <Text
+                            style={[redFontStyles.light, {paddingTop: 20}]}
+                            testID={'notAuthorizedText'}
+                        >
+                            {'Email not authorized'}
+                        </Text>
                 }
                 <RequestAccess />
                 <Image

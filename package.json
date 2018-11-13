@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "acceptance": "detox build && detox test",
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
