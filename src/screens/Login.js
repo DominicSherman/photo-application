@@ -63,6 +63,7 @@ export default class Login extends React.Component {
                             onChangeText={(email) => actions.setEmail(email.toLowerCase())}
                             placeholder={'Email'}
                             style={styles.textInputStyle}
+                            testID={'emailInput'}
                             value={user.email}
                         />
                     </View>
@@ -72,13 +73,14 @@ export default class Login extends React.Component {
                             onChangeText={(name) => actions.setName(name)}
                             placeholder={'Name'}
                             style={styles.textInputStyle}
+                            testID={'nameInput'}
                             value={user.name}
                         />
                     </View>
                 </View>
                 {
                     users ?
-                        <View style={{paddingTop: 20}}>
+                        <View style={{paddingTop: 20}} testID={'loginButton'}>
                             <Button
                                 action={actions.login}
                                 fontSize={30}

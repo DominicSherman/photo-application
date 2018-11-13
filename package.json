@@ -46,12 +46,13 @@
   "detox": {
     "configurations": {
       "ios.sim.debug": {
-        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/photo-application.app",
-        "build": "xcodebuild -project ios/photo-application.xcodeproj -scheme photo-application -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/photoapplication.app",
+        "build": "xcodebuild -project ios/photoapplication.xcodeproj -scheme photoapplication -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
         "type": "ios.simulator",
-        "name": "iPhone X"
+        "name": "iPhone 7"
       }
-    }
+    },
+    "test-runner": "jest"
   },
   "dependencies": {
     "firebase": "4.6.2",
@@ -84,8 +85,5 @@
     "jest": "^23.5.0",
     "jest-react-native": "^18.0.0",
     "react-test-renderer": "16.3.1"
-  },
-  "resolutions": {
-    "grpc": "^1.12.0"
   }
 }
