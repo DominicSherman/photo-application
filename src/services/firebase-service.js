@@ -83,7 +83,7 @@ export const uploadImage = async ({actions, env, image, index, sessionId, user})
     window.Blob = Blob;
 
     const mime = 'application/octet-stream';
-    const imageRef = firebase.storage().ref(`${env}/${sessionId}`).child(`${image.filename}`);
+    const imageRef = firebase.storage().ref(`${env}`).child(`${image.filename}`);
 
     const uploadUri = await getUploadUri(image);
     const blob = await fs.readFile(uploadUri, 'base64').then((data) => Blob.build(data, {type: `${mime};BASE64`}));

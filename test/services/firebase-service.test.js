@@ -116,7 +116,7 @@ describe('firebase-service', () => {
         it('should create an imageRef', () => {
             expect(firebase.storage).toHaveBeenCalledTimes(1);
             expect(storageRefSpy).toHaveBeenCalledTimes(1);
-            expect(storageRefSpy).toHaveBeenCalledWith(`${expectedProps.env}/${expectedProps.sessionId}`);
+            expect(storageRefSpy).toHaveBeenCalledWith(`${expectedProps.env}`);
             expect(childSpy).toHaveBeenCalledTimes(1);
             expect(childSpy).toHaveBeenCalledWith(`${expectedProps.image.filename}`);
         });
