@@ -33,6 +33,7 @@ export default class Home extends React.Component {
     render() {
         const {
             actions,
+            env,
             isUploading,
             selectedImages,
             user
@@ -49,6 +50,7 @@ export default class Home extends React.Component {
                 <ScrollView style={styles.scrollView}>
                     <UploadButton
                         actions={actions}
+                        env={env}
                         selectedImages={selectedImages}
                         user={user}
                     />
