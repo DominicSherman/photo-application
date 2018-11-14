@@ -65,6 +65,7 @@ export default class More extends Component {
                             <Text style={lightFontStyles.light}>{'DEV'}</Text>
                             <Switch
                                 onValueChange={actions.toggleEnv}
+                                testID={'changeEnvSwitch'}
                                 value={env === PROD}
                             />
                             <Text style={lightFontStyles.light}>{'PROD'}</Text>

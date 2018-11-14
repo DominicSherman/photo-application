@@ -80,6 +80,7 @@ export default class TouchableImage extends React.Component {
         return (
             <Touchable
                 onPress={this.handlePress}
+                testID={`touchableImage-${filename}`}
             >
                 <ImageBackground
                     key={`${filename}`}

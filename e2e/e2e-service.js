@@ -1,19 +1,17 @@
-const { execSync } = require('child_process')
-const { existsSync, mkdirSync } = require('fs')
+import {userName} from './user-info';
 
-const SCREENSHOT_DIR = '/tmp/screenshots'
+export const login = async (email) => {
+    await element(by.id('emailInput')).tap();
+    await element(by.id('emailInput')).typeText(email);
 
-const SCREENSHOT_OPTIONS = {
-    timeout: 1000,
-    killSignal: 'SIGKILL',
-}
+    await element(by.id('nameInput')).tap();
+    await element(by.id('nameInput')).typeText(userName);
 
-let screenshotIndex = 0
+    await element(by.id('loginButton')).tap();
+};
 
-const takeScreenshot = () => {
-    if (!existsSync(SCREENSHOT_DIR)) mkdirSync(SCREENSHOT_DIR)
-    const screenshotFilename = `${SCREENSHOT_DIR}/screenshot-${screenshotIndex++}.png`
-    execSync(`xcrun simctl io booted screenshot ${screenshotFilename}`, SCREENSHOT_OPTIONS)
-}
-
-module.exports = { takeScreenshot }
+export const switchToDev = async () => {
+    await element(by.label('More').and(by.traits(['button']))).tap();
+    await element(by.id('changeEnvSwitch')).tap();
+    await element(by.label('Home').and(by.traits(['button']))).tap();
+};
