@@ -1,5 +1,5 @@
 import {black, darkFont, green, white} from '../constants/style-variables';
-import {HOME, LOGIN, MORE, PHOTOS, WEDDING_INFORMATION} from '../constants/routes';
+import {HOME, MORE, PHOTOS, SELECT_EVENT, WEDDING_INFORMATION} from '../constants/routes';
 
 import {getIcons} from './icons-factory';
 
@@ -15,8 +15,7 @@ export const getDefaultOptions = () => ({
         buttonColor: black,
         drawBehind: false,
         title: {
-            color: darkFont,
-            text: 'D&M Photos'
+            color: darkFont
         },
         visible: true
     }
@@ -24,13 +23,17 @@ export const getDefaultOptions = () => ({
 
 const loggedOutRoot = {
     root: {
-        component: {
-            name: LOGIN
+        stack: {
+            children: [{
+                component: {
+                    name: SELECT_EVENT
+                }
+            }]
         }
     }
 };
 
-const getMainRoot = (icons) => ({
+const getMainRoot = (icons, eventName) => ({
     root: {
         bottomTabs: {
             children: [
@@ -45,6 +48,11 @@ const getMainRoot = (icons) => ({
                             bottomTab: {
                                 icon: icons.home,
                                 title: 'Home'
+                            },
+                            topBar: {
+                                title: {
+                                    text: eventName
+                                }
                             }
                         }
                     }
@@ -60,6 +68,11 @@ const getMainRoot = (icons) => ({
                             bottomTab: {
                                 icon: icons.image,
                                 title: 'Photos'
+                            },
+                            topBar: {
+                                title: {
+                                    text: eventName
+                                }
                             }
                         }
                     }
@@ -75,6 +88,11 @@ const getMainRoot = (icons) => ({
                             bottomTab: {
                                 icon: icons.more,
                                 title: 'More'
+                            },
+                            topBar: {
+                                title: {
+                                    text: eventName
+                                }
                             }
                         }
                     }
@@ -91,7 +109,7 @@ const getMainRoot = (icons) => ({
     }
 });
 
-const getAdminRoot = (icons) => ({
+const getDominicAndMaryRoot = (icons, eventName) => ({
     root: {
         bottomTabs: {
             children: [
@@ -106,6 +124,11 @@ const getAdminRoot = (icons) => ({
                             bottomTab: {
                                 icon: icons.home,
                                 title: 'Home'
+                            },
+                            topBar: {
+                                title: {
+                                    text: eventName
+                                }
                             }
                         }
                     }
@@ -115,12 +138,22 @@ const getAdminRoot = (icons) => ({
                         children: [{
                             component: {
                                 name: PHOTOS
+                            },
+                            topBar: {
+                                title: {
+                                    text: eventName
+                                }
                             }
                         }],
                         options: {
                             bottomTab: {
                                 icon: icons.image,
                                 title: 'Photos'
+                            },
+                            topBar: {
+                                title: {
+                                    text: eventName
+                                }
                             }
                         }
                     }
@@ -136,6 +169,11 @@ const getAdminRoot = (icons) => ({
                             bottomTab: {
                                 icon: icons.info,
                                 title: 'Information'
+                            },
+                            topBar: {
+                                title: {
+                                    text: eventName
+                                }
                             }
                         }
                     }
@@ -151,6 +189,11 @@ const getAdminRoot = (icons) => ({
                             bottomTab: {
                                 icon: icons.more,
                                 title: 'More'
+                            },
+                            topBar: {
+                                title: {
+                                    text: eventName
+                                }
                             }
                         }
                     }
@@ -161,22 +204,22 @@ const getAdminRoot = (icons) => ({
                     animate: true,
                     drawBehind: false,
                     selectedTabColor: green
-                }
+                },
             }
         }
     }
 });
 
-export const getRoot = (isLoggedIn, isAdmin) => {
+export const getRoot = (isLoggedIn, eventName) => {
     const icons = getIcons();
 
     if (!isLoggedIn) {
         return loggedOutRoot;
     }
 
-    if (isAdmin) {
-        return getAdminRoot(icons);
+    if (eventName === 'Dominic & Mary') {
+        return getDominicAndMaryRoot(icons, eventName);
     }
 
-    return getMainRoot(icons);
+    return getMainRoot(icons, eventName);
 };

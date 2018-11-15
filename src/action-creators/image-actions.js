@@ -114,9 +114,9 @@ export const toggleSelected = (item) => (dispatch, getState) => {
 };
 
 export const setMedia = () => async (dispatch, getState) => {
-    const {env} = getState();
+    const {env, event} = getState();
 
-    await getMedia(env).on('value', (snapshot) => {
+    await getMedia(env, event.eventId).on('value', (snapshot) => {
         let all = [],
             photos = [],
             videos = [];

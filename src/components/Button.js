@@ -36,7 +36,7 @@ export default class Button extends Component {
                     >
                         <Text
                             style={[
-                                whiteFontStyles.regular,
+                                whiteFontStyles.light,
                                 {fontSize}
                             ]}
                         >

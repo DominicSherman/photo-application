@@ -1,6 +1,16 @@
 import {Navigation} from 'react-native-navigation';
 
-import {GALLERY, HOME, IMAGE_MODAL, LOGIN, MORE, PHOTOS, USER_MODAL, WEDDING_INFORMATION} from '../constants/routes';
+import {
+    CREATE_EVENT,
+    GALLERY,
+    HOME,
+    IMAGE_MODAL,
+    LOGIN,
+    MORE,
+    PHOTOS, SELECT_EVENT,
+    USER_MODAL,
+    WEDDING_INFORMATION
+} from '../constants/routes';
 import {withRedux} from '../services/redux-factory';
 
 import Home from './Home';
@@ -11,6 +21,8 @@ import ImageSelectModal from './ImageSelectModal';
 import Photos from './Photos';
 import WeddingInformation from './WeddingInformation';
 import GalleryModal from './GalleryModal';
+import CreateEventModal from './CreateEventModal';
+import SelectEvent from './SelectEvent';
 
 export const screens = [
     {
@@ -44,6 +56,14 @@ export const screens = [
     {
         component: GalleryModal,
         route: GALLERY
+    },
+    {
+        component: CreateEventModal,
+        route: CREATE_EVENT
+    },
+    {
+        component: SelectEvent,
+        route: SELECT_EVENT
     }
 ];
 

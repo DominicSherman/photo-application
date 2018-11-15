@@ -43,16 +43,17 @@ const styles = StyleSheet.create({
 export default class Login extends React.Component {
     componentDidMount() {
         Navigation.mergeOptions(this.props.componentId, {
-            options: {
-                bottomTabs: {
-                    visible: false
+            topBar: {
+                title: {
+                    text: this.props.event.eventName
                 }
             }
         });
+        this.props.actions.setUsers();
     }
 
     render() {
-        const {actions, failedLogin, user, users} = this.props;
+        const {actions, failedLogin, event, user, users} = this.props;
 
         return (
             <View style={styles.wrapperView}>
@@ -105,11 +106,14 @@ export default class Login extends React.Component {
                         </Text>
                 }
                 <RequestAccess />
-                <Image
-                    resizeMode={'contain'}
-                    source={require('../assets/D&M-logo.png')}
-                    style={styles.image}
-                />
+                {
+                    event.eventName === 'Dominic & Mary' &&
+                    <Image
+                        resizeMode={'contain'}
+                        source={require('../assets/D&M-logo.png')}
+                        style={styles.image}
+                    />
+                }
             </View>
         );
     }

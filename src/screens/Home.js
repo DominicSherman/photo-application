@@ -34,6 +34,7 @@ export default class Home extends React.Component {
         const {
             actions,
             env,
+            event,
             isUploading,
             selectedImages,
             user
@@ -51,6 +52,7 @@ export default class Home extends React.Component {
                     <UploadButton
                         actions={actions}
                         env={env}
+                        event={event}
                         selectedImages={selectedImages}
                         user={user}
                     />

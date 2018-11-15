@@ -41,13 +41,13 @@ export default class More extends Component {
     }
 
     render() {
-        const {actions, env, user} = this.props;
+        const {actions, event, user} = this.props;
 
         return (
             <View style={{flex: 1}}>
                 <View style={styles.userWrapper}>
-                    <Text style={darkFontStyles.regular}>{user.name}</Text>
-                    <Text style={darkFontStyles.regular}>{user.email}</Text>
+                    <Text style={darkFontStyles.light}>{user.name}</Text>
+                    <Text style={darkFontStyles.light}>{user.email}</Text>
                 </View>
                 {
                     user.isAdmin &&
@@ -61,15 +61,6 @@ export default class More extends Component {
                                 size={80}
                             />
                         </Touchable>
-                        <View style={styles.switchWrapper}>
-                            <Text style={lightFontStyles.light}>{'DEV'}</Text>
-                            <Switch
-                                onValueChange={actions.toggleEnv}
-                                testID={'changeEnvSwitch'}
-                                value={env === PROD}
-                            />
-                            <Text style={lightFontStyles.light}>{'PROD'}</Text>
-                        </View>
                     </View>
                 }
                 <Button

@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 
 export default class UploadButton extends Component {
     uploadImages = async () => {
-        const {actions, env, selectedImages, user} = this.props;
+        const {actions, env, selectedImages, user, event: {eventId, eventName}} = this.props;
 
         actions.setUploading(Object.keys(selectedImages).length);
 
@@ -47,6 +47,8 @@ export default class UploadButton extends Component {
             await uploadImage({
                 actions,
                 env,
+                eventId,
+                eventName,
                 image,
                 index,
                 sessionId,

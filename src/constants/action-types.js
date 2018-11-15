@@ -14,3 +14,5 @@ export const SET_PICTURES = 'SET_PICTURES';
 export const SET_VIDEOS = 'SET_VIDEOS';
 export const SET_ENV = 'SET_ENV';
 export const SET_FAILED_LOGIN = 'SET_FAILED_LOGIN';
+export const SET_EVENTS = 'SET_EVENTS';
+export const SET_EVENT = 'SET_EVENT';
