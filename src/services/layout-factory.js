@@ -217,7 +217,7 @@ export const getRoot = (isLoggedIn, eventName) => {
         return loggedOutRoot;
     }
 
-    if (eventName === 'Dominic & Mary') {
+    if (eventName === 'Dominic & Mary\'s Wedding') {
         return getDominicAndMaryRoot(icons, eventName);
     }
 

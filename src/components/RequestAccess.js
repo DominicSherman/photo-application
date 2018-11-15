@@ -12,13 +12,15 @@ const styles = StyleSheet.create({
 
 export default class RequestAccess extends Component {
     render() {
+        const {primaryAdmin} = this.props;
+
         return (
             <View style={styles.wrapper}>
                 <Text style={darkFontStyles.light}>
                     {'Don\'t have access? '}
                     <Text
                         onPress={() =>
-                            Linking.openURL('mailto:dominic.sherman98@gmail.com?subject=DMPhotos Access&body=Requesting access for: ')
+                            Linking.openURL(`mailto:${primaryAdmin}?subject=DMPhotos Access&body=Requesting access for: `)
                         }
                         style={redFontStyles.regular}
                     >

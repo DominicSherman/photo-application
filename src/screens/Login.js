@@ -105,9 +105,11 @@ export default class Login extends React.Component {
                             {'Email not authorized'}
                         </Text>
                 }
-                <RequestAccess />
+                <RequestAccess
+                    primaryAdmin={event.primaryAdmin}
+                />
                 {
-                    event.eventName === 'Dominic & Mary' &&
+                    event.eventName === 'Dominic & Mary\'s Wedding' &&
                     <Image
                         resizeMode={'contain'}
                         source={require('../assets/D&M-logo.png')}
