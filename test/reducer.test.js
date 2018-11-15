@@ -4,25 +4,31 @@ import reducer from '../src/reducers/reducer';
 import {
     ADD_CAMERA_ROLL_ROW,
     SET_ADMIN,
-    SET_EMAIL, SET_ENV, SET_FAILED_LOGIN,
+    SET_EMAIL,
+    SET_ENV, SET_EVENT, SET_EVENTS,
+    SET_FAILED_LOGIN,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
     SET_NAME,
     SET_NUM_FINISHED,
-    SET_NUM_TO_UPLOAD, SET_PICTURES,
+    SET_NUM_TO_UPLOAD,
+    SET_PICTURES,
     SET_PROGRESSES,
     SET_SELECTED_IMAGES,
     SET_TOTALS,
-    SET_USERS, SET_VIDEOS
+    SET_USERS,
+    SET_VIDEOS
 } from '../src/constants/action-types';
-import {PROD} from '../src/constants/variables';
+import {DEV} from '../src/constants/variables';
 
 const chance = new Chance();
 
 describe('reducer', () => {
     const defaultState = {
         cameraRollRows: [],
-        env: PROD,
+        env: DEV,
+        event: {},
+        events: null,
         failedLogin: false,
         isUploading: false,
         numFinished: 0,
@@ -402,6 +408,46 @@ describe('reducer', () => {
         expect(actualState).toEqual({
             ...originalState,
             failedLogin: expectedData
+        });
+    });
+
+    it('should set events when the action is SET_EVENTS', () => {
+        const originalState = {
+            [chance.string()]: chance.string(),
+            events: chance.string()
+        };
+
+        const expectedData = chance.string();
+        const action = {
+            data: expectedData,
+            type: SET_EVENTS
+        };
+
+        const actualState = reducer(originalState, action);
+
+        expect(actualState).toEqual({
+            ...originalState,
+            events: expectedData
+        });
+    });
+
+    it('should set event when the action is SET_EVENT', () => {
+        const originalState = {
+            [chance.string()]: chance.string(),
+            event: chance.string()
+        };
+
+        const expectedData = chance.string();
+        const action = {
+            data: expectedData,
+            type: SET_EVENT
+        };
+
+        const actualState = reducer(originalState, action);
+
+        expect(actualState).toEqual({
+            ...originalState,
+            event: expectedData
         });
     });
 });

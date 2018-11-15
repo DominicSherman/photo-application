@@ -34,20 +34,35 @@ const styles = StyleSheet.create({
 });
 
 export default class More extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            numPresses: 0
+        };
+    }
+
     componentDidUpdate(prevProps) {
         if (prevProps.env !== this.props.env) {
             this.props.actions.setUsers();
         }
     }
 
+    incrementPresses = () => this.setState({numPresses: this.state.numPresses + 1});
+
     render() {
-        const {actions, event, user} = this.props;
+        const {actions, env, user} = this.props;
 
         return (
             <View style={{flex: 1}}>
                 <View style={styles.userWrapper}>
-                    <Text style={darkFontStyles.light}>{user.name}</Text>
-                    <Text style={darkFontStyles.light}>{user.email}</Text>
+                    <Text
+                        onPress={this.incrementPresses}
+                        style={darkFontStyles.regular}
+                    >
+                        {user.name}
+                    </Text>
+                    <Text style={darkFontStyles.regular}>{user.email}</Text>
                 </View>
                 {
                     user.isAdmin &&
@@ -61,6 +76,17 @@ export default class More extends Component {
                                 size={80}
                             />
                         </Touchable>
+                        {this.state.numPresses >= 10 &&
+                            <View style={styles.switchWrapper}>
+                                <Text style={lightFontStyles.light}>{'DEV'}</Text>
+                                <Switch
+                                    onValueChange={actions.toggleEnv}
+                                    testID={'changeEnvSwitch'}
+                                    value={env === PROD}
+                                />
+                                <Text style={lightFontStyles.light}>{'PROD'}</Text>
+                            </View>
+                        }
                     </View>
                 }
                 <Button

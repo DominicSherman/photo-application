@@ -14,7 +14,7 @@ jest.mock('../src/services/layout-factory', () => ({
     getRoot: jest.fn()
 }));
 jest.mock('../src/services/firebase-service');
-jest.mock('../src/action-creators/index', () => ({setUsers: jest.fn()}));
+jest.mock('../src/action-creators/index', () => ({setEvents: jest.fn()}));
 
 const chance = new Chance();
 

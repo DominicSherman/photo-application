@@ -38,7 +38,7 @@ describe('More', () => {
         renderedSwitch,
         renderedProdText;
 
-    const cacheChildrenIsAdmin = () => {
+    const cacheChildrenTenPresses = () => {
         [
             renderedAdminButtonTouchable,
             renderedSwitchWrapper
@@ -132,11 +132,18 @@ describe('More', () => {
         expect(renderedUserEmail.props.children).toBe(expectedProps.user.email);
     });
 
-    describe('if the user is an admin', () => {
+    describe('if the text has been pressed 10 times and the user is an admin', () => {
         beforeEach(() => {
             expectedProps.user.isAdmin = true;
             renderComponent();
-            cacheChildrenIsAdmin();
+
+            for (let i = 0; i < 10; i++) {
+                renderedInstance.incrementPresses();
+            }
+
+            renderedComponent = renderedInstance.render();
+            cacheChildren();
+            cacheChildrenTenPresses();
         });
 
         it('should render the touchable for the userModal', () => {
@@ -177,7 +184,7 @@ describe('More', () => {
         });
     });
 
-    it('should not render the Admin button if the user is not an admin', () => {
+    it('should not render the Admin button if name has not been pressed 10 times', () => {
         expectedProps.user.isAdmin = false;
         renderComponent();
 
