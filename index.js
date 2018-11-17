@@ -27,5 +27,5 @@ Navigation.events().registerAppLaunchedListener(async () => {
 
     await Navigation.setDefaultOptions(getDefaultOptions());
 
-    Navigation.setRoot(getRoot(isLoggedIn, eventName));
+    await Navigation.setRoot(getRoot(isLoggedIn, eventName));
 });

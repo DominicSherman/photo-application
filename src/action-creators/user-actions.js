@@ -39,7 +39,7 @@ export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, emai
 
 export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
 
-export const login = () => (dispatch, getState) => {
+export const login = () => async (dispatch, getState) => {
     const {user, users, event} = getState();
     const {email, name} = user;
     const authUser = users.find((u) => clean(u.email) === clean(email));
@@ -49,20 +49,20 @@ export const login = () => (dispatch, getState) => {
         dispatch(action(SET_ADMIN, authUser.isAdmin));
         dispatch(action(SET_LOGGED_IN, true));
         dispatch(action(SET_FAILED_LOGIN, false));
-        setRoot(true, event.eventName);
+        await setRoot(true, event.eventName);
     } else {
         dispatch(action(SET_FAILED_LOGIN, true));
     }
 };
 
-export const logout = () => (dispatch) => {
+export const logout = () => async (dispatch) => {
     removeCredentials();
     dispatch(action(SET_EMAIL, ''));
     dispatch(action(SET_NAME, ''));
     dispatch(action(SET_ADMIN, false));
     dispatch(action(SET_LOGGED_IN, false));
 
-    setRoot(false);
+    await setRoot(false);
 };
 
 export const toggleEnv = () => (dispatch, getState) => {

@@ -1,13 +1,11 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, CameraRoll, Platform} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 
 import SelectedPreview from '../components/SelectedPreview';
 import UploadButton from '../components/UploadButton';
 import Button from '../components/Button';
 import {IMAGE_MODAL} from '../constants/routes';
 import {showModal} from '../services/navigation-service';
-import {numPictures} from '../constants/variables';
-import {requestExternalStorage} from '../services/permission-service';
 
 import LoadingView from './LoadingView';
 

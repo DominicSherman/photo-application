@@ -14,8 +14,8 @@ import {numPerRow} from '../constants/variables';
 import {getMedia} from '../services/firebase-service';
 
 export const setCameraRollRows = (r) => (dispatch, getState) => {
-    let row = [];
-    let currPhotosCount = 0;
+    let row = [],
+        currPhotosCount = 0;
 
     const {cameraRollRows} = getState();
 

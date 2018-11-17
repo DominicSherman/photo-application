@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Platform} from 'react-native';
+import {View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import Entypo from 'react-native-vector-icons/Entypo';
 

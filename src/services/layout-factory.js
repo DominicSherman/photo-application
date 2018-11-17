@@ -100,8 +100,8 @@ const getMainRoot = (icons, eventName) => ({
             ],
             options: {
                 bottomTabs: {
-                    animate: true,
-                    drawBehind: false,
+                    animate: false,
+                    drawBehind: true,
                     selectedTabColor: green
                 }
             }
@@ -201,10 +201,10 @@ const getDominicAndMaryRoot = (icons, eventName) => ({
             ],
             options: {
                 bottomTabs: {
-                    animate: true,
-                    drawBehind: false,
+                    animate: false,
+                    drawBehind: true,
                     selectedTabColor: green
-                },
+                }
             }
         }
     }
