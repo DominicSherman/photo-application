@@ -6,7 +6,7 @@ import {Text, View} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import UploadButton from '../../src/components/UploadButton';
-import {createRandomImage, createRandomUser} from '../model-factory';
+import {createRandomEvent, createRandomImage, createRandomUser} from '../model-factory';
 import {uploadImage} from '../../src/services/firebase-service';
 
 jest.mock('../../src/services/firebase-service');
@@ -60,6 +60,8 @@ describe('UploadButton', () => {
                 setUploading: jest.fn(),
                 toggleImageModal: jest.fn()
             },
+            env: chance.string(),
+            event: createRandomEvent(),
             selectedImages: expectedSelectedImages,
             user: createRandomUser()
         };

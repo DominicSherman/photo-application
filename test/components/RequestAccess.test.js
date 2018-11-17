@@ -1,8 +1,11 @@
 import React from 'react';
+import Chance from 'chance';
 import {Text, View, Linking} from 'react-native';
 import ShallowRenderer from 'react-test-renderer/shallow';
 
 import RequestAccess from '../../src/components/RequestAccess';
+
+const chance = new Chance();
 
 describe('RequestAccess', () => {
     let expectedProps,
@@ -34,7 +37,9 @@ describe('RequestAccess', () => {
     };
 
     beforeEach(() => {
-        expectedProps = {};
+        expectedProps = {
+            primaryAdmin: chance.string()
+        };
         Linking.openUrl = jest.fn();
 
         renderComponent();
@@ -56,6 +61,6 @@ describe('RequestAccess', () => {
         renderedRequestText.props.onPress();
 
         expect(Linking.openURL).toHaveBeenCalledTimes(1);
-        expect(Linking.openURL).toHaveBeenCalledWith('mailto:dominic.sherman98@gmail.com?subject=DMPhotos Access&body=Requesting access for: ');
+        expect(Linking.openURL).toHaveBeenCalledWith(`mailto:${expectedProps.primaryAdmin}?subject=DMPhotos Access&body=Requesting access for: `);
     });
 });

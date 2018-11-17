@@ -1,9 +1,9 @@
 import {AsyncStorage} from 'react-native';
 import Chance from 'chance';
 
-import {createRandomUser} from '../model-factory';
+import {createRandomEvent, createRandomUser} from '../model-factory';
 import {removeCredentials, storeCredentials, tryToLoadCredentials} from '../../src/services/async-storage-service';
-import {SET_ADMIN, SET_EMAIL, SET_LOGGED_IN, SET_NAME} from '../../src/constants/action-types';
+import {SET_ADMIN, SET_EMAIL, SET_EVENT, SET_LOGGED_IN, SET_NAME} from '../../src/constants/action-types';
 import {action} from '../../src/constants/action';
 
 jest.mock('react-native', () => ({
@@ -19,22 +19,27 @@ const chance = new Chance();
 describe('async-storage-service', () => {
     let expectedData,
         user,
-        name;
+        name,
+        event;
 
     beforeEach(() => {
         user = createRandomUser();
         name = chance.string();
+        event = createRandomEvent();
 
         expectedData = [
             ['email', user.email],
             ['name', name],
-            ['isAdmin', `${user.isAdmin}`]
+            ['isAdmin', `${user.isAdmin}`],
+            ['eventId', event.eventId],
+            ['eventName', event.eventName],
+            ['primaryAdmin', event.primaryAdmin]
         ];
     });
 
     describe('storeCredentials', () => {
         it('should store the credentials', () => {
-            storeCredentials(user, name);
+            storeCredentials(user, name, event);
 
             expect(AsyncStorage.multiSet).toHaveBeenCalledTimes(1);
             expect(AsyncStorage.multiSet).toHaveBeenCalledWith(expectedData);
@@ -46,7 +51,7 @@ describe('async-storage-service', () => {
             removeCredentials();
 
             expect(AsyncStorage.multiRemove).toHaveBeenCalledTimes(1);
-            expect(AsyncStorage.multiRemove).toHaveBeenCalledWith(['email', 'name', 'isAdmin']);
+            expect(AsyncStorage.multiRemove).toHaveBeenCalledWith(['email', 'name', 'isAdmin', 'eventId', 'eventName', 'primaryAdmin']);
         });
     });
 
@@ -72,19 +77,23 @@ describe('async-storage-service', () => {
 
         it('should call asyncStorage multiGet', () => {
             expect(AsyncStorage.multiGet).toHaveBeenCalledTimes(1);
-            expect(AsyncStorage.multiGet).toHaveBeenCalledWith(['email', 'name', 'isAdmin']);
+            expect(AsyncStorage.multiGet).toHaveBeenCalledWith(['email', 'name', 'isAdmin', 'eventId', 'eventName', 'primaryAdmin']);
         });
 
         it('should set the credentials in the state if they are there', () => {
             expectedData = [
                 ['email', user.email],
                 ['name', name],
-                ['isAdmin', 'true']
+                ['isAdmin', 'true'],
+                ['eventId', event.eventId],
+                ['eventName', event.eventName],
+                ['primaryAdmin', event.primaryAdmin]
             ];
             callbackFunction(expectedData);
 
-            expect(dispatchSpy).toHaveBeenCalledTimes(4);
+            expect(dispatchSpy).toHaveBeenCalledTimes(5);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EMAIL, expectedData[0][1]));
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EVENT, event));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_LOGGED_IN, true));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_NAME, expectedData[1][1]));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_ADMIN, true));
@@ -94,7 +103,10 @@ describe('async-storage-service', () => {
             expectedData = [
                 ['email', null],
                 ['name', name],
-                ['isAdmin', 'true']
+                ['isAdmin', 'true'],
+                ['eventId', event.eventId],
+                ['eventName', event.eventName],
+                ['primaryAdmin', event.primaryAdmin]
             ];
             callbackFunction(expectedData);
 
@@ -105,12 +117,16 @@ describe('async-storage-service', () => {
             expectedData = [
                 ['email', user.email],
                 ['name', null],
-                ['isAdmin', 'true']
+                ['isAdmin', 'true'],
+                ['eventId', event.eventId],
+                ['eventName', event.eventName],
+                ['primaryAdmin', event.primaryAdmin]
             ];
             callbackFunction(expectedData);
 
-            expect(dispatchSpy).toHaveBeenCalledTimes(3);
+            expect(dispatchSpy).toHaveBeenCalledTimes(4);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EMAIL, expectedData[0][1]));
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EVENT, event));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_LOGGED_IN, true));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_ADMIN, true));
         });
@@ -119,12 +135,16 @@ describe('async-storage-service', () => {
             expectedData = [
                 ['email', user.email],
                 ['name', name],
-                ['isAdmin', 'false']
+                ['isAdmin', 'false'],
+                ['eventId', event.eventId],
+                ['eventName', event.eventName],
+                ['primaryAdmin', event.primaryAdmin]
             ];
             callbackFunction(expectedData);
 
-            expect(dispatchSpy).toHaveBeenCalledTimes(3);
+            expect(dispatchSpy).toHaveBeenCalledTimes(4);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EMAIL, expectedData[0][1]));
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EVENT, event));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_LOGGED_IN, true));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_NAME, expectedData[1][1]));
         });

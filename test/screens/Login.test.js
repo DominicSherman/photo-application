@@ -5,7 +5,7 @@ import {TextInput, View, Image, ActivityIndicator, Text} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
 import Login from '../../src/screens/Login';
-import {createRandomUser} from '../model-factory';
+import {createRandomEvent, createRandomUser} from '../model-factory';
 import Button from '../../src/components/Button';
 import RequestAccess from '../../src/components/RequestAccess';
 
@@ -70,9 +70,11 @@ describe('Login', () => {
             actions: {
                 login: jest.fn(),
                 setEmail: jest.fn(),
-                setName: jest.fn()
+                setName: jest.fn(),
+                setUsers: jest.fn()
             },
             componentId: chance.natural(),
+            event: createRandomEvent(),
             failedLogin: chance.bool(),
             user: createRandomUser(),
             users: chance.n(createRandomUser, chance.d6() + 1)
@@ -81,16 +83,24 @@ describe('Login', () => {
         renderComponent();
     });
 
-    it('should merge options on componentDidMount', () => {
-        renderedInstance.componentDidMount();
+    describe('componentDidMount', () => {
+        beforeEach(() => {
+            renderedInstance.componentDidMount();
+        });
 
-        expect(Navigation.mergeOptions).toHaveBeenCalledTimes(1);
-        expect(Navigation.mergeOptions).toHaveBeenCalledWith(expectedProps.componentId, {
-            options: {
-                bottomTabs: {
-                    visible: false
+        it('should merge options', () => {
+            expect(Navigation.mergeOptions).toHaveBeenCalledTimes(1);
+            expect(Navigation.mergeOptions).toHaveBeenCalledWith(expectedProps.componentId, {
+                topBar: {
+                    title: {
+                        text: expectedProps.event.eventName
+                    }
                 }
-            }
+            });
+        });
+
+        it('should set users', () => {
+            expect(expectedProps.actions.setUsers).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -177,8 +187,15 @@ describe('Login', () => {
         expect(renderedRequestAccessText.type).toBe(RequestAccess);
     });
 
-    it('should render the logo', () => {
+    it('should render the logo if the event name is Dominic & Mary', () => {
+        expectedProps.event.eventName = 'Dominic & Mary\'s Wedding';
+        renderComponent();
+
         expect(renderedLogo.type).toBe(Image);
         expect(renderedLogo.props.resizeMode).toBe('contain');
+    });
+
+    it('should not return the logo if it is not Dominic & Mary', () => {
+        expect(renderedLogo).toBeFalsy();
     });
 });

@@ -88,7 +88,7 @@ describe('CameraRollRow', () => {
             expectedProps.images.forEach((i) => {
                 expectedProps.selectedImages = {
                     ...expectedProps.selectedImages,
-                    [`${i.image.filename}`]: chance.string()
+                    [`${i.image.uri}`]: chance.string()
                 };
             });
 

@@ -3,7 +3,8 @@ import Chance from 'chance';
 import {getDefaultOptions, getRoot} from '../../src/services/layout-factory';
 import {black, darkFont, green, white} from '../../src/constants/style-variables';
 import {getIcons} from '../../src/services/icons-factory';
-import {HOME, LOGIN, MORE, PHOTOS, WEDDING_INFORMATION} from '../../src/constants/routes';
+import {HOME, LOGIN, MORE, PHOTOS, SELECT_EVENT, WEDDING_INFORMATION} from '../../src/constants/routes';
+import {createRandomEvent} from '../model-factory';
 
 jest.mock('../../src/services/icons-factory');
 
@@ -26,8 +27,7 @@ describe('layout-factory', () => {
                     buttonColor: black,
                     drawBehind: false,
                     title: {
-                        color: darkFont,
-                        text: 'D&M Photos'
+                        color: darkFont
                     },
                     visible: true
                 }
@@ -49,8 +49,9 @@ describe('layout-factory', () => {
             getIcons.mockReturnValue(icons);
         });
 
-        it('should return the admin root layout when the user is loggedIn and admin', () => {
-            const expectedLayout = getRoot(true, true);
+        it('should return the Dominic & Mary root layout when applicable', () => {
+            const eventName = 'Dominic & Mary\'s Wedding';
+            const expectedLayout = getRoot(true, eventName);
 
             expect(expectedLayout).toEqual({
                 root: {
@@ -67,6 +68,11 @@ describe('layout-factory', () => {
                                         bottomTab: {
                                             icon: icons.home,
                                             title: 'Home'
+                                        },
+                                        topBar: {
+                                            title: {
+                                                text: eventName
+                                            }
                                         }
                                     }
                                 }
@@ -76,12 +82,22 @@ describe('layout-factory', () => {
                                     children: [{
                                         component: {
                                             name: PHOTOS
+                                        },
+                                        topBar: {
+                                            title: {
+                                                text: eventName
+                                            }
                                         }
                                     }],
                                     options: {
                                         bottomTab: {
                                             icon: icons.image,
                                             title: 'Photos'
+                                        },
+                                        topBar: {
+                                            title: {
+                                                text: eventName
+                                            }
                                         }
                                     }
                                 }
@@ -97,6 +113,11 @@ describe('layout-factory', () => {
                                         bottomTab: {
                                             icon: icons.info,
                                             title: 'Information'
+                                        },
+                                        topBar: {
+                                            title: {
+                                                text: eventName
+                                            }
                                         }
                                     }
                                 }
@@ -112,6 +133,11 @@ describe('layout-factory', () => {
                                         bottomTab: {
                                             icon: icons.more,
                                             title: 'More'
+                                        },
+                                        topBar: {
+                                            title: {
+                                                text: eventName
+                                            }
                                         }
                                     }
                                 }
@@ -119,8 +145,8 @@ describe('layout-factory', () => {
                         ],
                         options: {
                             bottomTabs: {
-                                animate: true,
-                                drawBehind: false,
+                                animate: false,
+                                drawBehind: true,
                                 selectedTabColor: green
                             }
                         }
@@ -129,8 +155,9 @@ describe('layout-factory', () => {
             });
         });
 
-        it('should return the main root layout when the user is loggedIn and not an amin', () => {
-            const expectedLayout = getRoot(true, false);
+        it('should return the main root layout when the user is loggedIn and the name is not Dominic & Mary', () => {
+            const eventName = chance.string();
+            const expectedLayout = getRoot(true, eventName);
 
             expect(expectedLayout).toEqual({
                 root: {
@@ -147,6 +174,11 @@ describe('layout-factory', () => {
                                         bottomTab: {
                                             icon: icons.home,
                                             title: 'Home'
+                                        },
+                                        topBar: {
+                                            title: {
+                                                text: eventName
+                                            }
                                         }
                                     }
                                 }
@@ -162,6 +194,11 @@ describe('layout-factory', () => {
                                         bottomTab: {
                                             icon: icons.image,
                                             title: 'Photos'
+                                        },
+                                        topBar: {
+                                            title: {
+                                                text: eventName
+                                            }
                                         }
                                     }
                                 }
@@ -177,6 +214,11 @@ describe('layout-factory', () => {
                                         bottomTab: {
                                             icon: icons.more,
                                             title: 'More'
+                                        },
+                                        topBar: {
+                                            title: {
+                                                text: eventName
+                                            }
                                         }
                                     }
                                 }
@@ -184,8 +226,8 @@ describe('layout-factory', () => {
                         ],
                         options: {
                             bottomTabs: {
-                                animate: true,
-                                drawBehind: false,
+                                animate: false,
+                                drawBehind: true,
                                 selectedTabColor: green
                             }
                         }
@@ -199,8 +241,12 @@ describe('layout-factory', () => {
 
             expect(expectedLayout).toEqual({
                 root: {
-                    component: {
-                        name: LOGIN
+                    stack: {
+                        children: [{
+                            component: {
+                                name: SELECT_EVENT
+                            }
+                        }]
                     }
                 }
             });

@@ -32,3 +32,10 @@ export const createRandomPicture = () => ({
         uri: chance.string()
     }
 });
+
+export const createRandomEvent = (event = {}) => ({
+    eventId: chance.guid(),
+    eventName: chance.string(),
+    primaryAdmin: chance.string(),
+    ...event
+});

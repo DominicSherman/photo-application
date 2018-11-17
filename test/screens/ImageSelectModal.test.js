@@ -1,6 +1,6 @@
 import React from 'react';
 import Chance from 'chance';
-import {FlatList, SafeAreaView, Text, View} from 'react-native';
+import ReactNative, {FlatList, SafeAreaView, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import ShallowRenderer from 'react-test-renderer/shallow';
@@ -8,14 +8,18 @@ import ShallowRenderer from 'react-test-renderer/shallow';
 import ImageSelectModal from '../../src/screens/ImageSelectModal';
 import CameraRollRow from '../../src/components/CameraRollRow';
 import {dismissModal} from '../../src/services/navigation-service';
+import {requestExternalStorage} from '../../src/services/permission-service';
+import {numPictures} from '../../src/constants/variables';
 
 jest.mock('../../src/services/navigation-service');
+jest.mock('../../src/services/permission-service');
 
 const chance = new Chance();
 
 describe('ImageSelectModal', () => {
     let expectedProps,
 
+        renderedInstance,
         renderedComponent,
 
         renderedView,
@@ -48,6 +52,7 @@ describe('ImageSelectModal', () => {
         shallowRenderer.render(<ImageSelectModal {...expectedProps} />);
 
         renderedComponent = shallowRenderer.getRenderOutput();
+        renderedInstance = shallowRenderer.getMountedInstance();
 
         cacheChildren();
     };
@@ -55,6 +60,7 @@ describe('ImageSelectModal', () => {
     beforeEach(() => {
         expectedProps = {
             actions: {
+                setCameraRollRows: jest.fn(),
                 setSelectedImages: jest.fn()
             },
             cameraRollRows: chance.n(chance.string, chance.d6() + 1),
@@ -67,6 +73,61 @@ describe('ImageSelectModal', () => {
 
     afterEach(() => {
         jest.resetAllMocks();
+    });
+
+    describe('componentDidMount', () => {
+        let thenSpy,
+            getPhotosSpy;
+
+        beforeEach(() => {
+            thenSpy = jest.fn();
+            getPhotosSpy = jest.fn(() => ({
+                then: thenSpy
+            }));
+            ReactNative.CameraRoll.getPhotos = getPhotosSpy;
+        });
+
+        it('should call getPhotos if is ios', async () => {
+            await renderedInstance.componentDidMount();
+
+            expect(getPhotosSpy).toHaveBeenCalledTimes(1);
+            expect(getPhotosSpy).toHaveBeenCalledWith({
+                assetType: 'All',
+                first: numPictures
+            });
+        });
+
+        it('should not call getPhotos if is android requestExternalStorage returns false', async () => {
+            ReactNative.Platform.OS = 'android';
+            requestExternalStorage.mockReturnValue(Promise.resolve(false));
+
+            await renderedInstance.componentDidMount();
+
+            expect(getPhotosSpy).not.toHaveBeenCalled();
+        });
+
+        it('should call getPhotos if is android and requestExternalStorage returns true', async () => {
+            ReactNative.Platform.OS = 'android';
+            requestExternalStorage.mockReturnValue(Promise.resolve(true));
+
+            await renderedInstance.componentDidMount();
+
+            expect(getPhotosSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should call then', async () => {
+            ReactNative.Platform.OS = 'ios';
+            await renderedInstance.componentDidMount();
+
+            expect(thenSpy).toHaveBeenCalledTimes(1);
+
+            const r = chance.string();
+
+            thenSpy.mock.calls[0][0](r);
+
+            expect(expectedProps.actions.setCameraRollRows).toHaveBeenCalledTimes(1);
+            expect(expectedProps.actions.setCameraRollRows).toHaveBeenCalledWith(r);
+        });
     });
 
     it('should render a SafeAreaView', () => {
