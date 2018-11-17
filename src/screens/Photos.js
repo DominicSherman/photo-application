@@ -10,12 +10,12 @@ import LoadingView from './LoadingView';
 
 export default class Photos extends Component {
     componentWillMount() {
-        // this.props.actions.setMedia();
+        this.props.actions.setMedia();
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.env !== this.props.env) {
-            // this.props.actions.setMedia();
+            this.props.actions.setMedia();
         }
     }
 
