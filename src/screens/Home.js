@@ -21,15 +21,6 @@ const styles = StyleSheet.create({
 });
 
 export default class Home extends React.Component {
-    async componentDidMount() {
-        if (Platform.OS === 'ios' || await requestExternalStorage()) {
-            CameraRoll.getPhotos({
-                assetType: 'All',
-                first: numPictures
-            }).then((r) => this.props.actions.setCameraRollRows(r));
-        }
-    }
-
     render() {
         const {
             actions,

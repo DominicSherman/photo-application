@@ -1,5 +1,5 @@
 import {
-    ADD_CAMERA_ROLL_ROW,
+    ADD_CAMERA_ROLL_ROW, RESET_CAMERA_ROLL_ROWS,
     SET_ADMIN,
     SET_EMAIL,
     SET_ENV, SET_EVENT, SET_EVENTS, SET_FAILED_LOGIN,
@@ -43,6 +43,11 @@ const defaultState = {
 const addCameraRollRow = (state, row) => ({
     ...state,
     cameraRollRows: [...state.cameraRollRows, row]
+});
+
+const resetCameraRollRows = (state) => ({
+    ...state,
+    cameraRollRows: []
 });
 
 const setSelectedImages = (state, selectedImages) => ({
@@ -144,6 +149,7 @@ const setEvent = (state, event) => ({
 
 const reducerMap = {
     [ADD_CAMERA_ROLL_ROW]: addCameraRollRow,
+    [RESET_CAMERA_ROLL_ROWS]: resetCameraRollRows,
     [SET_ADMIN]: setAdmin,
     [SET_EMAIL]: setUserEmail,
     [SET_ENV]: setEnv,

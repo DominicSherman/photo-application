@@ -15,7 +15,7 @@ const getPayload = (image, user, downloadUrl) => {
     const {email, name} = user;
     const height = 4;
     const width = image.width / image.height * height;
-    const last3 = image.filename.substr(-3).toLowerCase();
+    const last3 = image.filename ? image.filename.substr(-3).toLowerCase() : null;
 
     if (last3 === 'mov' || last3 === 'mp4') {
         isVideo = true;
@@ -23,7 +23,7 @@ const getPayload = (image, user, downloadUrl) => {
 
     return {
         email,
-        fileName: image.filename,
+        fileName: image.filename ? image.filename : null,
         height,
         isVideo,
         name,
@@ -66,7 +66,7 @@ const handleStateChange = (snapshot, index, actions) => {
 const getUploadUri = (image) => {
     const path = Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri;
 
-    if (image.filename.substr(-4) === 'HEIC') {
+    if (image.filename && image.filename.substr(-4) === 'HEIC') {
         return RNHeicConverter
             .convert({
                 path
@@ -85,7 +85,7 @@ export const uploadImage = async ({eventId, eventName, actions, env, image, inde
     window.Blob = Blob;
 
     const mime = 'application/octet-stream';
-    const imageRef = firebase.storage().ref(`${env}/${eventName}`).child(`${image.filename}-${sessionId}`);
+    const imageRef = firebase.storage().ref(`${env}/${eventName}`).child(`${image.uri}-${sessionId}`);
 
     const uploadUri = await getUploadUri(image);
     const blob = await fs.readFile(uploadUri, 'base64').then((data) => Blob.build(data, {type: `${mime};BASE64`}));

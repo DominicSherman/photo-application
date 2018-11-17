@@ -1,5 +1,5 @@
 import {
-    ADD_CAMERA_ROLL_ROW,
+    ADD_CAMERA_ROLL_ROW, RESET_CAMERA_ROLL_ROWS,
     SET_IS_UPLOADING,
     SET_NUM_FINISHED,
     SET_NUM_TO_UPLOAD,
@@ -13,20 +13,33 @@ import {action} from '../constants/action';
 import {numPerRow} from '../constants/variables';
 import {getMedia} from '../services/firebase-service';
 
-export const setCameraRollRows = (r) => (dispatch) => {
+export const setCameraRollRows = (r) => (dispatch, getState) => {
     let row = [];
+    let currPhotosCount = 0;
 
-    for (let i = 0; i < r.edges.length; i++) {
-        if ((i + 1) % numPerRow === 0) {
-            dispatch(action(ADD_CAMERA_ROLL_ROW, [...row, r.edges[i].node]));
-            row = [];
-        } else {
-            row = [...row, r.edges[i].node];
+    const {cameraRollRows} = getState();
+
+    cameraRollRows.map((currRow) => {
+        currRow.forEach(() => {
+            currPhotosCount += 1;
+        });
+    });
+
+    if (currPhotosCount !== r.edges.length) {
+        dispatch(action(RESET_CAMERA_ROLL_ROWS));
+
+        for (let i = 0; i < r.edges.length; i++) {
+            if ((i + 1) % numPerRow === 0) {
+                dispatch(action(ADD_CAMERA_ROLL_ROW, [...row, r.edges[i].node]));
+                row = [];
+            } else {
+                row = [...row, r.edges[i].node];
+            }
         }
-    }
 
-    if (row.length) {
-        dispatch(action(ADD_CAMERA_ROLL_ROW, row));
+        if (row.length) {
+            dispatch(action(ADD_CAMERA_ROLL_ROW, row));
+        }
     }
 };
 
@@ -81,15 +94,15 @@ export const setSelectedRow = (row, isSelected) => (dispatch, getState) => {
     let updatedSelectedImages = getState().selectedImages;
 
     row.forEach((item) => {
-        const {image: {filename}} = item;
+        const {image: {uri}} = item;
 
         if (isSelected) {
             updatedSelectedImages = {
                 ...updatedSelectedImages,
-                [`${filename}`]: item
+                [`${uri}`]: item
             };
         } else {
-            updatedSelectedImages = removeItem(updatedSelectedImages, filename);
+            updatedSelectedImages = removeItem(updatedSelectedImages, uri);
         }
     });
 
@@ -98,18 +111,18 @@ export const setSelectedRow = (row, isSelected) => (dispatch, getState) => {
 
 export const toggleSelected = (item) => (dispatch, getState) => {
     const {selectedImages} = getState();
-    const {image: {filename}} = item;
+    const {image: {uri}} = item;
 
-    if (!selectedImages[`${filename}`]) {
+    if (!selectedImages[`${uri}`]) {
         dispatch(action(
             SET_SELECTED_IMAGES,
             {
                 ...selectedImages,
-                [`${filename}`]: item
+                [`${uri}`]: item
             }
         ));
     } else {
-        dispatch(action(SET_SELECTED_IMAGES, removeItem(selectedImages, filename)));
+        dispatch(action(SET_SELECTED_IMAGES, removeItem(selectedImages, uri)));
     }
 };
 

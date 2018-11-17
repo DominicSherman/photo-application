@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet, Text, View, CameraRoll, Platform} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import {darkFontStyles, lightFontStyles} from '../constants/font-styles';
 import CameraRollRow from '../components/CameraRollRow';
 import {dismissModal} from '../services/navigation-service';
+import {requestExternalStorage} from '../services/permission-service';
+import {numPictures} from '../constants/variables';
+
+import LoadingView from './LoadingView';
 
 const styles = StyleSheet.create({
     header: {
@@ -17,12 +21,25 @@ const styles = StyleSheet.create({
 });
 
 export default class ImageSelectModal extends Component {
+    async componentWillMount() {
+        if (Platform.OS === 'ios' || await requestExternalStorage()) {
+            CameraRoll.getPhotos({
+                assetType: 'All',
+                first: numPictures
+            }).then((r) => this.props.actions.setCameraRollRows(r));
+        }
+    }
+
     render() {
         const {
             actions,
             cameraRollRows,
             selectedImages
         } = this.props;
+
+        if (!cameraRollRows.length) {
+            return <LoadingView />;
+        }
 
         return (
             <SafeAreaView>

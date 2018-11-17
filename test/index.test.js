@@ -25,7 +25,7 @@ describe('index', () => {
         registerScreens,
         tryToLoadCredentials,
         initializeFirebase,
-        setUsers,
+        setEvents,
         loadIcons,
         getDefaultOptions,
         getRoot,
@@ -45,10 +45,10 @@ describe('index', () => {
         registerScreens = require('../src/screens').registerScreens;
         tryToLoadCredentials = require('../src/services/async-storage-service').tryToLoadCredentials;
         initializeFirebase = require('../src/services/firebase-service').initializeFirebase;
-        setUsers = require('../src/action-creators/index').setUsers;
+        setEvents = require('../src/action-creators/index').setEvents;
         loadIcons = require('../src/services/icons-factory').loadIcons;
         thunkSpy = jest.fn();
-        setUsers.mockReturnValue(thunkSpy);
+        setEvents.mockReturnValue(thunkSpy);
         expectedDefaultOptions = chance.string();
         getDefaultOptions = require('../src/services/layout-factory').getDefaultOptions;
         getDefaultOptions.mockReturnValue(expectedDefaultOptions);

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, Platform} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import Entypo from 'react-native-vector-icons/Entypo';
 
@@ -13,11 +13,13 @@ export default class CameraRollRow extends Component {
             selectedImages
         } = this.props;
 
-        let isSelected = true;
+        let isSelected = false;
 
-        /* eslint-disable no-return-assign*/
-        images.forEach((i) => !selectedImages[i.image.filename] ? isSelected = false : null);
-        /* eslint-enable  no-return-assign*/
+        images.forEach((i) => {
+            if (selectedImages[i.image.uri]) {
+                isSelected = true;
+            }
+        });
 
         return (
             <View style={{flexDirection: 'row'}}>
@@ -54,8 +56,8 @@ export default class CameraRollRow extends Component {
                         <TouchableImage
                             actions={actions}
                             item={item}
-                            key={`${item.image.filename}`}
-                            selected={selectedImages[item.image.filename]}
+                            key={`${item.image.uri}`}
+                            selected={selectedImages[item.image.uri]}
                         />
                     )
                 }

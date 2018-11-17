@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import {login, logout, setEmail, setName, setUsers, toggleEnv} from '../../src/action-creators';
+import {login, logout, setEmail, setEvents, setName, setUsers, toggleEnv} from '../../src/action-creators';
 import {action} from '../../src/constants/action';
 import {
     SET_ADMIN,
@@ -30,7 +30,10 @@ describe('user-actions', () => {
 
     beforeEach(() => {
         expectedState = {
-            env: chance.string()
+            env: chance.string(),
+            event: {
+                eventId: chance.guid()
+            }
         };
 
         dispatchSpy = jest.fn();
@@ -74,7 +77,7 @@ describe('user-actions', () => {
 
         it('should get the users from firebase', () => {
             expect(getUsers).toHaveBeenCalledTimes(1);
-            expect(getUsers).toHaveBeenCalledWith(expectedState.env);
+            expect(getUsers).toHaveBeenCalledWith(expectedState.env, expectedState.event.eventId);
         });
 
         it('should use on', () => {
@@ -144,13 +147,13 @@ describe('user-actions', () => {
             login()(dispatchSpy, getStateStub);
 
             expect(storeCredentials).toHaveBeenCalledTimes(1);
-            expect(storeCredentials).toHaveBeenCalledWith(expectedUser, expectedUser.name);
+            expect(storeCredentials).toHaveBeenCalledWith(expectedUser, expectedUser.name, expectedState.event);
             expect(dispatchSpy).toHaveBeenCalledTimes(3);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_ADMIN, expectedUser.isAdmin));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_LOGGED_IN, true));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_FAILED_LOGIN, false));
             expect(setRoot).toHaveBeenCalledTimes(1);
-            expect(setRoot).toHaveBeenCalledWith(true, expectedUser.isAdmin);
+            expect(setRoot).toHaveBeenCalledWith(true, expectedState.event.eventName);
         });
 
         it('should not storeCredentials and set failedLogin to true if it is not an authUser', () => {
@@ -198,6 +201,16 @@ describe('user-actions', () => {
             expect(dispatchSpy).toHaveBeenCalledWith(
                 action(SET_ENV, reverseEnum[expectedState.env])
             );
+        });
+    });
+
+    describe('setEvents', () => {
+        beforeEach(async () => {
+            await setEvents()(dispatchSpy, getStateStub);
+        });
+
+        it('should ', () => {
+            
         });
     });
 });

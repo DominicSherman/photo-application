@@ -16,3 +16,4 @@ export const SET_ENV = 'SET_ENV';
 export const SET_FAILED_LOGIN = 'SET_FAILED_LOGIN';
 export const SET_EVENTS = 'SET_EVENTS';
 export const SET_EVENT = 'SET_EVENT';
+export const RESET_CAMERA_ROLL_ROWS = 'RESET_CAMERA_ROLL_ROWS';
