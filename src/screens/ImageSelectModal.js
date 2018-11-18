@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 });
 
 export default class ImageSelectModal extends Component {
-    async componentDidMount() {
+    async componentWillMount() {
         if (Platform.OS === 'ios' || await requestExternalStorage()) {
             CameraRoll.getPhotos({
                 assetType: 'All',
