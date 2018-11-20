@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Switch, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import {Navigation} from 'react-native-navigation';
 
-import {lightFontStyles} from '../constants/font-styles';
+import {lightFontStyles, whiteFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
 import {goToRoute, showModal} from '../services/navigation-service';
 import {CREATE_EVENT, LOGIN} from '../constants/routes';
+import {PROD} from '../constants/variables';
 
 import LoadingView from './LoadingView';
 
@@ -33,6 +34,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 10
     },
+    switchWrapper: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '50%'
+    },
     wrapperView: {
         alignItems: 'center',
         flex: 1,
@@ -43,6 +50,14 @@ const styles = StyleSheet.create({
 });
 
 export default class SelectEvent extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            numPresses: 0
+        };
+    }
+
     componentDidMount() {
         Navigation.mergeOptions(this.props.componentId, {
             topBar: {
@@ -53,8 +68,16 @@ export default class SelectEvent extends Component {
         });
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.env !== this.props.env) {
+            this.props.actions.setEvents();
+        }
+    }
+
+    incrementPresses = () => this.setState({numPresses: this.state.numPresses + 1});
+
     render() {
-        const {actions, componentId, event, events} = this.props;
+        const {actions, componentId, event, events, env} = this.props;
 
         if (!events) {
             return <LoadingView />;
@@ -62,6 +85,22 @@ export default class SelectEvent extends Component {
 
         return (
             <View style={styles.wrapperView}>
+                <Touchable
+                    onPress={this.incrementPresses}
+                >
+                    <Text style={whiteFontStyles.regular}>{'Admin Button'}</Text>
+                </Touchable>
+                {this.state.numPresses >= 10 &&
+                <View style={styles.switchWrapper}>
+                    <Text style={lightFontStyles.light}>{'DEV'}</Text>
+                    <Switch
+                        onValueChange={actions.toggleEnv}
+                        testID={'changeEnvSwitch'}
+                        value={env === PROD}
+                    />
+                    <Text style={lightFontStyles.light}>{'PROD'}</Text>
+                </View>
+                }
                 <FlatList
                     ListEmptyComponent={
                         <View style={styles.eventsEmpty}>

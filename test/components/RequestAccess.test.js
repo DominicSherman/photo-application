@@ -61,6 +61,6 @@ describe('RequestAccess', () => {
         renderedRequestText.props.onPress();
 
         expect(Linking.openURL).toHaveBeenCalledTimes(1);
-        expect(Linking.openURL).toHaveBeenCalledWith(`mailto:${expectedProps.primaryAdmin}?subject=DMPhotos Access&body=Requesting access for: `);
+        expect(Linking.openURL).toHaveBeenCalledWith(`mailto:${expectedProps.primaryAdmin}?subject=PikCloud Access&body=Requesting access for: `);
     });
 });

@@ -8,7 +8,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import UserModal from '../../src/screens/UserModal';
 import Button from '../../src/components/Button';
 import {addUser} from '../../src/services/firebase-service';
-import {createRandomUser} from '../model-factory';
+import {createRandomEvent, createRandomUser} from '../model-factory';
 import {dismissModal} from '../../src/services/navigation-service';
 
 const chance = new Chance();
@@ -95,12 +95,22 @@ describe('UserModal', () => {
 
     beforeEach(() => {
         expectedProps = {
+            actions: {
+                setUsers: jest.fn()
+            },
             componentId: chance.natural(),
             env: chance.string(),
+            event: createRandomEvent(),
             users: chance.n(createRandomUser, chance.d6() + 1)
         };
 
         renderComponent();
+    });
+
+    it('should set the users on componentDidMount', () => {
+        renderedInstance.componentDidMount();
+
+        expect(expectedProps.actions.setUsers).toHaveBeenCalledTimes(1);
     });
 
     it('should render a SafeAreaView', () => {
@@ -148,7 +158,7 @@ describe('UserModal', () => {
         renderedComponent = renderedInstance.render();
         cacheChildren();
 
-        expect(renderedEmailInput.props.value).toBe(email);
+        expect(renderedEmailInput.props.value).toBe(email.toLowerCase());
     });
 
     it('should render a view for the admin switch', () => {
@@ -192,7 +202,7 @@ describe('UserModal', () => {
         renderedAddButton.props.action();
 
         expect(addUser).toHaveBeenCalledTimes(1);
-        expect(addUser).toHaveBeenCalledWith(email.toLowerCase(), isAdmin, expectedProps.env);
+        expect(addUser).toHaveBeenCalledWith(expectedProps.event.eventId, email.toLowerCase(0), isAdmin, expectedProps.env);
     });
 
     it('should render a view for current users', () => {

@@ -20,7 +20,7 @@ export default class RequestAccess extends Component {
                     {'Don\'t have access? '}
                     <Text
                         onPress={() =>
-                            Linking.openURL(`mailto:${primaryAdmin}?subject=DMPhotos Access&body=Requesting access for: `)
+                            Linking.openURL(`mailto:${primaryAdmin}?subject=PikCloud Access&body=Requesting access for: `)
                         }
                         style={redFontStyles.regular}
                     >

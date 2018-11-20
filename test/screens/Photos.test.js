@@ -47,32 +47,11 @@ describe('Photos', () => {
         renderComponent();
     });
 
-    describe('componentWillMount', () => {
+    describe('componentDidMount', () => {
         it('should set the media', () => {
-            expect(expectedProps.actions.setMedia).toHaveBeenCalledTimes(1);
-        });
-    });
-
-    describe('componentDidUpdate', () => {
-        beforeEach(() => {
-            jest.resetAllMocks();
-        });
-
-        it('should set users again if the env has changed', () => {
-            const prevProps = {
-                ...expectedProps,
-                env: chance.string()
-            };
-
-            renderedInstance.componentDidUpdate(prevProps);
+            renderedInstance.componentDidMount();
 
             expect(expectedProps.actions.setMedia).toHaveBeenCalledTimes(1);
-        });
-
-        it('should do nothing if props have not changed', () => {
-            renderedInstance.componentDidUpdate(expectedProps);
-
-            expect(expectedProps.actions.setMedia).not.toHaveBeenCalled();
         });
     });
 

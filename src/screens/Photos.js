@@ -9,14 +9,8 @@ import {GALLERY} from '../constants/routes';
 import LoadingView from './LoadingView';
 
 export default class Photos extends Component {
-    componentWillMount() {
+    componentDidMount() {
         this.props.actions.setMedia();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.env !== this.props.env) {
-            this.props.actions.setMedia();
-        }
     }
 
     render() {

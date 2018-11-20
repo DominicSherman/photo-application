@@ -1,7 +1,7 @@
 import React from 'react';
 import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, Switch, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import {Navigation} from 'react-native-navigation';
 
@@ -22,10 +22,25 @@ describe('SelectEvent', () => {
 
         renderedInstance,
         renderedComponent,
-        renderedFlatlist;
+
+        renderedHiddenTouchable,
+        renderedSwitchView,
+        renderedFlatlist,
+
+        renderedHiddenText,
+
+        renderedDevText,
+        renderedSwitch,
+        renderedProdText;
 
     const cacheChildren = () => {
-        renderedFlatlist = renderedComponent.props.children;
+        [
+            renderedHiddenTouchable,
+            renderedSwitchView,
+            renderedFlatlist
+        ] = renderedComponent.props.children;
+
+        renderedHiddenText = renderedHiddenTouchable.props.children;
     };
 
     const renderComponent = () => {
@@ -40,7 +55,8 @@ describe('SelectEvent', () => {
     beforeEach(() => {
         expectedProps = {
             actions: {
-                setEvent: jest.fn()
+                setEvent: jest.fn(),
+                setEvents: jest.fn()
             },
             componentId: chance.string(),
             event: createRandomEvent(),
@@ -64,6 +80,29 @@ describe('SelectEvent', () => {
         });
     });
 
+    describe('componentDidUpdate', () => {
+        afterEach(() => {
+            jest.resetAllMocks();
+        });
+
+        it('should set users again if the env has changed', () => {
+            const prevProps = {
+                ...expectedProps,
+                env: chance.string()
+            };
+
+            renderedInstance.componentDidUpdate(prevProps);
+
+            expect(expectedProps.actions.setEvents).toHaveBeenCalledTimes(1);
+        });
+
+        it('should do nothing if props have not changed', () => {
+            renderedInstance.componentDidUpdate(expectedProps);
+
+            expect(expectedProps.actions.setEvents).not.toHaveBeenCalled();
+        });
+    });
+
     it('should return a LoadingView when there are not events', () => {
         expectedProps.events = null;
         renderComponent();
@@ -73,6 +112,53 @@ describe('SelectEvent', () => {
 
     it('should render a root View', () => {
         expect(renderedComponent.type).toBe(View);
+    });
+
+    it('should render the hidden touchable and text', () => {
+        expect(renderedHiddenTouchable.type).toBe(Touchable);
+        expect(renderedHiddenText.type).toBe(Text);
+    });
+
+    describe('if the text has been pressed 10 times', () => {
+        const cacheChildren10Presses = () => {
+            [
+                renderedDevText,
+                renderedSwitch,
+                renderedProdText
+            ] = renderedSwitchView.props.children;
+        };
+
+        beforeEach(() => {
+            renderComponent();
+
+            for (let i = 0; i < 10; i++) {
+                renderedInstance.incrementPresses();
+            }
+
+            renderedComponent = renderedInstance.render();
+            cacheChildren();
+            cacheChildren10Presses();
+        });
+
+        it('should render a view for the switch', () => {
+            expect(renderedSwitchView.type).toBe(View);
+        });
+
+        it('should render text for DEV', () => {
+            expect(renderedDevText.type).toBe(Text);
+            expect(renderedDevText.props.children).toBe('DEV');
+        });
+
+        it('should render a switch', () => {
+            expect(renderedSwitch.type).toBe(Switch);
+            expect(renderedSwitch.props.onValueChange).toBe(expectedProps.actions.toggleEnv);
+            expect(renderedSwitch.props.value).toBeFalsy();
+        });
+
+        it('should render text for PROD', () => {
+            expect(renderedProdText.type).toBe(Text);
+            expect(renderedProdText.props.children).toBe('PROD');
+        });
     });
 
     describe('FlatList', () => {

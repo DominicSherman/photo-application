@@ -1,7 +1,7 @@
 import React from 'react';
 import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
-import {Switch, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -20,7 +20,6 @@ describe('More', () => {
     let expectedProps,
 
         renderedComponent,
-        renderedInstance,
 
         renderedUserWrapper,
         renderedAdminButtonWrapper,
@@ -30,28 +29,8 @@ describe('More', () => {
         renderedUserEmail,
 
         renderedAdminButtonTouchable,
-        renderedSwitchWrapper,
 
-        renderedAdminButtonIcon,
-
-        renderedDevText,
-        renderedSwitch,
-        renderedProdText;
-
-    const cacheChildrenTenPresses = () => {
-        [
-            renderedAdminButtonTouchable,
-            renderedSwitchWrapper
-        ] = renderedAdminButtonWrapper.props.children;
-
-        renderedAdminButtonIcon = renderedAdminButtonTouchable.props.children;
-
-        [
-            renderedDevText,
-            renderedSwitch,
-            renderedProdText
-        ] = renderedSwitchWrapper.props.children;
-    };
+        renderedAdminButtonIcon;
 
     const cacheChildren = () => {
         [
@@ -72,7 +51,6 @@ describe('More', () => {
         shallowRenderer.render(<More {...expectedProps} />);
 
         renderedComponent = shallowRenderer.getRenderOutput();
-        renderedInstance = shallowRenderer.getMountedInstance();
 
         cacheChildren();
     };
@@ -89,29 +67,6 @@ describe('More', () => {
         };
 
         renderComponent();
-    });
-
-    describe('componentDidUpdate', () => {
-        afterEach(() => {
-            jest.resetAllMocks();
-        });
-
-        it('should set users again if the env has changed', () => {
-            const prevProps = {
-                ...expectedProps,
-                env: chance.string()
-            };
-
-            renderedInstance.componentDidUpdate(prevProps);
-
-            expect(expectedProps.actions.setUsers).toHaveBeenCalledTimes(1);
-        });
-
-        it('should do nothing if props have not changed', () => {
-            renderedInstance.componentDidUpdate(expectedProps);
-
-            expect(expectedProps.actions.setUsers).not.toHaveBeenCalled();
-        });
     });
 
     it('should render a root View', () => {
@@ -132,18 +87,14 @@ describe('More', () => {
         expect(renderedUserEmail.props.children).toBe(expectedProps.user.email);
     });
 
-    describe('if the text has been pressed 10 times and the user is an admin', () => {
+    describe('if the user is an admin', () => {
         beforeEach(() => {
             expectedProps.user.isAdmin = true;
             renderComponent();
-
-            for (let i = 0; i < 10; i++) {
-                renderedInstance.incrementPresses();
-            }
-
-            renderedComponent = renderedInstance.render();
             cacheChildren();
-            cacheChildrenTenPresses();
+
+            renderedAdminButtonTouchable = renderedAdminButtonWrapper.props.children;
+            renderedAdminButtonIcon = renderedAdminButtonTouchable.props.children;
         });
 
         it('should render the touchable for the userModal', () => {
@@ -161,26 +112,6 @@ describe('More', () => {
             expect(renderedAdminButtonIcon.props.color).toBe(green);
             expect(renderedAdminButtonIcon.props.name).toBe('user-plus');
             expect(renderedAdminButtonIcon.props.size).toBe(80);
-        });
-
-        it('should render a view for the switch', () => {
-            expect(renderedSwitchWrapper.type).toBe(View);
-        });
-
-        it('should render text for DEV', () => {
-            expect(renderedDevText.type).toBe(Text);
-            expect(renderedDevText.props.children).toBe('DEV');
-        });
-
-        it('should render a switch', () => {
-            expect(renderedSwitch.type).toBe(Switch);
-            expect(renderedSwitch.props.onValueChange).toBe(expectedProps.actions.toggleEnv);
-            expect(renderedSwitch.props.value).toBeFalsy();
-        });
-
-        it('should render text for PROD', () => {
-            expect(renderedProdText.type).toBe(Text);
-            expect(renderedProdText.props.children).toBe('PROD');
         });
     });
 

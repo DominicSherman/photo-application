@@ -66,6 +66,10 @@ export default class UserModal extends React.Component {
         this.state = this.initalState;
     }
 
+    componentDidMount() {
+        this.props.actions.setUsers();
+    }
+
     resetState = () => this.setState(this.initalState);
 
     setEmail = (email) => this.setState({email});
@@ -73,7 +77,7 @@ export default class UserModal extends React.Component {
     setIsAdmin = (isAdmin) => this.setState({isAdmin});
 
     render() {
-        const {env, users} = this.props;
+        const {env, users, event} = this.props;
         const {email, isAdmin} = this.state;
 
         return (
@@ -94,7 +98,7 @@ export default class UserModal extends React.Component {
                             autoCapitalize={'none'}
                             clearTextOnFocus
                             numberOfLines={2}
-                            onChangeText={(inputEmail) => this.setEmail(inputEmail)}
+                            onChangeText={(inputEmail) => this.setEmail(inputEmail.toLowerCase())}
                             placeholder={'Email'}
                             style={styles.textInputStyle}
                             value={email}
@@ -109,7 +113,7 @@ export default class UserModal extends React.Component {
                     </View>
                     <Button
                         action={() => {
-                            addUser(email.toLowerCase(), isAdmin, env);
+                            addUser(event.eventId, email, isAdmin, env);
                             Linking.openURL(`mailto:${email.toLowerCase()}?subject=RE: DMPhotos Access&body=Access granted`);
                             this.resetState();
                         }}
