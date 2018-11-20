@@ -117,6 +117,7 @@ const getDominicAndMaryRoot = (icons, eventName) => ({
                     stack: {
                         children: [{
                             component: {
+                                id: HOME,
                                 name: HOME
                             }
                         }],
@@ -137,6 +138,7 @@ const getDominicAndMaryRoot = (icons, eventName) => ({
                     stack: {
                         children: [{
                             component: {
+                                id: PHOTOS,
                                 name: PHOTOS
                             },
                             topBar: {
@@ -162,6 +164,7 @@ const getDominicAndMaryRoot = (icons, eventName) => ({
                     stack: {
                         children: [{
                             component: {
+                                id: WEDDING_INFORMATION,
                                 name: WEDDING_INFORMATION
                             }
                         }],
@@ -182,6 +185,7 @@ const getDominicAndMaryRoot = (icons, eventName) => ({
                     stack: {
                         children: [{
                             component: {
+                                id: MORE,
                                 name: MORE
                             }
                         }],

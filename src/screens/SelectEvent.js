@@ -9,7 +9,6 @@ import {goToRoute, showModal} from '../services/navigation-service';
 import {CREATE_EVENT, LOGIN} from '../constants/routes';
 
 import LoadingView from './LoadingView';
-import {getDefaultOptions} from '../services/layout-factory';
 
 const styles = StyleSheet.create({
     eventsEmpty: {
