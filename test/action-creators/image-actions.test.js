@@ -24,7 +24,7 @@ import {
 } from '../../src/action-creators/index';
 import {action} from '../../src/constants/action';
 import {numPerRow} from '../../src/constants/variables';
-import {createRandomImage} from '../model-factory';
+import {createRandomEvent, createRandomImage} from '../model-factory';
 import {getMedia} from '../../src/services/firebase-service';
 
 jest.mock('../../src/services/firebase-service');
@@ -43,11 +43,13 @@ describe('image-actions', () => {
         items.forEach((item) => {
             expectedSelectedImages = {
                 ...expectedSelectedImages,
-                [`${item.image.filename}`]: item
+                [`${item.image.uri}`]: item
             };
         });
 
         expectedState = {
+            cameraRollRows: [],
+            event: createRandomEvent(),
             imageModalVisible: chance.bool(),
             numFinished: chance.natural(),
             numToUpload: chance.natural(),
@@ -81,7 +83,7 @@ describe('image-actions', () => {
                 edges: chance.n(createRandomNode, numPerRow * (chance.d6() + 1))
             };
 
-            setCameraRollRows(r)(dispatchSpy);
+            setCameraRollRows(r)(dispatchSpy, getStateStub);
 
             let timesCalled = Math.floor(r.edges.length / numPerRow);
 
@@ -89,7 +91,7 @@ describe('image-actions', () => {
                 timesCalled += 1;
             }
 
-            expect(dispatchSpy).toHaveBeenCalledTimes(timesCalled);
+            expect(dispatchSpy).toHaveBeenCalledTimes(timesCalled + 1);
             expect(dispatchSpy).toHaveBeenCalledWith(action(ADD_CAMERA_ROLL_ROW, expect.anything()));
         });
 
@@ -102,7 +104,7 @@ describe('image-actions', () => {
                 r.edges = [...r.edges, createRandomNode()];
             }
 
-            setCameraRollRows(r)(dispatchSpy);
+            setCameraRollRows(r)(dispatchSpy, getStateStub);
 
             let timesCalled = Math.floor(r.edges.length / numPerRow);
 
@@ -110,8 +112,20 @@ describe('image-actions', () => {
                 timesCalled += 1;
             }
 
-            expect(dispatchSpy).toHaveBeenCalledTimes(timesCalled);
+            expect(dispatchSpy).toHaveBeenCalledTimes(timesCalled + 1);
             expect(dispatchSpy).toHaveBeenCalledWith(action(ADD_CAMERA_ROLL_ROW, expect.anything()));
+        });
+
+        it('should not dispatch anything if the length of r has not changed', () => {
+            r = {
+                edges: chance.n(createRandomNode, chance.d6() + 1)
+            };
+            expectedState.cameraRollRows = r.edges.map((image) => [image]);
+            getStateStub = jest.fn(() => expectedState);
+
+            setCameraRollRows(r)(dispatchSpy, getStateStub);
+
+            expect(dispatchSpy).not.toHaveBeenCalled();
         });
     });
 
@@ -220,7 +234,7 @@ describe('image-actions', () => {
             row.forEach((item) => {
                 expectedSelectedImages = {
                     ...expectedSelectedImages,
-                    [`${item.image.filename}`]: item
+                    [`${item.image.uri}`]: item
                 };
             });
 
@@ -257,7 +271,7 @@ describe('image-actions', () => {
             expect(dispatchSpy).toHaveBeenCalledTimes(1);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_SELECTED_IMAGES, {
                 ...expectedSelectedImages,
-                [`${item.image.filename}`]: item
+                [`${item.image.uri}`]: item
             }));
         });
 
@@ -267,7 +281,7 @@ describe('image-actions', () => {
 
             toggleSelected(item)(dispatchSpy, getStateStub);
 
-            delete expectedSelectedImages[`${item.image.filename}`];
+            delete expectedSelectedImages[`${item.image.uri}`];
 
             expect(dispatchSpy).toHaveBeenCalledTimes(1);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_SELECTED_IMAGES, expectedSelectedImages));
@@ -302,7 +316,7 @@ describe('image-actions', () => {
             expectedVideos,
             expectedMedia;
 
-        beforeEach(() => {
+        beforeEach(async () => {
             expectedSessionKeys = chance.n(chance.string, chance.d6() + 1);
             sessionData = {};
             expectedMedia = {};
@@ -341,7 +355,7 @@ describe('image-actions', () => {
                 on: onSpy
             });
 
-            setMedia()(dispatchSpy, getStateStub);
+            await setMedia()(dispatchSpy, getStateStub);
         });
 
         afterEach(() => {

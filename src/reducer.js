@@ -14,8 +14,8 @@ import {
     SET_TOTALS,
     SET_USERS,
     SET_VIDEOS
-} from '../constants/action-types';
-import {DEV} from '../constants/variables';
+} from './constants/action-types';
+import {DEV} from './constants/variables';
 
 const defaultState = {
     cameraRollRows: [],

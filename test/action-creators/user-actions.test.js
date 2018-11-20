@@ -1,18 +1,18 @@
 import Chance from 'chance';
 
-import {login, logout, setEmail, setEvents, setName, setUsers, toggleEnv} from '../../src/action-creators';
+import {login, logout, setEmail, setEvent, setEvents, setName, setUsers, toggleEnv} from '../../src/action-creators';
 import {action} from '../../src/constants/action';
 import {
     SET_ADMIN,
     SET_EMAIL,
-    SET_ENV,
+    SET_ENV, SET_EVENT, SET_EVENTS,
     SET_FAILED_LOGIN,
     SET_LOGGED_IN,
     SET_NAME,
     SET_USERS
 } from '../../src/constants/action-types';
-import {getUsers} from '../../src/services/firebase-service';
-import {createRandomUser} from '../model-factory';
+import {getEvents, getUsers} from '../../src/services/firebase-service';
+import {createRandomEvent, createRandomUser} from '../model-factory';
 import {removeCredentials, storeCredentials} from '../../src/services/async-storage-service';
 import {setRoot} from '../../src/services/navigation-service';
 import {reverseEnum} from '../../src/constants/variables';
@@ -205,12 +205,69 @@ describe('user-actions', () => {
     });
 
     describe('setEvents', () => {
+        let expectedEvents,
+            expectedEventMap,
+            expectedSnapshot,
+            onSpy;
+
         beforeEach(async () => {
+            const keys = chance.n(chance.string, chance.d6() + 1);
+
+            expectedEventMap = {};
+            expectedEvents = keys.map(() => createRandomEvent());
+            keys.forEach((key, index) => {
+                expectedEventMap = {
+                    ...expectedEventMap,
+                    [key]: expectedEvents[index]
+                };
+            });
+            expectedSnapshot = {
+                val: jest.fn().mockReturnValue(expectedEventMap)
+            };
+            onSpy = jest.fn();
+            getEvents.mockReturnValue({
+                on: onSpy
+            });
+
             await setEvents()(dispatchSpy, getStateStub);
         });
 
-        it('should ', () => {
-            
+        it('should get the events from firebase', () => {
+            expect(getEvents).toHaveBeenCalledTimes(1);
+            expect(getEvents).toHaveBeenCalledWith(expectedState.env);
+        });
+
+        it('should use on', () => {
+            expect(onSpy).toHaveBeenCalledTimes(1);
+            expect(onSpy).toHaveBeenCalledWith('value', expect.anything());
+        });
+
+        it('should add the events to redux if there are any', () => {
+            const snapshotCall = onSpy.mock.calls[0][1];
+
+            snapshotCall(expectedSnapshot);
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EVENTS, expectedEvents));
+        });
+
+        it('should set an empty list to redux if there are any', () => {
+            expectedSnapshot = {
+                val: jest.fn().mockReturnValue(null)
+            };
+            const snapshotCall = onSpy.mock.calls[0][1];
+
+            snapshotCall(expectedSnapshot);
+            expect(dispatchSpy).toHaveBeenCalledTimes(1);
+            expect(dispatchSpy).toHaveBeenCalledWith(action(SET_EVENTS, []));
+        });
+    });
+
+    describe('setEvent', () => {
+        it('should return an action to set the event', () => {
+            const expectedEvent = createRandomEvent();
+            const actualAction = setEvent(expectedEvent);
+
+            expect(actualAction).toEqual(action(SET_EVENT, expectedEvent));
         });
     });
 });

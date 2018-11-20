@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import reducer from '../src/reducers/reducer';
+import reducer from '../src/reducer';
 
 jest.mock('redux', () => ({
     applyMiddleware: jest.fn(),

@@ -56,45 +56,46 @@ export default class SelectEvent extends Component {
     render() {
         const {actions, componentId, event, events} = this.props;
 
+        if (!events) {
+            return <LoadingView />;
+        }
+
         return (
-            events ?
-                <View style={styles.wrapperView}>
-                    <FlatList
-                        ListEmptyComponent={
-                            <View style={styles.eventsEmpty}>
-                                <Text style={lightFontStyles.regular}>{'No events created'}</Text>
+            <View style={styles.wrapperView}>
+                <FlatList
+                    ListEmptyComponent={
+                        <View style={styles.eventsEmpty}>
+                            <Text style={lightFontStyles.regular}>{'No events created'}</Text>
+                        </View>
+                    }
+                    ListFooterComponent={
+                        <View style={{paddingTop: '10%'}}>
+                            <Button
+                                action={() => showModal(CREATE_EVENT)}
+                                fontSize={30}
+                                height={15}
+                                text={'Create Event'}
+                                width={50}
+                            />
+                        </View>
+                    }
+                    data={events}
+                    extraData={event}
+                    keyExtractor={(item) => item.eventId}
+                    renderItem={({item}) =>
+                        <Touchable
+                            onPress={() => {
+                                actions.setEvent(item);
+                                goToRoute(LOGIN, componentId);
+                            }}
+                        >
+                            <View style={styles.eventView}>
+                                <Text style={lightFontStyles.light}>{item.eventName}</Text>
                             </View>
-                        }
-                        ListFooterComponent={
-                            <View style={{paddingTop: '10%'}}>
-                                <Button
-                                    action={() => showModal(CREATE_EVENT)}
-                                    fontSize={30}
-                                    height={15}
-                                    text={'Create Event'}
-                                    width={50}
-                                />
-                            </View>
-                        }
-                        data={events}
-                        extraData={event}
-                        keyExtractor={(item) => item.eventId}
-                        renderItem={({item}) =>
-                            <Touchable
-                                onPress={() => {
-                                    actions.setEvent(item);
-                                    goToRoute(LOGIN, componentId);
-                                }}
-                            >
-                                <View style={styles.eventView}>
-                                    <Text style={lightFontStyles.light}>{item.eventName}</Text>
-                                </View>
-                            </Touchable>
-                        }
-                    />
-                </View>
-                :
-                <LoadingView />
+                        </Touchable>
+                    }
+                />
+            </View>
         );
     }
 }

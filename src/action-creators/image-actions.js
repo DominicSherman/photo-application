@@ -13,9 +13,25 @@ import {action} from '../constants/action';
 import {numPerRow} from '../constants/variables';
 import {getMedia} from '../services/firebase-service';
 
+const setRows = (r, dispatch) => {
+    let row = [];
+
+    for (let i = 0; i < r.edges.length; i++) {
+        if ((i + 1) % numPerRow === 0) {
+            dispatch(action(ADD_CAMERA_ROLL_ROW, [...row, r.edges[i].node]));
+            row = [];
+        } else {
+            row = [...row, r.edges[i].node];
+        }
+    }
+
+    if (row.length) {
+        dispatch(action(ADD_CAMERA_ROLL_ROW, row));
+    }
+};
+
 export const setCameraRollRows = (r) => (dispatch, getState) => {
-    let row = [],
-        currPhotosCount = 0;
+    let currPhotosCount = 0;
 
     const {cameraRollRows} = getState();
 
@@ -28,18 +44,7 @@ export const setCameraRollRows = (r) => (dispatch, getState) => {
     if (currPhotosCount !== r.edges.length) {
         dispatch(action(RESET_CAMERA_ROLL_ROWS));
 
-        for (let i = 0; i < r.edges.length; i++) {
-            if ((i + 1) % numPerRow === 0) {
-                dispatch(action(ADD_CAMERA_ROLL_ROW, [...row, r.edges[i].node]));
-                row = [];
-            } else {
-                row = [...row, r.edges[i].node];
-            }
-        }
-
-        if (row.length) {
-            dispatch(action(ADD_CAMERA_ROLL_ROW, row));
-        }
+        setRows(r, dispatch);
     }
 };
 

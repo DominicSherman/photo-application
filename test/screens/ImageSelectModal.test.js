@@ -10,6 +10,7 @@ import CameraRollRow from '../../src/components/CameraRollRow';
 import {dismissModal} from '../../src/services/navigation-service';
 import {requestExternalStorage} from '../../src/services/permission-service';
 import {numPictures} from '../../src/constants/variables';
+import LoadingView from '../../src/screens/LoadingView';
 
 jest.mock('../../src/services/navigation-service');
 jest.mock('../../src/services/permission-service');
@@ -53,8 +54,6 @@ describe('ImageSelectModal', () => {
 
         renderedComponent = shallowRenderer.getRenderOutput();
         renderedInstance = shallowRenderer.getMountedInstance();
-
-        cacheChildren();
     };
 
     beforeEach(() => {
@@ -69,6 +68,7 @@ describe('ImageSelectModal', () => {
         };
 
         renderComponent();
+        cacheChildren();
     });
 
     afterEach(() => {
@@ -128,6 +128,13 @@ describe('ImageSelectModal', () => {
             expect(expectedProps.actions.setCameraRollRows).toHaveBeenCalledTimes(1);
             expect(expectedProps.actions.setCameraRollRows).toHaveBeenCalledWith(r);
         });
+    });
+
+    it('should return loading if there are no pictures', () => {
+        expectedProps.cameraRollRows = [];
+        renderComponent();
+
+        expect(renderedComponent.type).toBe(LoadingView);
     });
 
     it('should render a SafeAreaView', () => {

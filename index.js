@@ -4,7 +4,7 @@ import {applyMiddleware, createStore} from 'redux';
 
 import {loadIcons} from './src/services/icons-factory';
 import {getDefaultOptions, getRoot} from './src/services/layout-factory';
-import reducer from './src/reducers/reducer';
+import reducer from './src/reducer';
 import {initializeFirebase} from './src/services/firebase-service';
 import {registerScreens} from './src/screens';
 import {tryToLoadCredentials} from './src/services/async-storage-service';

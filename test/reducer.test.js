@@ -1,8 +1,8 @@
 import Chance from 'chance';
 
-import reducer from '../src/reducers/reducer';
+import reducer from '../src/reducer';
 import {
-    ADD_CAMERA_ROLL_ROW,
+    ADD_CAMERA_ROLL_ROW, RESET_CAMERA_ROLL_ROWS,
     SET_ADMIN,
     SET_EMAIL,
     SET_ENV, SET_EVENT, SET_EVENTS,
@@ -84,6 +84,22 @@ describe('reducer', () => {
         expect(actualState).toEqual({
             ...originalState,
             cameraRollRows: [...originalState.cameraRollRows, expectedData]
+        });
+    });
+
+    it('should reset cameraRollRows when the action is RESET_CAMERA_ROLL_ROWS', () => {
+        const originalState = {
+            [chance.string()]: chance.string(),
+            cameraRollRows: chance.n(chance.string, chance.d6() + 1)
+        };
+
+        const action = {type: RESET_CAMERA_ROLL_ROWS};
+
+        const actualState = reducer(originalState, action);
+
+        expect(actualState).toEqual({
+            ...originalState,
+            cameraRollRows: []
         });
     });
 

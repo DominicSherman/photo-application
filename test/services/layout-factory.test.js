@@ -3,8 +3,7 @@ import Chance from 'chance';
 import {getDefaultOptions, getRoot} from '../../src/services/layout-factory';
 import {black, darkFont, green, white} from '../../src/constants/style-variables';
 import {getIcons} from '../../src/services/icons-factory';
-import {HOME, LOGIN, MORE, PHOTOS, SELECT_EVENT, WEDDING_INFORMATION} from '../../src/constants/routes';
-import {createRandomEvent} from '../model-factory';
+import {HOME, MORE, PHOTOS, SELECT_EVENT, WEDDING_INFORMATION} from '../../src/constants/routes';
 
 jest.mock('../../src/services/icons-factory');
 
@@ -61,6 +60,7 @@ describe('layout-factory', () => {
                                 stack: {
                                     children: [{
                                         component: {
+                                            id: HOME,
                                             name: HOME
                                         }
                                     }],
@@ -81,6 +81,7 @@ describe('layout-factory', () => {
                                 stack: {
                                     children: [{
                                         component: {
+                                            id: PHOTOS,
                                             name: PHOTOS
                                         },
                                         topBar: {
@@ -106,6 +107,7 @@ describe('layout-factory', () => {
                                 stack: {
                                     children: [{
                                         component: {
+                                            id: WEDDING_INFORMATION,
                                             name: WEDDING_INFORMATION
                                         }
                                     }],
@@ -126,6 +128,7 @@ describe('layout-factory', () => {
                                 stack: {
                                     children: [{
                                         component: {
+                                            id: MORE,
                                             name: MORE
                                         }
                                     }],

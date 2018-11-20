@@ -10,16 +10,25 @@ import {config} from '../config';
 import {clean} from '../constants/service';
 
 let isInitialized = false;
+
+export const initializeFirebase = () => {
+    if (!isInitialized) {
+        firebase.initializeApp(config);
+        isInitialized = true;
+    }
+};
+
+const getIsVideo = (filename) => {
+    const last3 = filename ? filename.substr(-3).toLowerCase() : null;
+
+    return last3 === 'mov' || last3 === 'mp4';
+};
+
 const getPayload = (image, user, downloadUrl) => {
-    let isVideo = false;
     const {email, name} = user;
     const height = 4;
     const width = image.width / image.height * height;
-    const last3 = image.filename ? image.filename.substr(-3).toLowerCase() : null;
-
-    if (last3 === 'mov' || last3 === 'mp4') {
-        isVideo = true;
-    }
+    const isVideo = getIsVideo(image.filename);
 
     return {
         email,
@@ -110,7 +119,7 @@ export const uploadImage = async ({eventId, eventName, actions, env, image, inde
 export const getUsers = (env, eventId) => firebase.database().ref(`${env}/users/${eventId}`);
 
 export const addUser = (eventId, email, isAdmin, env) =>
-    firebase.database().ref(`${env}/users/${eventId}`).child(`${clean(email)}`).set({
+    firebase.database().ref(`${env}/users/${eventId}/${clean(email)}`).set({
         email,
         isAdmin
     });
@@ -130,10 +139,3 @@ export const createEvent = (env, eventName, primaryAdmin) => {
 };
 
 export const getEvents = (env) => firebase.database().ref(`${env}/events`);
-
-export const initializeFirebase = () => {
-    if (!isInitialized) {
-        firebase.initializeApp(config);
-        isInitialized = true;
-    }
-};
