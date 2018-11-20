@@ -1,8 +1,12 @@
 import {
-    ADD_CAMERA_ROLL_ROW, RESET_CAMERA_ROLL_ROWS,
+    ADD_CAMERA_ROLL_ROW,
+    RESET_CAMERA_ROLL_ROWS,
     SET_ADMIN,
     SET_EMAIL,
-    SET_ENV, SET_EVENT, SET_EVENTS, SET_FAILED_LOGIN,
+    SET_ENV,
+    SET_EVENT,
+    SET_EVENTS,
+    SET_FAILED_LOGIN,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
     SET_NAME,
@@ -15,11 +19,11 @@ import {
     SET_USERS,
     SET_VIDEOS
 } from './constants/action-types';
-import {DEV} from './constants/variables';
+import {PROD} from './constants/variables';
 
 const defaultState = {
     cameraRollRows: [],
-    env: DEV,
+    env: PROD,
     event: {},
     events: null,
     failedLogin: false,

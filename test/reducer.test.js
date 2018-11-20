@@ -2,10 +2,13 @@ import Chance from 'chance';
 
 import reducer from '../src/reducer';
 import {
-    ADD_CAMERA_ROLL_ROW, RESET_CAMERA_ROLL_ROWS,
+    ADD_CAMERA_ROLL_ROW,
+    RESET_CAMERA_ROLL_ROWS,
     SET_ADMIN,
     SET_EMAIL,
-    SET_ENV, SET_EVENT, SET_EVENTS,
+    SET_ENV,
+    SET_EVENT,
+    SET_EVENTS,
     SET_FAILED_LOGIN,
     SET_IS_UPLOADING,
     SET_LOGGED_IN,
@@ -19,14 +22,14 @@ import {
     SET_USERS,
     SET_VIDEOS
 } from '../src/constants/action-types';
-import {DEV} from '../src/constants/variables';
+import {PROD} from '../src/constants/variables';
 
 const chance = new Chance();
 
 describe('reducer', () => {
     const defaultState = {
         cameraRollRows: [],
-        env: DEV,
+        env: PROD,
         event: {},
         events: null,
         failedLogin: false,
