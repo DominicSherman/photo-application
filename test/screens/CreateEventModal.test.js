@@ -138,7 +138,7 @@ describe('CreateEventModal', () => {
     it('should render a TextInput for the admin', () => {
         expect(renderedAdminInput.type).toBe(TextInput);
         expect(renderedAdminInput.props.autoCapitalize).toBe('none');
-        expect(renderedAdminInput.props.placeholder).toBe('Admin');
+        expect(renderedAdminInput.props.placeholder).toBe('Admin Email');
 
         renderedAdminInput.props.onChangeText(expectedAdmin);
         renderedComponent = renderedInstance.render();

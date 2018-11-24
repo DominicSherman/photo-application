@@ -4,6 +4,7 @@ import ShallowRenderer from 'react-test-renderer/shallow';
 import {FlatList, Switch, Text, View} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import {Navigation} from 'react-native-navigation';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import SelectEvent from '../../src/screens/SelectEvent';
 import {createRandomEvent} from '../model-factory';
@@ -18,7 +19,8 @@ jest.mock('../../src/services/navigation-service');
 const chance = new Chance();
 
 describe('SelectEvent', () => {
-    let expectedProps,
+    let Alert,
+        expectedProps,
 
         renderedInstance,
         renderedComponent,
@@ -53,8 +55,12 @@ describe('SelectEvent', () => {
     };
 
     beforeEach(() => {
+        Alert = require('react-native').Alert;
+        Alert.alert = jest.fn();
+
         expectedProps = {
             actions: {
+                deleteEvent: jest.fn(),
                 setEvent: jest.fn(),
                 setEvents: jest.fn()
             },
@@ -159,6 +165,42 @@ describe('SelectEvent', () => {
             expect(renderedProdText.type).toBe(Text);
             expect(renderedProdText.props.children).toBe('PROD');
         });
+
+        it('should render the delete button for each flatlist item', () => {
+            const item = chance.pickone(expectedProps.events);
+
+            const renderedWrapperView = renderedFlatlist.props.renderItem({item});
+            const [
+                renderedTouchable,
+                renderedDeleteView
+            ] = renderedWrapperView.props.children;
+            const renderedDeleteTouchable = renderedDeleteView.props.children;
+            const renderedDeleteIcon = renderedDeleteTouchable.props.children;
+
+            expect(renderedTouchable.type).toBe(Touchable);
+            expect(renderedDeleteTouchable.type).toBe(Touchable);
+            expect(renderedDeleteIcon.type).toBe(EvilIcons);
+
+            renderedDeleteTouchable.props.onPress();
+
+            expect(Alert.alert).toHaveBeenCalledTimes(1);
+            expect(Alert.alert).toHaveBeenCalledWith(
+                'Are you sure?',
+                item.eventName,
+                [
+                    {text: 'Cancel'},
+                    {
+                        onPress: expect.any(Function),
+                        text: 'Yes'
+                    }
+                ]
+            );
+
+            Alert.alert.mock.calls[0][2][1].onPress();
+
+            expect(expectedProps.actions.deleteEvent).toHaveBeenCalledTimes(1);
+            expect(expectedProps.actions.deleteEvent).toHaveBeenCalledWith(item.eventId);
+        });
     });
 
     describe('FlatList', () => {
@@ -197,14 +239,20 @@ describe('SelectEvent', () => {
         it('should renderItem', () => {
             const item = chance.pickone(expectedProps.events);
 
-            const renderedTouchable = renderedFlatlist.props.renderItem({item});
+            const renderedWrapperView = renderedFlatlist.props.renderItem({item});
+            const [
+                renderedTouchable,
+                renderedDeleteView
+            ] = renderedWrapperView.props.children;
             const renderedView = renderedTouchable.props.children;
             const renderedText = renderedView.props.children;
 
+            expect(renderedWrapperView.type).toBe(View);
             expect(renderedTouchable.type).toBe(Touchable);
             expect(renderedView.type).toBe(View);
             expect(renderedText.type).toBe(Text);
             expect(renderedText.props.children).toBe(item.eventName);
+            expect(renderedDeleteView).toBeFalsy();
 
             renderedTouchable.props.onPress();
 
