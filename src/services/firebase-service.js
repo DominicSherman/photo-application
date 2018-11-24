@@ -139,3 +139,9 @@ export const createEvent = (env, eventName, primaryAdmin) => {
 };
 
 export const getEvents = (env) => firebase.database().ref(`${env}/events`);
+
+export const deleteEvents = (env, eventId) => firebase.database().ref(`${env}/events/${eventId}`).remove();
+
+export const deleteUsers = (env, eventId) => firebase.database().ref(`${env}/users/${eventId}`).remove();
+
+export const deleteMedia = (env, eventId) => firebase.database().ref(`${env}/media/${eventId}`).remove();

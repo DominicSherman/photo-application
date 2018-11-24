@@ -567,4 +567,8 @@ describe('firebase-service', () => {
             expect(refSpy).toHaveBeenCalledWith(`${expectedEnv}/events`);
         });
     });
+
+    describe('deleteEvents', () => {
+
+    });
 });
