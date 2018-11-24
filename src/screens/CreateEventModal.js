@@ -89,7 +89,7 @@ export default class CreateEventModal extends Component {
                             <TextInput
                                 autoCapitalize={'none'}
                                 onChangeText={(primaryAdmin) => this.setPrimaryAdmin(primaryAdmin.toLowerCase())}
-                                placeholder={'Admin'}
+                                placeholder={'Admin Email'}
                                 style={styles.textInputStyle}
                                 value={this.state.primaryAdmin}
                             />

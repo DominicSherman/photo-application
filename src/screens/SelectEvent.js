@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Switch, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Switch, Text, View, Alert} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import {Navigation} from 'react-native-navigation';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import {lightFontStyles, whiteFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
@@ -122,17 +123,50 @@ export default class SelectEvent extends Component {
                     extraData={event}
                     keyExtractor={(item) => item.eventId}
                     renderItem={({item}) =>
-                        <Touchable
-                            onPress={() => {
-                                actions.setEvent(item);
-                                goToRoute(LOGIN, componentId);
-                            }}
-                            testID={item.eventId}
-                        >
-                            <View style={styles.eventView}>
-                                <Text style={lightFontStyles.light}>{item.eventName}</Text>
-                            </View>
-                        </Touchable>
+                        <View>
+                            <Touchable
+                                onPress={() => {
+                                    actions.setEvent(item);
+                                    goToRoute(LOGIN, componentId);
+                                }}
+                                testID={item.eventId}
+                            >
+                                <View style={styles.eventView}>
+                                    <Text style={lightFontStyles.light}>{item.eventName}</Text>
+                                </View>
+                            </Touchable>
+                            {
+                                this.state.numPresses >= 10 &&
+                                <View
+                                    style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <Touchable
+                                        onPress={() =>
+                                            Alert.alert(
+                                                'Are you sure?',
+                                                item.eventName,
+                                                [
+                                                    {text: 'Cancel'},
+                                                    {
+                                                        onPress: () => actions.deleteEvent(item.eventId),
+                                                        text: 'Yes'
+                                                    }
+                                                ]
+                                            )
+                                        }
+                                    >
+                                        <EvilIcons
+                                            name={'minus'}
+                                            size={20}
+                                        />
+                                    </Touchable>
+                                </View>
+                            }
+                        </View>
                     }
                 />
             </View>

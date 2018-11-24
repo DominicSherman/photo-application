@@ -7,7 +7,7 @@ import {
     SET_NAME,
     SET_USERS
 } from '../constants/action-types';
-import {getEvents, getUsers} from '../services/firebase-service';
+import {deleteEventByEventId, deleteMedia, deleteUsers, getEvents, getUsers} from '../services/firebase-service';
 import {action} from '../constants/action';
 import {removeCredentials, storeCredentials} from '../services/async-storage-service';
 import {clean} from '../constants/service';
@@ -94,3 +94,11 @@ export const setEvents = () => async (dispatch, getState) => {
 };
 
 export const setEvent = (event) => action(SET_EVENT, event);
+
+export const deleteEvent = (eventId) => async (dispatch, getState) => {
+    const {env} = getState();
+
+    deleteEventByEventId(env, eventId);
+    deleteUsers(env, eventId);
+    deleteMedia(env, eventId);
+};
