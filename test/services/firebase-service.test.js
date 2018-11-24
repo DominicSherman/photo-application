@@ -9,6 +9,7 @@ import {createRandomImage, createRandomUser} from '../model-factory';
 import {
     addUser,
     createEvent,
+    deleteEvent, deleteMedia, deleteUsers,
     getEvents,
     getMedia,
     getUsers,
@@ -46,11 +47,13 @@ global.window = {
 
 describe('firebase-service', () => {
     let expectedEnv,
-        expectedEventId;
+        expectedEventId,
+        refSpy;
 
     beforeEach(() => {
         expectedEnv = chance.pickone([DEV, PROD]);
         expectedEventId = chance.guid();
+        refSpy = jest.fn();
     });
 
     afterEach(() => {
@@ -416,11 +419,7 @@ describe('firebase-service', () => {
     });
 
     describe('getUsers', () => {
-        let refSpy;
-
         beforeEach(() => {
-            refSpy = jest.fn();
-
             firebase.database.mockReturnValue({
                 ref: refSpy
             });
@@ -441,8 +440,7 @@ describe('firebase-service', () => {
     describe('addUser', () => {
         let email,
             isAdmin,
-            setSpy,
-            refSpy;
+            setSpy;
 
         beforeEach(() => {
             email = chance.string();
@@ -477,11 +475,7 @@ describe('firebase-service', () => {
     });
 
     describe('getMedia', () => {
-        let refSpy;
-
         beforeEach(() => {
-            refSpy = jest.fn();
-
             firebase.database.mockReturnValue({
                 ref: refSpy
             });
@@ -502,7 +496,6 @@ describe('firebase-service', () => {
     describe('createEvent', () => {
         let expectedEventName,
             expectedPrimaryAdmin,
-            refSpy,
             setSpy;
 
         beforeEach(() => {
@@ -546,11 +539,7 @@ describe('firebase-service', () => {
     });
 
     describe('getEvents', () => {
-        let refSpy;
-
         beforeEach(() => {
-            refSpy = jest.fn();
-
             firebase.database.mockReturnValue({
                 ref: refSpy
             });
@@ -568,7 +557,81 @@ describe('firebase-service', () => {
         });
     });
 
-    describe('deleteEvents', () => {
+    describe('deleteEvent', () => {
+        let remove;
 
+        beforeEach(() => {
+            remove = jest.fn();
+            refSpy.mockReturnValue({remove});
+            firebase.database.mockReturnValue({
+                ref: refSpy
+            });
+            deleteEvent(expectedEnv, expectedEventId);
+        });
+
+        it('should call the database', () => {
+            expect(firebase.database).toHaveBeenCalledTimes(1);
+        });
+
+        it('should call the ref', () => {
+            expect(refSpy).toHaveBeenCalledTimes(1);
+            expect(refSpy).toHaveBeenCalledWith(`${expectedEnv}/events/${expectedEventId}`);
+        });
+
+        it('should call remove', () => {
+            expect(remove).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('deleteUsers', () => {
+        let remove;
+
+        beforeEach(() => {
+            remove = jest.fn();
+            refSpy.mockReturnValue({remove});
+            firebase.database.mockReturnValue({
+                ref: refSpy
+            });
+            deleteUsers(expectedEnv, expectedEventId);
+        });
+
+        it('should call the database', () => {
+            expect(firebase.database).toHaveBeenCalledTimes(1);
+        });
+
+        it('should call the ref', () => {
+            expect(refSpy).toHaveBeenCalledTimes(1);
+            expect(refSpy).toHaveBeenCalledWith(`${expectedEnv}/users/${expectedEventId}`);
+        });
+
+        it('should call remove', () => {
+            expect(remove).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('deleteMedia', () => {
+        let remove;
+
+        beforeEach(() => {
+            remove = jest.fn();
+            refSpy.mockReturnValue({remove});
+            firebase.database.mockReturnValue({
+                ref: refSpy
+            });
+            deleteMedia(expectedEnv, expectedEventId);
+        });
+
+        it('should call the database', () => {
+            expect(firebase.database).toHaveBeenCalledTimes(1);
+        });
+
+        it('should call the ref', () => {
+            expect(refSpy).toHaveBeenCalledTimes(1);
+            expect(refSpy).toHaveBeenCalledWith(`${expectedEnv}/media/${expectedEventId}`);
+        });
+
+        it('should call remove', () => {
+            expect(remove).toHaveBeenCalledTimes(1);
+        });
     });
 });

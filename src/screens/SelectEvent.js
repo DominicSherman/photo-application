@@ -150,7 +150,10 @@ export default class SelectEvent extends Component {
                                                 item.eventName,
                                                 [
                                                     {text: 'Cancel'},
-                                                    {text: 'Yes', onPress: () => actions.deleteEvent(item.eventId)}
+                                                    {
+                                                        onPress: () => actions.deleteEvent(item.eventId),
+                                                        text: 'Yes'
+                                                    }
                                                 ]
                                             )
                                         }
