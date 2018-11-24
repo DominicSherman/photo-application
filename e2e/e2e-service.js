@@ -1,6 +1,7 @@
-import {userName} from './user-info';
+import {prod_eventId, userName} from './user-info';
 
 export const login = async (email) => {
+    await element(by.id(prod_eventId)).tap();
     await element(by.id('emailInput')).tap();
     await element(by.id('emailInput')).typeText(email);
 

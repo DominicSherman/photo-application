@@ -127,6 +127,7 @@ export default class SelectEvent extends Component {
                                 actions.setEvent(item);
                                 goToRoute(LOGIN, componentId);
                             }}
+                            testID={item.eventId}
                         >
                             <View style={styles.eventView}>
                                 <Text style={lightFontStyles.light}>{item.eventName}</Text>

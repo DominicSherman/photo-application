@@ -2,7 +2,7 @@ import {email, nonAdminEmail} from '../user-info';
 import {login} from '../e2e-service';
 
 describe('Login', () => {
-    beforeEach(async () => {
+    afterEach(async () => {
         await device.launchApp({
             delete: true,
             permissions: {
@@ -23,12 +23,5 @@ describe('Login', () => {
 
         await expect(element(by.label('Upload'))).toBeVisible();
         await expect(element(by.label('Information').and(by.traits(['button'])))).toBeVisible();
-    });
-
-    it('should login and not show information if the user is an admin', async () => {
-        await login(nonAdminEmail);
-
-        await expect(element(by.label('Upload'))).toBeVisible();
-        await expect(element(by.label('Information').and(by.traits(['button'])))).toNotExist();
     });
 });
