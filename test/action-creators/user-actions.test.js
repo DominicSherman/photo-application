@@ -1,6 +1,16 @@
 import Chance from 'chance';
 
-import {login, logout, setEmail, setEvent, setEvents, setName, setUsers, toggleEnv} from '../../src/action-creators';
+import {
+    deleteEvent,
+    login,
+    logout,
+    setEmail,
+    setEvent,
+    setEvents,
+    setName,
+    setUsers,
+    toggleEnv
+} from '../../src/action-creators';
 import {action} from '../../src/constants/action';
 import {
     SET_ADMIN,
@@ -11,7 +21,7 @@ import {
     SET_NAME,
     SET_USERS
 } from '../../src/constants/action-types';
-import {getEvents, getUsers} from '../../src/services/firebase-service';
+import {deleteEventByEventId, deleteMedia, deleteUsers, getEvents, getUsers} from '../../src/services/firebase-service';
 import {createRandomEvent, createRandomUser} from '../model-factory';
 import {removeCredentials, storeCredentials} from '../../src/services/async-storage-service';
 import {setRoot} from '../../src/services/navigation-service';
@@ -268,6 +278,31 @@ describe('user-actions', () => {
             const actualAction = setEvent(expectedEvent);
 
             expect(actualAction).toEqual(action(SET_EVENT, expectedEvent));
+        });
+    });
+
+    describe('deleteEvent', () => {
+        let expectedEventId;
+
+        beforeEach(() => {
+            expectedEventId = chance.guid();
+
+            deleteEvent(expectedEventId)(dispatchSpy, getStateStub);
+        });
+
+        it('should delete the event', () => {
+            expect(deleteEventByEventId).toHaveBeenCalledTimes(1);
+            expect(deleteEventByEventId).toHaveBeenCalledWith(expectedState.env, expectedEventId);
+        });
+
+        it('should delete the users', () => {
+            expect(deleteUsers).toHaveBeenCalledTimes(1);
+            expect(deleteUsers).toHaveBeenCalledWith(expectedState.env, expectedEventId);
+        });
+
+        it('should delete the media', () => {
+            expect(deleteMedia).toHaveBeenCalledTimes(1);
+            expect(deleteMedia).toHaveBeenCalledWith(expectedState.env, expectedEventId);
         });
     });
 });

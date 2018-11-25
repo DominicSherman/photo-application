@@ -95,7 +95,7 @@ export const setEvents = () => async (dispatch, getState) => {
 
 export const setEvent = (event) => action(SET_EVENT, event);
 
-export const deleteEvent = (eventId) => async (dispatch, getState) => {
+export const deleteEvent = (eventId) => (dispatch, getState) => {
     const {env} = getState();
 
     deleteEventByEventId(env, eventId);
