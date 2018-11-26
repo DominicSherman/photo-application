@@ -11,6 +11,7 @@ import {CREATE_EVENT, LOGIN} from '../constants/routes';
 import {PROD} from '../constants/variables';
 
 import LoadingView from './LoadingView';
+import {white} from '../constants/style-variables';
 
 const styles = StyleSheet.create({
     eventsEmpty: {
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
     },
     wrapperView: {
         alignItems: 'center',
+        backgroundColor: white,
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',

@@ -32,9 +32,10 @@ const styles = StyleSheet.create({
     },
     textWrapper: {
         alignItems: 'flex-start',
+        flex: 1,
         flexDirection: 'column',
         height: '30%',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         paddingLeft: '16%',
         width: '100%'
     },
