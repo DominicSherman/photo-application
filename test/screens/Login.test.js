@@ -157,7 +157,7 @@ describe('Login', () => {
         expect(renderedLoginButton.props.action).toBe(expectedProps.actions.login);
         expect(renderedLoginButton.props.fontSize).toBe(30);
         expect(renderedLoginButton.props.height).toBe(15);
-        expect(renderedLoginButton.props.text).toBe('LOGIN');
+        expect(renderedLoginButton.props.text).toBe('Login');
         expect(renderedLoginButton.props.width).toBe(80);
     });
 
