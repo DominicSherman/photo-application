@@ -1,5 +1,5 @@
-import {email} from '../user-info';
-import {login} from '../e2e-service';
+import {email} from '../support/user-info';
+import {login} from '../../e2e-service';
 
 describe('More', () => {
     beforeAll(async () => {

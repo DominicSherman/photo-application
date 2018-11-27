@@ -1,5 +1,4 @@
-import {login, switchToDev} from '../e2e-service';
-import {email} from '../user-info';
+import {email} from '../support/user-info';
 
 describe.only('Home', () => {
     beforeAll(async () => {

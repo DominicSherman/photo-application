@@ -1,5 +1,5 @@
-import {email, nonAdminEmail} from '../user-info';
-import {login} from '../e2e-service';
+import {email, nonAdminEmail} from '../support/user-info';
+import {login} from '../../e2e-service';
 
 describe('Login', () => {
     afterEach(async () => {
