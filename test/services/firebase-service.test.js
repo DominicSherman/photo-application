@@ -16,7 +16,7 @@ import {
     initializeFirebase,
     uploadImage
 } from '../../src/services/firebase-service';
-import {config} from '../../src/config';
+import {config} from '../../config';
 import {clean} from '../../src/constants/service';
 import {DEV, PROD} from '../../src/constants/variables';
 

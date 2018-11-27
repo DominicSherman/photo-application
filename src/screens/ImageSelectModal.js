@@ -62,6 +62,7 @@ export default class ImageSelectModal extends Component {
                             darkFontStyles.regular,
                             {color: 'blue'}
                         ]}
+                        testID={'doneButton'}
                     >
                         {'Done'}
                     </Text>

@@ -61,7 +61,10 @@ export default class UploadButton extends Component {
         const {actions, selectedImages} = this.props;
 
         return (
-            <View style={styles.centeredRow}>
+            <View
+                style={styles.centeredRow}
+                testID={'uploadButton'}
+            >
                 <Touchable
                     onPress={() => {
                         if (Object.keys(selectedImages).length) {

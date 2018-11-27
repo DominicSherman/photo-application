@@ -1,17 +1,24 @@
 const {Given, When, Then} = require('cucumber');
+const testConfig = require('../../../testConfig');
 
 Given(/^I have logged in$/, async () => {
-    await expect(element(by.label('Upload'))).toBeVisible();
+    await expect(element(by.id('button-Select Images'))).toBeVisible();
 });
 
-When(/^I click on the Select Images button$/, async () => {
-    await element(by.label('Select Images')).tap();
+When(/^I select an image$/, async () => {
+    await element(by.id('button-Select Images')).tap();
+    await element(by.id(`touchableImage-${testConfig.fileName}`)).tap();
+    await element(by.id('doneButton')).tap();
 });
 
-Then(/^I should see a Touchable Image$/, async () => {
-    await expect(element(by.label('Select Images to Upload'))).toBeVisible();
+When(/^I press the upload button$/, async () => {
+    await element(by.id('uploadButton')).tap();
 });
 
-When(/^I click on a Touchable Image$/, async () => {
-    await element(by.id('touchableImage-IMG_0001.JPG')).tap();
+Then(/^I should see the selected image preview$/, async () => {
+    await expect(element(by.id(`preview-${testConfig.fileName}`))).toBeVisible();
+});
+
+Then(/^I should see the loading view$/, async () => {
+    await expect(element(by.id('spinner'))).toBeVisible();
 });

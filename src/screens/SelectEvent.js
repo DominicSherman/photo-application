@@ -9,9 +9,9 @@ import Button from '../components/Button';
 import {goToRoute, showModal} from '../services/navigation-service';
 import {CREATE_EVENT, LOGIN} from '../constants/routes';
 import {PROD} from '../constants/variables';
+import {white} from '../constants/style-variables';
 
 import LoadingView from './LoadingView';
-import {white} from '../constants/style-variables';
 
 const styles = StyleSheet.create({
     eventsEmpty: {
@@ -91,7 +91,12 @@ export default class SelectEvent extends Component {
                 <Touchable
                     onPress={this.incrementPresses}
                 >
-                    <Text style={whiteFontStyles.regular}>{'Admin Button'}</Text>
+                    <Text
+                        style={whiteFontStyles.regular}
+                        testID={'adminButton'}
+                    >
+                        {'Admin Button'}
+                    </Text>
                 </Touchable>
                 {this.state.numPresses >= 10 &&
                 <View style={styles.switchWrapper}>

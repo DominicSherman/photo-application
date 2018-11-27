@@ -39,6 +39,7 @@ export default class PreviewRow extends Component {
                     <Text
                         numberOfLines={1}
                         style={darkFontStyles.light}
+                        testID={`preview-${selectedImage.image.filename}`}
                     >
                         {selectedImage.image.filename}
                     </Text>

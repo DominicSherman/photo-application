@@ -1,7 +1,7 @@
-@home @LogMeIn
+@e2e @home @LogMeInToDev @LogMeOutOfDev
 Feature: Test home screen
 
-  Scenario: When I click on the Select Images button I should see the Select Images Modal
+  Scenario: When I upload an image it should show the loading screen
     Given I have logged in
-    When I click on the Select Images button
-    Then I should see a Touchable Image
+    When I select an image
+    Then I should see the selected image preview

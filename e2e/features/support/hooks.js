@@ -1,14 +1,7 @@
-import {email, prod_eventId, userName} from './user-info';
-
 const {BeforeAll, Before, AfterAll, After} = require('cucumber');
 const detox = require('detox');
-
-const config = require('../package.json').detox;
-
-const adapter = require('detox/runners/jest/adapter');
-
-jest.setTimeout(120000);
-jasmine.getEnv().addReporter(adapter);
+const config = require('../../../package.json').detox;
+const testConfig = require('../../../testConfig.js');
 
 BeforeAll({timeout: 89 * 1000}, async () => {
     await detox.init(config);
@@ -19,24 +12,27 @@ BeforeAll({timeout: 89 * 1000}, async () => {
     });
 });
 
-Before({tags: '@LogMeIn', timeout: 60000}, async () => {
-    await element(by.id(prod_eventId)).tap();
+Before({tags: '@LogMeInToDev', timeout: 60000}, async () => {
+    await element(by.id('adminButton')).multiTap(10);
+    await element(by.id('changeEnvSwitch')).tap();
+
+    await element(by.id(testConfig.devEventId)).tap();
     await element(by.id('emailInput')).tap();
-    await element(by.id('emailInput')).typeText(email);
+    await element(by.id('emailInput')).typeText(testConfig.email);
 
     await element(by.id('nameInput')).tap();
-    await element(by.id('nameInput')).typeText(userName);
+    await element(by.id('nameInput')).typeText(testConfig.userName);
 
-    await element(by.id('loginButton')).tap();
+    await element(by.id('button-Login')).tap();
 });
 
-Before({tags: '@SwitchToDev', timeout: 60000}, async () => {
+After({tags: '@LogMeOutOfDev', timeout: 60000}, async () => {
     await element(by.label('More').and(by.traits(['button']))).tap();
+    await element(by.id('button-Logout')).tap();
+    await element(by.id('adminButton')).multiTap(10);
     await element(by.id('changeEnvSwitch')).tap();
-    await element(by.label('Home').and(by.traits(['button']))).tap();
 });
 
 AfterAll(async () => {
-    await adapter.afterAll();
     await detox.cleanup();
 });

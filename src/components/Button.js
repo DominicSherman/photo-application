@@ -39,6 +39,7 @@ export default class Button extends Component {
                                 whiteFontStyles.light,
                                 {fontSize}
                             ]}
+                            testID={`button-${text}`}
                         >
                             {text}
                         </Text>

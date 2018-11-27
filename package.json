@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "acceptance": "mkdir -p ./e2e/reporting/ios && npx cucumber-js e2e/features --tags '@e2e' --format json:e2e/reporting/ios/cucumber.json -- platform=ios",
+    "detox:build": "xcodebuild -project ios/photoapplication.xcodeproj -scheme photoapplication -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -48,7 +50,6 @@
     "configurations": {
       "ios.sim.debug": {
         "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/photoapplication.app",
-        "build": "xcodebuild -project ios/photoapplication.xcodeproj -scheme photoapplication -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
         "type": "ios.simulator",
         "name": "iPhone 7"
       }

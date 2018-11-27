@@ -6,7 +6,7 @@ import 'firebase/storage';
 import RNHeicConverter from 'react-native-heic-converter';
 import uuid from 'uuid';
 
-import {config} from '../config';
+import {config} from '../../config';
 import {clean} from '../constants/service';
 
 let isInitialized = false;

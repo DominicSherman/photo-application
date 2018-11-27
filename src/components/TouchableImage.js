@@ -75,12 +75,12 @@ export default class TouchableImage extends React.Component {
 
     render() {
         const {item} = this.props;
-        const {uri, playableDuration} = item.image;
+        const {filename, uri, playableDuration} = item.image;
 
         return (
             <Touchable
                 onPress={this.handlePress}
-                testID={`touchableImage-${uri}`}
+                testID={`touchableImage-${filename}`}
             >
                 <ImageBackground
                     key={uri}

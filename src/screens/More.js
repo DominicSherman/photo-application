@@ -53,7 +53,7 @@ export default class More extends Component {
                     action={actions.logout}
                     fontSize={15}
                     height={20}
-                    text={'LOGOUT'}
+                    text={'Logout'}
                     width={40}
                 />
             </View>

@@ -45,6 +45,7 @@ export default class LoadingView extends Component {
                 <ActivityIndicator
                     color={'#678da2'}
                     size={'large'}
+                    testID={'spinner'}
                 />
                 {numToUpload ?
                     <View style={styles.innerWrapper}>

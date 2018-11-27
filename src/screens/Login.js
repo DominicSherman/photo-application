@@ -83,13 +83,12 @@ export default class Login extends React.Component {
                     users ?
                         <View
                             style={{paddingTop: 20}}
-                            testID={'loginButton'}
                         >
                             <Button
                                 action={actions.login}
                                 fontSize={30}
                                 height={15}
-                                text={'LOGIN'}
+                                text={'Login'}
                                 width={80}
                             />
                         </View>
