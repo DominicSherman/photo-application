@@ -3,6 +3,7 @@ package com.photoapplication;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.chirag.RNMail.RNMail;
 import com.oblador.vectoricons.VectorIconsPackage;
 import cl.json.RNSharePackage;
 import com.imagepicker.ImagePickerPackage;

@@ -105,6 +105,7 @@ export default class Login extends React.Component {
                         </Text>
                 }
                 <RequestAccess
+                    event={event}
                     primaryAdmin={event.primaryAdmin}
                 />
                 {

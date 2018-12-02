@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, Linking} from 'react-native';
+import {Text, View, StyleSheet, Linking, Alert, Platform} from 'react-native';
+import Mailer from 'react-native-mail';
 
 import {darkFontStyles, redFontStyles} from '../constants/font-styles';
 
@@ -11,17 +12,31 @@ const styles = StyleSheet.create({
 });
 
 export default class RequestAccess extends Component {
-    render() {
-        const {primaryAdmin} = this.props;
+    handleEmail = async () => {
+        const {primaryAdmin, event: {eventName}} = this.props;
 
+        if (Platform.OS === 'ios') {
+            console.log('Mailer', Mailer);
+            await Mailer.mail({
+                body: '<b>Requesting access for </b>',
+                isHTML: true,
+                recipients: [primaryAdmin],
+                subject: `PikCloud acces to ${eventName}`
+            }, (error, event) => {
+                console.log('error, event', error, event);
+            });
+        } else {
+            Linking.openURL(`mailto:${primaryAdmin}?subject=PikCloud Access&body=Requesting access for: `);
+        }
+    };
+
+    render() {
         return (
             <View style={styles.wrapper}>
                 <Text style={darkFontStyles.light}>
                     {'Don\'t have access? '}
                     <Text
-                        onPress={() =>
-                            Linking.openURL(`mailto:${primaryAdmin}?subject=PikCloud Access&body=Requesting access for: `)
-                        }
+                        onPress={this.handleEmail}
                         style={redFontStyles.regular}
                     >
                         {'Request it'}

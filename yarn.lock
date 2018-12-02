@@ -8276,6 +8276,11 @@ react-native-interactive-image-gallery@^0.1.2:
   resolved "https://registry.yarnpkg.com/react-native-interactive-image-gallery/-/react-native-interactive-image-gallery-0.1.2.tgz#35a35ddddabb9713e7180f3bd932f55287b25c81"
   integrity sha512-gjQfPePnH/qJ3I5DkoPaEqWSVX15ojK/MG0TCBa58PyGmmcbZcj7aPqo+S3YkWz0vxFR/4yWxzR48TRwYQzj9g==
 
+react-native-mail@^3.0.7:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-3.0.7.tgz#07e6aca43f6f1f85f3e58e96e7fcd16b31a927b8"
+  integrity sha512-FHe4kKJKAGuCPPWcDwaRSjdUhEE4IWIsVtTZ05dgD/MgOm00isYmM20zuJHla7oiHVQ2HmzGji76g6IuhIrCjw==
+
 react-native-navigation@2.0.2373:
   version "2.0.2373"
   resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-2.0.2373.tgz#cd4a8d53b9b6072e5e215950e77b6ca52e61b8d4"
