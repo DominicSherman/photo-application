@@ -51,7 +51,7 @@ export default class More extends Component {
                 }
                 <Button
                     action={actions.logout}
-                    fontSize={15}
+                    fontSize={25}
                     height={20}
                     text={'Logout'}
                     width={40}

@@ -42,6 +42,7 @@ export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
 export const login = () => async (dispatch, getState) => {
     const {user, users, event} = getState();
     const {email, name} = user;
+    console.log('users', users);
     const authUser = users.find((u) => clean(u.email) === clean(email));
 
     if (authUser) {

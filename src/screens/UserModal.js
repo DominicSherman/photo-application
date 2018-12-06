@@ -1,7 +1,8 @@
 import React from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Linking} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Linking, Platform} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Mailer from 'react-native-mail';
 
 import {darkFontStyles} from '../constants/font-styles';
 import Button from '../components/Button';
@@ -76,6 +77,21 @@ export default class UserModal extends React.Component {
 
     setIsAdmin = (isAdmin) => this.setState({isAdmin});
 
+    handleEmail = async () => {
+        const {event: {eventName}} = this.props;
+        const {email} = this.state;
+
+        if (Platform.OS === 'ios') {
+            await Mailer.mail({
+                isHTML: true,
+                recipients: [email],
+                subject: `PikCloud access to ${eventName} granted`
+            }, () => ({}));
+        } else {
+            Linking.openURL(`mailto:${email}?subject=PikCloud access to ${eventName} granted`);
+        }
+    };
+
     render() {
         const {env, users, event} = this.props;
         const {email, isAdmin} = this.state;
@@ -113,9 +129,11 @@ export default class UserModal extends React.Component {
                     </View>
                     <Button
                         action={() => {
-                            addUser(event.eventId, email, isAdmin, env);
-                            Linking.openURL(`mailto:${email.toLowerCase()}?subject=RE: DMPhotos Access&body=Access granted`);
-                            this.resetState();
+                            if (email !== '') {
+                                addUser(event.eventId, email, isAdmin, env);
+                                this.handleEmail();
+                                this.resetState();
+                            }
                         }}
                         fontSize={25}
                         height={18}
