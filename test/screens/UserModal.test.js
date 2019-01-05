@@ -4,13 +4,13 @@ import ShallowRenderer from 'react-test-renderer/shallow';
 import {FlatList, SafeAreaView, Switch, Text, TextInput, View, Platform, Linking} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Mailer from 'react-native-mail';
 
 import UserModal from '../../src/screens/UserModal';
 import Button from '../../src/components/Button';
 import {addUser} from '../../src/services/firebase-service';
 import {createRandomEvent, createRandomUser} from '../model-factory';
 import {dismissModal} from '../../src/services/navigation-service';
-import Mailer from 'react-native-mail';
 
 const chance = new Chance();
 
