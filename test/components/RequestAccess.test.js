@@ -81,5 +81,7 @@ describe('RequestAccess', () => {
             recipients: [expectedProps.primaryAdmin],
             subject: `PikCloud access to ${expectedProps.event.eventName}`
         }, expect.any(Function));
+
+        Mailer.mail.mock.calls[0][1]();
     });
 });

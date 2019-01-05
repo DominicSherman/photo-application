@@ -210,6 +210,12 @@ describe('UserModal', () => {
         expect(addUser).toHaveBeenCalledWith(expectedProps.event.eventId, email.toLowerCase(0), isAdmin, expectedProps.env);
     });
 
+    it('should not add the user if the email is empty', () => {
+        renderedAddButton.props.action();
+
+        expect(addUser).not.toHaveBeenCalled();
+    });
+
     it('should allow the user to send an email to the new user on android', async () => {
         const email = chance.string();
 
@@ -240,6 +246,8 @@ describe('UserModal', () => {
             recipients: [email.toLowerCase()],
             subject: `PikCloud access to ${expectedProps.event.eventName} granted`
         }, expect.any(Function));
+
+        Mailer.mail.mock.calls[0][1]();
     });
 
     it('should render a view for current users', () => {
