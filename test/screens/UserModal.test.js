@@ -1,7 +1,7 @@
 import React from 'react';
 import Chance from 'chance';
 import ShallowRenderer from 'react-test-renderer/shallow';
-import {FlatList, SafeAreaView, Switch, Text, TextInput, View} from 'react-native';
+import {FlatList, SafeAreaView, Switch, Text, TextInput, View, Platform, Linking} from 'react-native';
 import Touchable from 'react-native-platform-touchable';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
@@ -10,6 +10,7 @@ import Button from '../../src/components/Button';
 import {addUser} from '../../src/services/firebase-service';
 import {createRandomEvent, createRandomUser} from '../model-factory';
 import {dismissModal} from '../../src/services/navigation-service';
+import Mailer from 'react-native-mail';
 
 const chance = new Chance();
 
@@ -105,6 +106,10 @@ describe('UserModal', () => {
         };
 
         renderComponent();
+    });
+
+    afterEach(() => {
+        jest.resetAllMocks();
     });
 
     it('should set the users on componentDidMount', () => {
@@ -203,6 +208,38 @@ describe('UserModal', () => {
 
         expect(addUser).toHaveBeenCalledTimes(1);
         expect(addUser).toHaveBeenCalledWith(expectedProps.event.eventId, email.toLowerCase(0), isAdmin, expectedProps.env);
+    });
+
+    it('should allow the user to send an email to the new user on android', async () => {
+        const email = chance.string();
+
+        renderedEmailInput.props.onChangeText(email);
+        renderedComponent = renderedInstance.render();
+        cacheChildren();
+
+        Platform.OS = 'android';
+        await renderedAddButton.props.action();
+
+        expect(Linking.openURL).toHaveBeenCalledTimes(1);
+        expect(Linking.openURL).toHaveBeenCalledWith(`mailto:${email.toLowerCase()}?subject=PikCloud access to ${expectedProps.event.eventName} granted`);
+    });
+
+    it('should allow the user to send an email to the new user on ios', async () => {
+        const email = chance.string();
+
+        renderedEmailInput.props.onChangeText(email);
+        renderedComponent = renderedInstance.render();
+        cacheChildren();
+
+        Platform.OS = 'ios';
+        await renderedAddButton.props.action();
+
+        expect(Mailer.mail).toHaveBeenCalledTimes(1);
+        expect(Mailer.mail).toHaveBeenCalledWith({
+            isHTML: true,
+            recipients: [email.toLowerCase()],
+            subject: `PikCloud access to ${expectedProps.event.eventName} granted`
+        }, expect.any(Function));
     });
 
     it('should render a view for current users', () => {

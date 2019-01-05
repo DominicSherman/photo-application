@@ -125,7 +125,7 @@ describe('More', () => {
     it('should render the logout button', () => {
         expect(renderedLogoutButton.type).toBe(Button);
         expect(renderedLogoutButton.props.action).toBe(expectedProps.actions.logout);
-        expect(renderedLogoutButton.props.fontSize).toBe(15);
+        expect(renderedLogoutButton.props.fontSize).toBe(25);
         expect(renderedLogoutButton.props.height).toBe(20);
         expect(renderedLogoutButton.props.text).toBe('Logout');
         expect(renderedLogoutButton.props.width).toBe(40);

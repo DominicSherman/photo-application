@@ -42,7 +42,8 @@
       "^react-redux": "<rootDir>/test/stubs/react-redux-stub.js",
       "react-native-fetch-blob": "<rootDir>/test/stubs/react-native-fetch-blob-stub.js",
       "^firebase": "<rootDir>/test/stubs/firebase-stub.js",
-      ".+\\.(png)$": "jest-transform-stub"
+      ".+\\.(png)$": "jest-transform-stub",
+      "react-native-mail": "<rootDir>/test/stubs/react-native-mail-stub.js"
     }
   },
   "detox": {
