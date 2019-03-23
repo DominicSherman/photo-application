@@ -40,12 +40,12 @@ export const setEmail = (email) => (dispatch) => dispatch(action(SET_EMAIL, emai
 export const setName = (name) => (dispatch) => dispatch(action(SET_NAME, name));
 
 export const login = () => async (dispatch, getState) => {
-    const {user, users, event} = getState();
+    const {user, users, event, env} = getState();
     const {email, name} = user;
     const authUser = users.find((u) => clean(u.email) === clean(email));
 
     if (authUser) {
-        storeCredentials(authUser, name, event);
+        storeCredentials(authUser, name, event, env);
         dispatch(action(SET_ADMIN, authUser.isAdmin));
         dispatch(action(SET_LOGGED_IN, true));
         dispatch(action(SET_FAILED_LOGIN, false));
