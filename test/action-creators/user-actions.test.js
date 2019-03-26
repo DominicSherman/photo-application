@@ -157,7 +157,7 @@ describe('user-actions', () => {
             login()(dispatchSpy, getStateStub);
 
             expect(storeCredentials).toHaveBeenCalledTimes(1);
-            expect(storeCredentials).toHaveBeenCalledWith(expectedUser, expectedUser.name, expectedState.event);
+            expect(storeCredentials).toHaveBeenCalledWith(expectedUser, expectedUser.name, expectedState.event, expectedState.env);
             expect(dispatchSpy).toHaveBeenCalledTimes(3);
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_ADMIN, expectedUser.isAdmin));
             expect(dispatchSpy).toHaveBeenCalledWith(action(SET_LOGGED_IN, true));
